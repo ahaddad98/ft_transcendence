@@ -1,0 +1,61 @@
+
+.background{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+.Section1{
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    justify-content: center;
+    padding: 0 calc(1em + 1.8vw);
+}
+.title {
+
+
+font-family: Righteous;
+font-style: normal;
+font-weight: normal;
+font-size: 80px;
+line-height: 99px;
+
+color: #424242;
+margin-bottom: 118px;
+}
+.button{
+    width: 380px;
+    height: 79px;
+    background: linear-gradient(89.76deg, #FA982F 0.18%, #FF5E43 99.78%, rgba(196, 196, 196, 0) 99.78%);
+    box-shadow: 2px 5px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+}
+.Section3 {
+
+    font-family: Righteous;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 20px;
+
+    color: #424242;
+    margin-bottom: 30px;
+}
+.Section2{
+    width: 60%;
+    /* background: url("../../assets/background.svg"); */
+    /* background-repeat: no-repeat; */
+    /* background-size: cover; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    z-index: -1;
+}
