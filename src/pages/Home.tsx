@@ -5,6 +5,8 @@ import "../styles/components/style.css"
 import player from "../assets/player.svg"
 //@ts-ignore
 import {ReactComponent as Background} from "../assets/background.svg"
+//@ts-ignore
+import {ReactComponent as Logo} from "../assets/logo.svg"
 // import button_singin from "../assets/button_singin.svg"
 
 const Home = () => {
@@ -13,12 +15,11 @@ const Home = () => {
             <Background className="bg" />
             <div className="background">
                 <div className="Section1">
+                <Logo className="logo" />
                     <h1 className="title">PING PONG GAME</h1>
-                    <p className="Section3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, corporis. Magni enim sit eos quia ad dicta beatae sint, esse modi at unde asperiores dolor eaque laudantium, voluptates provident suscipit.
-                    <br ></br>
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni assumenda optio ea eligendi laboriosam odit nobis atque nostrum sit, dolorum commodi eius repudiandae reiciendis aut consectetur labore temporibus hic maxime? Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab rem incidunt odio minima, reiciendis ipsam facilis porro omnis sit similique ipsa corrupti dolore, dolores a numquam quibusdam eum expedita amet?
+                    <p className="parag">Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus, corporis. Magni enim sit eos quia ad dicta beatae sint, esse modi at unde asperiores dolor eaque laudantium, voluptates provident suscipit.
                     </p>
-                    <button className="button">SING IN</button>
+                    <button className="button">SIGN IN</button>
                 </div>
                 <div className="Section2">
                 <img src={player} />
