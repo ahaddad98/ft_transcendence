@@ -34,21 +34,21 @@ const Home = () => {
 
                     <NavLink className={(navData) => navData.isActive ? "nave-active" : "" }  to="/" 
                     >
-                        ABout
+                        About us
                     </NavLink>
                         </div>
                         <div className="nav-active">
 
                     <NavLink className={(navData) => navData.isActive ? "nave-active" : "" }  to="/" 
                     >
-                        Contact
+                        Learning
                     </NavLink>
                         </div>
                         <div className="nav-active">
 
                     <NavLink className={(navData) => navData.isActive ? "nave-active" : "" }  to="/" 
                     >
-                        Servises
+                        Services
                     </NavLink>
                         </div>
                 {/* <NavLink className={(navData) => navData.isActive ? "nav-active" : "" }  to="/" 
