@@ -69,11 +69,20 @@ const Home = () => {
             <label htmlFor="active" className="menu-btn"><span></span></label>
             <label htmlFor="active" className="close"></label>
             <div className="wrapper">
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Services</a></li>
-                </ul>
+                <div className="nave-active">
+                    Home
+                    </div>
+                <div className="nave-active">
+                    About
+                    </div>
+                <div className="nave-active">
+                    Services
+                    </div>
+                {/* <ul>
+                    <li>Home</li>
+                    <li>About</li>
+                    <li>Services</li>
+                </ul> */}
             </div>
         <div className="logo-resp">
           <Logo />
