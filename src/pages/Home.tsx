@@ -23,11 +23,35 @@ const Home = () => {
                     <button className="button">SIGN IN</button>
                 </div>
                 <div className="navigation">
-                <NavLink className={(navData) => navData.isActive ? "nav-active" : "" }  to="/" 
+                    <div className="nav-active">
+
+                    <NavLink className={(navData) => navData.isActive ? "nave-active" : "" }  to="/" 
                     >
-                    Home
-                </NavLink>
-                <NavLink className={(navData) => navData.isActive ? "nav-active" : "" }  to="/" 
+                        Home
+                    </NavLink>
+                        </div>
+                        <div className="nav-active">
+
+                    <NavLink className={(navData) => navData.isActive ? "nave-active" : "" }  to="/" 
+                    >
+                        ABout
+                    </NavLink>
+                        </div>
+                        <div className="nav-active">
+
+                    <NavLink className={(navData) => navData.isActive ? "nave-active" : "" }  to="/" 
+                    >
+                        Contact
+                    </NavLink>
+                        </div>
+                        <div className="nav-active">
+
+                    <NavLink className={(navData) => navData.isActive ? "nave-active" : "" }  to="/" 
+                    >
+                        Servises
+                    </NavLink>
+                        </div>
+                {/* <NavLink className={(navData) => navData.isActive ? "nav-active" : "" }  to="/" 
                     >
                     About
                 </NavLink>
@@ -38,10 +62,7 @@ const Home = () => {
                 <NavLink className={(navData) => navData.isActive ? "nav-active" : "" }  to="/" 
                     >
                     Servises
-                </NavLink>
-                    {/* <section className="home-button">
-                        Home
-                    </section> */}
+                </NavLink> */}
                 </div>
                 <div className="Section2">
                 <img src={player} />
