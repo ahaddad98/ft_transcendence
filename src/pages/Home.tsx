@@ -63,8 +63,18 @@ const Home = () => {
             <img src={player} />
           </div>
         </div>
-      </MediaQuery>
-      <MediaQuery minResolution="2dppx">
+        </MediaQuery>
+        <MediaQuery minResolution="2dppx">
+            <input type="checkbox" id="active" />
+            <label htmlFor="active" className="menu-btn"><span></span></label>
+            <label htmlFor="active" className="close"></label>
+            <div className="wrapper">
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Services</a></li>
+                </ul>
+            </div>
         <div className="logo-resp">
           <Logo />
         </div>
