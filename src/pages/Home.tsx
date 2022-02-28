@@ -1,5 +1,4 @@
 import React from "react";
-// import Background from "../components/Background";
 import "../styles/components/style.css";
 //@ts-ignore
 import player from "../assets/player.svg";
@@ -11,7 +10,6 @@ import { ReactComponent as Logo } from "../assets/logo.svg";
 import { NavLink } from "react-router-dom";
 import MediaQuery from "react-responsive";
 // import { MediaQuery } from 'react-responsive'
-
 const Home = () => {
   return (
     <div className="home">
@@ -65,24 +63,37 @@ const Home = () => {
         </div>
         </MediaQuery>
         <MediaQuery minResolution="2dppx">
-            <input type="checkbox" id="active" />
-            <label htmlFor="active" className="menu-btn"><span></span></label>
-            <label htmlFor="active" className="close"></label>
+            <input type="checkbox" id="active" style={{display: "none"}}/>
+            <label htmlFor="active" className="menu-btn">
+            <img src="https://img.icons8.com/color/48/000000/menu--v4.png"/>
+              <span></span></label>
+            <label htmlFor="active" className="close">
+            </label>
             <div className="wrapper">
-                <div className="nave-active">
-                    Home
-                    </div>
-                <div className="nave-active">
-                    About
-                    </div>
-                <div className="nave-active">
-                    Services
-                    </div>
-                {/* <ul>
-                    <li>Home</li>
-                    <li>About</li>
-                    <li>Services</li>
-                </ul> */}
+            <div>
+              <NavLink
+                className={(navData) => (navData.isActive ? "nave-active-resp" : "")}
+                to="/"
+              >
+                Home
+              </NavLink>
+              </div>
+            <div>
+              <NavLink
+                className={(navData) => (navData.isActive ? "nave-active-resp" : "")}
+                to="/"
+              >
+                About
+              </NavLink>
+              </div>
+            <div>
+              <NavLink
+                className={(navData) => (navData.isActive ? "nave-active-resp" : "")}
+                to="/"
+              >
+                Services
+              </NavLink>
+              </div>
             </div>
         <div className="logo-resp">
           <Logo />
