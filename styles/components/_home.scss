@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+.title {
+    width: 40%;
+    font-family: Righteous;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 80px;
+    line-height: 99px;
+    margin-left: 20px;
+    color: #424242;
+    margin-top: 10%;
+}
+.parag {
+    width: 40%;
+    font-family: Righteous;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 39px;
+    color: #424242;
+    margin-top: 6%;
+    margin-left: 20px;
+  }
+  .button {
+    width: 20%;
+    height: 79px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-family: roboto;
+    color: white;
+    background: linear-gradient(85.74deg, #F8A036 -2.45%, #FF5E43 113.93%);
+    cursor: pointer;
+    border-radius: 20px;
+    margin-left: 20px;
+    margin-top: 4%;
+}
