@@ -1,5 +1,6 @@
 import React from "react";
 import Link from 'next/link'
+import MediaQuery from "react-responsive";
 
 const  Navbar = () =>  {
     return (
@@ -8,6 +9,7 @@ const  Navbar = () =>  {
           <img id="logo" src="/logo.svg">
           </img>
         </Link>
+        <MediaQuery minWidth={1121}>
         <div className="menu">
           <div className="menu-bar">
             <Link href="/">
@@ -25,6 +27,7 @@ const  Navbar = () =>  {
             </Link>
           </div>
           </div>
+          </MediaQuery>
       </div>
     )
   }
