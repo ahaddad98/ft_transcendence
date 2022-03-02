@@ -1,0 +1,35 @@
+.navbar {
+    width: 100%;
+    margin-top: 4px;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    flex-flow: row wrap;
+    .menu{
+        color: white;
+        width: 38%;
+        display: flex;
+        flex-flow: row wrap;
+        font-size: 24px;
+        justify-content: space-around;
+        .menu-bar{
+            margin-top: 8px;
+            height: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: pointer;
+            a {
+                color: white;
+                text-decoration: none;
+                // border: 2px solid #ffffff;
+                // padding: 10px;
+                // border-radius: 10px;
+            }
+        }
+    }
+    #logo {
+        height: inherit;
+        cursor: pointer;
+    }
+}

@@ -1,0 +1,15 @@
+// .container {
+//     display: flex;
+//     flex-direction: column;
+// }
+
+
+#player
+{
+    position: absolute;
+    width: 60%;
+    right: 0;
+    top: 0;
+    height: inherit;
+    z-index: -1;
+}
