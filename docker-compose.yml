@@ -21,10 +21,17 @@ services:
       - db
     ports:
       - "5050:80"
-  frondend:
+  frontdend:
     build: ./front-end/
     container_name: front_end
     image: front_end
     restart: always
     ports:
         - "3000:3000"
+  backdend:
+    build: ./back-end/
+    container_name: back_end
+    image: back_end
+    restart: always
+    ports:
+        - "3001:3001"

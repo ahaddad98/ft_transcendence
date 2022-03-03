@@ -12,5 +12,4 @@ COPY package*.json ./
 RUN npm install --only=production
 COPY . .
 COPY --from=development /usr/src/app/dist ./dist
-ENTRYPOINT ["/bin/sh", "/script.sh"]
-# CMD ["node", "dist/main"]
+CMD ["node", "dist/main"]
