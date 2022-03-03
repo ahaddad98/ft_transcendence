@@ -20,6 +20,22 @@ export default function Home() {
       <div className="button">
         SIGN IN
       </div>
+      </MediaQuery>
+      <MediaQuery maxWidth={1060}>
+      <div className="title-resp">
+      PING PONG GAME
+      </div>
+      <div className="parag-resp">
+        <p style={{ textAlign: "justify", lineHeight: 1.6 }}>
+
+        Ping Pong est un jeu de sport créé par MarketJS. Prenez l'une des pagaies numériques et vivez une expérience passionnante de ping-pong. Dans ce jeu de sport simple mais stimulant, vous devez frapper la balle du côté de la table de votre adversaire.
+        </p>
+      </div>
+      <div className="button-resp">
+        <div>
+        SIGN IN
+        </div>
+      </div>
       </MediaQuery> 
     </Background>
   )
