@@ -5,8 +5,22 @@ import Navbar from '../components/Navbar'
 import Player from '../components/Player'
 import MediaQuery from "react-responsive";
 import axios from 'axios';
+import SignIN from '../components/Signin'
+import { useState } from 'react'
 
-export default function Home() {
+const App = ({data}) => {
+  const user = {
+    "firstname": "amine",
+    "lastname": "haddad",
+  }
+  const [dataAction, setDataAction] = useState({name: '', description: ''});
+
+    const _handleChangeName = (data) => {
+        if(data.name)
+            setDataAction( prevState  => ({ ...prevState,   name : data.name }));
+        if(data.description)
+            setDataAction( prevState  => ({ ...prevState,   description : data.description }));
+    };
   return (
     <Background>
       <Navbar />
@@ -18,10 +32,10 @@ export default function Home() {
       <div className="parag">
       Ping Pong est un jeu de sport créé par MarketJS. Prenez l'une des pagaies numériques et vivez une expérience passionnante de ping-pong. Dans ce jeu de sport simple mais stimulant, vous devez frapper la balle du côté de la table de votre adversaire.
       </div>
-      <div className="button">
-      <Link href="/about">
-        SIGN IN
-        </Link>
+      <div>
+        <SignIN>
+          {user}
+          </SignIN>
       </div>
       </MediaQuery>
       <MediaQuery maxWidth={1060}>
@@ -45,3 +59,4 @@ export default function Home() {
     </Background>
   )
 }
+export default App;
