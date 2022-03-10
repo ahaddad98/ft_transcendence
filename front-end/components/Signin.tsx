@@ -17,20 +17,14 @@ const SignIN = (props) => {
         // e.preventDefault();
     }
     const {user} = props;
-    // console.log(props);
+    console.log(user);
     
     return (
         <div>
-            
             <form action="http://localhost:3001">
                 <input type="submit" value="SIGN IN" className="button"/>
-                <h1>
-                    {/* amine */}
-                    {props.firstname}
-                </h1>
             </form>
         </div>
     )
 }
-
 export default SignIN;

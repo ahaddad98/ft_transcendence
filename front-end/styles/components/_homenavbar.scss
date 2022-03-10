@@ -1,0 +1,343 @@
+.homenavbar{
+    $color-primary: #f857a8;
+$color-secondary: #ff5858;
+$color-neutral-lt: rgb(0, 0, 0);
+$color-neutral-med: rgb(0, 0, 0);
+$color-neutral-dk: #444;
+$a-tags: "a, a:active, a:hover, a:visited";
+$a-tags-no-hov: "a:link, a:visited, a:active";
+$headings-font: "Saira Semi Condensed", sans-serif;
+$shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+
+@mixin main-gradient {
+  background: $color-primary;
+  background: -webkit-linear-gradient(45deg, $color-primary, $color-secondary);
+  background: linear-gradient(90deg, rgba(248, 160, 54, 0.5) 0%, rgba(255, 94, 67, 0.5) 100%);
+}
+
+@mixin shadow-box {
+  background-color: $color-neutral-lt;
+  box-shadow: $shadow;
+}
+
+@mixin skew {
+  transform: skew(-20deg);
+}
+
+@mixin unskew {
+  transform: skew(20deg);
+}
+
+/*-------------Layout-------------*/
+body {
+  line-height: 1.5em;
+  padding: 0;
+  margin: 0;
+}
+
+section {
+  height: 100vh;
+}
+
+#home {
+  background-color: rgb(255, 0, 0);
+}
+
+#about {
+  background-color: rgb(255, 0, 0);
+}
+
+#work {
+  background-color: rgb(255, 0, 0);
+}
+
+#contact {
+  background-color: rgb(255, 0, 0);
+}
+
+/*-------------Helpers-------------*/
+.skew {
+  @include skew;
+}
+
+.un-skew {
+  @include unskew;
+}
+
+/*-------------Nav-------------*/
+#nav-wrapper {
+  overflow: hidden;
+  width: 100%;
+  margin: 0 auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+#nav {
+  @include shadow-box;
+  display: flex;
+  flex-direction: column;
+  font-family: $headings-font;
+  height: 4em;
+  overflow: hidden;
+
+  &.nav-visible {
+    height: 100%;
+    overflow: auto;
+  }
+}
+
+.nav {
+  display: flex;
+  height: 4em;
+  line-height: 4em;
+  flex-grow: 1;
+}
+
+.nav-link,
+.logo {
+  padding: 0 1em;
+}
+
+span.gradient {
+  @include main-gradient;
+  padding: 0 1em;
+  position: relative;
+  right: 1em;
+  margin-right: auto;
+
+  &:hover {
+    animation-name: logo-hover;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+    animation-timing-function: cubic-bezier(0.17, 0.57, 0.31, 0.85);
+  }
+}
+
+h1.logo {
+  font-weight: 300;
+  font-size: 1.75em;
+  line-height: 0.75em;
+  color: blue;
+}
+
+h1.logo #{$a-tags} {
+  text-decoration: none;
+  color: blue;
+}
+
+.nav-link {
+  text-transform: uppercase;
+  text-align: center;
+  border-top: 0.5px solid $color-neutral-med;
+}
+
+// #{$a-tags-no-hov} {
+//   text-decoration: none;
+//   color: $color-primary;
+// }
+
+a:hover {
+  text-decoration: underline;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.btn-nav {
+  color: blue;
+  padding-left: 2em;
+  padding-right: 2em;
+}
+
+@media (min-width: 800px) {
+  #nav-wrapper {
+    overflow: hidden;
+  }
+
+  #nav {
+    overflow: hidden;
+    flex-direction: row;
+  }
+
+  .nav-link {
+    border-top: none;
+  }
+
+  .right {
+    overflow: hidden;
+    flex-direction: row;
+    justify-content: flex-end;
+    position: relative;
+    left: 1.5em;
+    height: auto;
+  }
+
+  .btn-nav {
+    display: none;
+  }
+
+  .nav #{$a-tags-no-hov} {
+    &.active {
+      @include main-gradient;
+      color: #fff;
+    }
+  }
+
+  .nav-link-span {
+    @include unskew;
+    display: inline-block;
+  }
+
+  .nav-link {
+    @include skew;
+    color: #777;
+    text-decoration: none;
+
+    &:last-child {
+      padding-right: 3em;
+    }
+  }
+
+  a:hover.nav-link:not(.active) {
+    color: $color-neutral-dk;
+    background: $color-neutral-med;
+    background: linear-gradient(90deg, rgba(248, 160, 54, 0.5) 0%, rgba(255, 94, 67, 0.5) 100%);
+  }
+}
+
+@keyframes logo-hover {
+  20% {
+    padding-right: 0em;
+  }
+  100% {
+    padding-right: 5em;
+  }
+}
+
+}
+    // .homenavbar{
+//     width: 100%;
+//     border-radius: 20px;
+//     height: 80px;
+//     background: linear-gradient(90deg, rgba(248, 160, 54, 0.5) 0%, rgba(255, 94, 67, 0.5) 100%);
+//     border-radius: 20px;
+//     display: flex;
+//     flex-direction: row;
+//     justify-content: space-between;
+//     .firstpart{
+//         display: flex;
+//         flex-direction: row;
+//         width: 30%;
+//         color: white;
+//         #av {
+//             cursor: pointer;
+//             width: 87px;
+//             margin-left: 29%;
+//             // height: 10px;
+//         }
+//         .username {
+//             cursor: pointer;
+//             margin-left: 40px;
+//             display: flex;
+//             flex-direction: column;
+//             justify-content: center;
+//             font-size: 34px;
+//         }
+//         .username:hover {
+//             display: flex;
+//             flex-direction: column;
+//             justify-content: center;
+//             border: 1px solid;
+//             box-sizing: border-box;
+//             border-radius: 10px;
+//             width:fit-content;
+//             width:-webkit-fit-content;
+//             width:-moz-fit-content;
+//             color: #BD3737;
+//             background-color: white;
+//             opacity: 60%;
+//         }
+//     }
+//     .secpart{
+//         display: flex;
+//         flex-direction: row;
+//         width: 60%;
+//         justify-content: space-around;
+//         color: white;
+//         .stream{
+//             margin-left: 8%;
+//             display: flex;
+//             flex-direction: column;
+//             justify-content: center;
+//             font-size: 100%;
+//             cursor: pointer;
+//             // width: 100px;
+//         }
+//         .stream:hover {
+//             display: flex;
+//             flex-direction: column;
+//             justify-content: center;
+//             border: 1px solid;
+//             // box-sizing: border-box;
+//             border-radius: 10px;
+//             color: #BD3737;
+//             background-color: white;
+//             opacity: 60%;
+//         }
+//         .game {
+            
+//             margin-left: 8%;
+//             display: flex;
+//             flex-direction: column;
+//             justify-content: center;
+//             font-size: 100%;
+//             cursor: pointer;
+//             // width: 100px;
+//         }
+//             .game:hover {
+//                 display: flex;
+//                 flex-direction: column;
+//                 justify-content: center;
+//                 border: 1px solid;
+//                 box-sizing: border-box;
+//                 border-radius: 10px;
+//                 color: #BD3737;
+//                 background-color: white;
+//                 opacity: 60%;
+//                 box-sizing: border-box;
+//             }
+//         .friend{
+//             margin-left: 8%;
+//             display: flex;
+//             flex-direction: column;
+//             justify-content: center;
+//             font-size: 100%;
+//             cursor: pointer;
+//             // width: 100px;
+//         }
+//             .friend:hover {
+//                 border: 1px solid;
+//                 box-sizing: border-box;
+//                 border-radius: 10px;
+//                 color: #BD3737;
+//                 background-color: white;
+//                 opacity: 60%;
+//         }
+//     }
+//     .thirtpart{
+//         display: flex;
+//         flex-direction: column;
+//         width: 10%;
+//         color: white;
+//         justify-content: center;
+//         margin-left: 17%;
+//         cursor: pointer;
+//     }
+// }
+// saad@sportime.me

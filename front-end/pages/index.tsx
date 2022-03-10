@@ -10,17 +10,17 @@ import { useState } from 'react'
 
 const App = ({data}) => {
   const user = {
-    "firstname": "amine",
-    "lastname": "haddad",
+    firstname: "amine",
+    lastname: "haddad",
   }
-  const [dataAction, setDataAction] = useState({name: '', description: ''});
+  // const [dataAction, setDataAction] = useState({name: '', description: ''});
 
-    const _handleChangeName = (data) => {
-        if(data.name)
-            setDataAction( prevState  => ({ ...prevState,   name : data.name }));
-        if(data.description)
-            setDataAction( prevState  => ({ ...prevState,   description : data.description }));
-    };
+  //   const _handleChangeName = (data) => {
+  //       if(data.name)
+  //           setDataAction( prevState  => ({ ...prevState,   name : data.name }));
+  //       if(data.description)
+  //           setDataAction( prevState  => ({ ...prevState,   description : data.description }));
+  //   };
   return (
     <Background>
       <Navbar />
@@ -33,8 +33,7 @@ const App = ({data}) => {
       Ping Pong est un jeu de sport créé par MarketJS. Prenez l'une des pagaies numériques et vivez une expérience passionnante de ping-pong. Dans ce jeu de sport simple mais stimulant, vous devez frapper la balle du côté de la table de votre adversaire.
       </div>
       <div>
-        <SignIN>
-          {user}
+        <SignIN user={user}>
           </SignIN>
       </div>
       </MediaQuery>
@@ -44,7 +43,6 @@ const App = ({data}) => {
       </div>
       <div className="parag-resp">
         <p style={{ textAlign: "justify", lineHeight: 1.6 }}>
-
         Ping Pong est un jeu de sport créé par MarketJS. Prenez l'une des pagaies numériques et vivez une expérience passionnante de ping-pong. Dans ce jeu de sport simple mais stimulant, vous devez frapper la balle du côté de la table de votre adversaire.
         </p>
       </div>

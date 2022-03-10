@@ -1,0 +1,5 @@
+stop server;
+sudo /opt/lampp/lampp stop
+
+start server;
+sudo /opt/lampp/lampp start
