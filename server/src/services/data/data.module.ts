@@ -9,11 +9,11 @@ import { JwtStrategy } from 'src/frameworks/auth/jwt/jwt.strategy';
 import { FriendService } from '../use-cases/friend/friend.service';
 import { StatsService } from '../use-cases/stats/stats.service';
 import { UserService } from '../use-cases/user/user.service';
-import { DataServicesService } from './data-services.service';
+import { DataService } from './data.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Friend, Stats]), AuthModule],
-  providers: [DataServicesService, UserService, FriendService, StatsService],
-  exports: [DataServicesService],
+  providers: [DataService, UserService, FriendService, StatsService],
+  exports: [DataService],
 })
-export class DataServicesModule {}
+export class DataModule {}

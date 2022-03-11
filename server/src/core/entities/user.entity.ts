@@ -3,6 +3,7 @@ import {
   Entity,
   OneToMany,
   OneToOne,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Friend } from '../../core/entities/friend.entity';
@@ -10,14 +11,14 @@ import { Stats } from './stats.entity';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
-  @Column({ nullable: true })
-  password?: string;
-
   @Column()
-  username: string;
+  password: string;
+
+  @Column({ unique: true, nullable: true })
+  username?: string;
 
   @Column({ nullable: true })
   avatar?: string;

@@ -1,13 +1,14 @@
-import { Controller, Get, Res, Req, Post,UseGuards } from '@nestjs/common';
+import { Controller, Get, Res, Req, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FortyTwoStrategyAuthGuard } from '../frameworks/auth/o-auth/42-auth.guard';
-import { DataServicesService } from 'src/services/data-services/data-services.service';
+import { DataService } from 'src/services/data/data.service';
 // import { JwtAuthGuard } from '../frameworks/auth/jwt/jwt-auth.guard';
 import { LocalStrategy } from '../frameworks/auth/local/local.strategy';
+import { LocalAuthGuard } from 'src/frameworks/auth/local/local-auth.guard';
 
 @Controller('login')
 export class LoginController {
-  constructor(private readonly dataService: DataServicesService) {}
+  constructor(private readonly dataService: DataService) {}
 
   @Get('intra-42')
   @UseGuards(FortyTwoStrategyAuthGuard)
@@ -20,9 +21,10 @@ export class LoginController {
     return res.redirect(`http://localhost:3000/loginSuccess?token=${token}`);
   }
 
-    @Post('local')
-    @UseGuards(LocalStrategy)
-    async login(@Req() req) {
-      return req.user;
-    }
+  @Post('local')
+  @UseGuards(LocalAuthGuard)
+  async login(@Req() req) {
+    console.log('w');
+    return req.user;
+  }
 }

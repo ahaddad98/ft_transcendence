@@ -2,11 +2,13 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-42';
 import { config } from 'dotenv';
 import { Injectable } from '@nestjs/common';
+import { DataService } from 'src/services/data/data.service';
+import { User } from 'src/core/entities/user.entity';
 
 config();
 @Injectable()
 export class FortyTwoStrategyStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+  constructor(private dataService: DataService) {
     //   constructor(private authService: AuthService) {
     super({
       clientID: process.env.CLIENT_ID,
@@ -21,10 +23,15 @@ export class FortyTwoStrategyStrategy extends PassportStrategy(Strategy) {
     profile: any,
     cb: VerifyCallback,
   ): Promise<any> {
-    const user = {
-      id: profile.id,
-      login: profile.username,
+    // console.log(profile);
+    const user: User = {
+      id: profile._json.id,
+      username: profile._json.login,
+      avatar: profile._json.image_url,
+      password: '13266231',
+      friend: [],
     };
+    this.dataService.save(user);
     return user;
   }
 }

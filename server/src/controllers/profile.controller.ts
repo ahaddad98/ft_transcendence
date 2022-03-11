@@ -1,10 +1,10 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { DataServicesService } from 'src/services/data-services/data-services.service';
+import { DataService } from 'src/services/data/data.service';
 import { JwtAuthGuard } from '../frameworks/auth/jwt/jwt-auth.guard';
 
 @Controller('profile')
 export class ProfileController {
-  constructor(private readonly dataService: DataServicesService) {}
+  constructor(private readonly dataService: DataService) {}
 
   @UseGuards(JwtAuthGuard)
   @Get('')

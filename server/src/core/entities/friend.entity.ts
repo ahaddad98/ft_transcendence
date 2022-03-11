@@ -6,7 +6,7 @@ export class Friend {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @ManyToOne((type) => User, (user) => user.friend)
+  @ManyToOne((type) => User, (user) => user.friend, { onDelete: 'CASCADE' })
   user: User;
 
   @Column()

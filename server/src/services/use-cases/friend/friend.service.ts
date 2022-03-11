@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/core/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Friend } from '../../../core/entities/friend.entity';
 
@@ -14,9 +15,9 @@ export class FriendService {
     return this.friendsRepository.find();
   }
 
-  // findAllByUserId(id: number) {
-  //   return this.friendsRepository.find({user : id});
-  // }
+  findAllByUser(userSearch: User) {
+    return this.friendsRepository.find({user : userSearch});
+  }
 
   // findAllOfUser():  Promise<Friend[]> {
   //     // return this.friendsRepository.find({userId :});
@@ -29,8 +30,10 @@ export class FriendService {
     await this.friendsRepository.delete(id);
   }
 
-  save(friend: Friend): Promise<Friend> {
-    // console.log(user);
-    return this.friendsRepository.save(friend);
+  async save(friendId: number, newUser: User): Promise<Friend> {
+    const friend: Friend = new Friend();
+    friend.friend = friendId;
+    friend.user = newUser;
+    return await this.friendsRepository.save(friend);
   }
 }

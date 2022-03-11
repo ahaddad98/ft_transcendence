@@ -15,17 +15,25 @@ export class Stats {
     this.loses = 0;
     this.rank = 'iron';
     this.honor = 0;
+    this.xp = 0;
+    this.xpForLevel = 5;
   }
 
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @OneToOne(() => User, (user) => user.stats)
+  @OneToOne(() => User, (user) => user.stats, { onDelete: 'CASCADE' })
   @JoinColumn()
   user?: number;
 
   @Column()
   level: number;
+
+  @Column()
+  xpForLevel: number;
+
+  @Column()
+  xp: number;
 
   @Column()
   wins: number;
