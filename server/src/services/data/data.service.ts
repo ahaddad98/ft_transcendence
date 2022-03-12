@@ -59,10 +59,6 @@ export class DataService {
             }); // hna jabt data dyal user bal friends dyalo
           });
       });
-    // } catch (err) {
-      // console.log(err);
-      // return err;
-    // }
   }
 
   async deleteFriend(userId: number, friendId: number) {
