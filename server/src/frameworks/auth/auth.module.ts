@@ -20,7 +20,7 @@ import { FortyTwoStrategyStrategy } from './o-auth/42.strategy';
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: '24h' },
     }),
     TypeOrmModule.forFeature([User, Friend, Stats]),
   ],

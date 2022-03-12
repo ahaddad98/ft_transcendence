@@ -19,7 +19,7 @@ export const saveImageToStorage = {
   storage: diskStorage({
     destination: './src/avatar',
     filename: (req, file, cb) => {
-      console.log(file);
+      // console.log(file);
       const filename: string =
         path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4(); // regexr : regular expressions / '\s' for Whitespace / '/g' expression flags for global
       const extension: string = path.parse(file.originalname).ext;
@@ -27,12 +27,13 @@ export const saveImageToStorage = {
     },
   }),
   fileFilter: (req, file, cb) => {
+    // console.log(file);
     const allowedMimeType: validMimeType[] = validMimeTypes;
     allowedMimeType.includes(file.mimetype) ? cb(null, true) : cb(null, false);
   },
 };
 
-export const fullImagePath = (filename: string) : string => {
+export const fullImagePath = (filename: string): string => {
   const imagesFolderPath = process.cwd() + '/src/avatar';
   const fullPath = imagesFolderPath + '/' + filename;
   return fullPath;

@@ -41,6 +41,31 @@ export class DataService {
   }
 
   async addFriend(userId: number, friendId: number) {
+    // let newUser: User;
+    // try {
+      await this.usersService.findOneById(friendId).then((element) => {
+        if (element === undefined) return  { error: 'error' };
+        this.usersService
+          .findOneByIdWithRelation(userId, { relations: ['friend'] })
+          .then((newUser) => {
+            if (newUser.friend.find((element) => element.friend == friendId)) {
+              console.log('friend is already in the list');
+              return { error: 'friend is already in the list' };
+              // newUser = data;
+            }
+            this.friendsService.save(friendId, newUser).then((data) => {
+              newUser.friend.push(data);
+              this.usersService.save(newUser).then((element) => element);
+            }); // hna jabt data dyal user bal friends dyalo
+          });
+      });
+    // } catch (err) {
+      // console.log(err);
+      // return err;
+    // }
+  }
+
+  async deleteFriend(userId: number, friendId: number) {
     try {
       let newUser: User;
       await this.usersService.findOneById(friendId).then((element) => {
@@ -51,14 +76,10 @@ export class DataService {
         .then((data) => {
           newUser = data;
         }); // hna jabt data dyal user bal friends dyalo
-      if (newUser.friend.find((element) => element.friend == friendId)) {
-        console.log('friend is already in the list');
-        return { error: 'friend is already in the list' };
-      }
-      await this.friendsService.save(friendId, newUser).then((data) => {
-        newUser.friend.push(data);
+      await this.friendsService.deleteFriend({
+        user: newUser,
+        friend: friendId,
       });
-      this.usersService.save(newUser).then((element) => element);
     } catch (err) {
       return 'salam';
     }

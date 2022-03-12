@@ -60,6 +60,40 @@ export class UsersController {
     });
   }
 
+  @Post('me/updateProfile')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file', saveImageToStorage))
+  uploadProfile(@UploadedFile() file: Express.Multer.File, @Req() req): Object {
+    if (file)
+      this.usersService.updateAvatar(req.user.id, fullImagePath(file.filename));
+    if (req.body.username)
+      this.usersService.updateUsername(req.user.id, req.body.username);
+    return { succes: 'Profile is updated' };
+  }
+
+  @Post('me/friends/:friendId')
+  @UseGuards(JwtAuthGuard)
+  async addNewFriend(@Req() req, @Param('friendId') friend: number) {
+    return await this.dataService.addFriend(req.user.id, friend);
+  }
+
+  @Delete('me/friends/:friendId')
+  @UseGuards(JwtAuthGuard)
+  async deleteFriend(@Req() req, @Param('friendId') friend: number) {
+    return this.dataService.deleteFriend(req.user.id, friend);
+  }
+  
+  @Put('me/avatar')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file', saveImageToStorage))
+  uploadAvatar(
+    @UploadedFile() file: Express.Multer.File, @Req() req): Object {
+    if (!file) return of({ error: 'haram walah haram' });
+    this.usersService.updateAvatar(req.user.id, fullImagePath(file.filename));
+    return { succes: 'avatar is updated' };
+  }
+
+
   @Get(':id')
   findOneUser(@Param('id') id: string) {
     return this.usersService.findOne(id);
@@ -81,41 +115,7 @@ export class UsersController {
 
   // Post
 
-  @Post('me/updateProfile')
-  @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('file', saveImageToStorage))
-  uploadProfile(@UploadedFile() file: Express.Multer.File, @Req() req): Object {
-    console.log(req.user);
-    // if (!file) return of({ error: 'haram walah haram' });
-    // this.usersService.updateAvatar(req.user.id, fullImagePath(file.filename));
-    this.usersService.updateUsername(req.user.id, 'sqatim');
-    return { succes: 'Profile is updated' };
-  }
 
-  @Post('me/friends/:friendId')
-  @UseGuards(JwtAuthGuard)
-  async addNewFriend(@Req() req, @Param('friendId') friend: number) {
-    return this.dataService.addFriend(req.user.id, friend);
-  }
-
-  @Post(':id/friends/:friendId')
-  async findAllFriend(
-    @Param('id') userId: number,
-    @Param('friendId') friendId: number,
-  ) {
-    this.dataService.addFriend(userId, friendId);
-  }
-
-  @Put(':id/avatar')
-  @UseInterceptors(FileInterceptor('file', saveImageToStorage))
-  uploadAvatar(
-    @UploadedFile() file: Express.Multer.File,
-    @Param('id') id: number,
-  ): Object {
-    if (!file) return of({ error: 'haram walah haram' });
-    this.usersService.updateAvatar(id, fullImagePath(file.filename));
-    return { succes: 'avatar is updated' };
-  }
 
   @Put(':id/stats/:stat')
   async updateStats(@Param('id') id: number, @Param('stat') stat: string) {
@@ -126,4 +126,23 @@ export class UsersController {
   removeUser(@Param('id') id: number) {
     return this.usersService.remove(id);
   }
+
+  // @Post(':id/friends/:friendId')
+  // async findAllFriend(
+  //   @Param('id') userId: number,
+  //   @Param('friendId') friendId: number,
+  // ) {
+  //   this.dataService.addFriend(userId, friendId);
+  // }
+
+  // @Put(':id/avatar')
+  // @UseInterceptors(FileInterceptor('file', saveImageToStorage))
+  // uploadAvatar(
+  //   @UploadedFile() file: Express.Multer.File,
+  //   @Param('id') id: number,
+  // ): Object {
+  //   if (!file) return of({ error: 'haram walah haram' });
+  //   this.usersService.updateAvatar(id, fullImagePath(file.filename));
+  //   return { succes: 'avatar is updated' };
+  // }
 }
