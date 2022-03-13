@@ -29,16 +29,29 @@ const loginSuccess = () => {
                     router.push('/home');
             })
         }
-    }, [query])
+    }, [query]);
+
+    const [selectedfile, swtSelectedfile] = useState();
+    const fileSelectedHundler  = (e) =>  {
+        swtSelectedfile(e.target.files[0]);
+    }
     const handleSubmit = async (e) => {
         e.preventDefault();
+        var formData = new FormData();
+        formData.append("file", selectedfile);
+        formData.append("username", 'khasd');
+        axios.post('http://localhost:3001/users/me/updateProfile', formData, 
+        
+        { headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
     }
-
     return (
     <div>
         <form onSubmit={handleSubmit} encType="multipart/form-data">
         <label >Select image:</label>
-        <input type="file" id="img" name="img" accept="image/*" />
+        <input type="file" id="img" name="img" accept="image/*" onChange={fileSelectedHundler}/>
         <label >username:</label>
         <input type="text" id="username" name="username"/>
         <input type="submit" value="Login"/>

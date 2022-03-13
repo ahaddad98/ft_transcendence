@@ -64,6 +64,8 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file', saveImageToStorage))
   uploadProfile(@UploadedFile() file: Express.Multer.File, @Req() req): Object {
+    console.log(file);
+    console.log(req.body);
     if (file)
       this.usersService.updateAvatar(req.user.id, fullImagePath(file.filename));
     if (req.body.username)
