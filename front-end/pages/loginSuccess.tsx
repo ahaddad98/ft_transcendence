@@ -12,39 +12,29 @@ import SignIN from '../components/Signin'
 import { useState } from 'react'
 
 const loginSuccess = () => {
-    const [token, setToken] = useState('');
-    const [load, setLoad] = useState(true);
-    // const router = useRo9uter();
-    // const {s} = router.query;
     const { query } = useRouter();
+    const Router  = useRouter();
+    const fetchData = async () => {
+        const response = await axios.get('http://localhost:3001/users/me', {headers: 
+        { Authorization: `Bearer ${query.token}` }});
+        return response;
+    };
     useEffect(() => {
-        // handleSubmit;
         if (query.token)
         {
-            console.log(query.token);
-            // setLoad(false);
-            setToken(query.token.toString());
+            const tok = query.token;
+            localStorage.setItem('token', `${tok}`);
+            fetchData().then((result) =>{
+                if (result.data.username !== null)
+                    router.push('/home');
+            })
         }
     }, [query])
     const handleSubmit = async (e) => {
-        console.log('im in handle');
         e.preventDefault();
-        setLoad(true);
-        try {
-            const response = await axios.get('http://localhost:3001/users/me', {headers: 
-            { Authorization: `Bearer ${router.query}` }});
-            // console.log(response);
-        } catch (error) {
-        //   console.log(error);
-        }
-
     }
-    
+
     return (
-        <div>
-            {
-                1 ?
-               <div>hello</div> :
     <div>
         <form onSubmit={handleSubmit} encType="multipart/form-data">
         <label >Select image:</label>
@@ -54,8 +44,6 @@ const loginSuccess = () => {
         <input type="submit" value="Login"/>
         </form>
     </div>
-    }
-        </div>
     );
 }
 
