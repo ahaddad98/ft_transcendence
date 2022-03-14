@@ -15,31 +15,15 @@ import MenuItem from '@mui/material/MenuItem';
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-const HomeNavbar = () => {
-//   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-//   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
-//   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-//     setAnchorElNav(event.currentTarget);
-//   };
-//   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-//     setAnchorElUser(event.currentTarget);
-//   };
 
-//   const handleCloseNavMenu = () => {
-//     setAnchorElNav(null);
-//   };
-
-//   const handleCloseUserMenu = () => {
-//     setAnchorElUser(null);
-//   };
-
+const HomeNavbar = (props) => {
   return (
     <div className="homenavbar">
         <header id="nav-wrapper">
     <nav id="nav">
       <div className="nav left">
-        <span className="gradient skew"><h1 className="logo un-skew"><a href="#home">Logo Here</a></h1></span>
+        <span className="gradient skew"><h1 className="logo un-skew"><a href="#home"></a>{props.data.username}</h1></span>
         <button id="menu" className="btn-nav"><span className="fas fa-bars"></span></button>
       </div>
       <div className="nav right">
