@@ -10,6 +10,7 @@ import MediaQuery from "react-responsive";
 import axios from 'axios';
 import SignIN from '../components/Signin'
 import { useState } from 'react'
+import Home from "./home";
 
 const loginSuccess = () => {
     const { query } = useRouter();
@@ -31,20 +32,26 @@ const loginSuccess = () => {
         }
     }, [query]);
 
-    const [selectedfile, swtSelectedfile] = useState();
+    const [selectedfile, setSelectedfile] = useState();
+    const [selectedusername, setSelectedUsername] = useState();
     const fileSelectedHundler  = (e) =>  {
-        swtSelectedfile(e.target.files[0]);
+        setSelectedfile(e.target.files[0]);
+    }
+    const fileSelectedHundlerusername  = (e) =>  {
+        setSelectedUsername(e.target.value);
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
         var formData = new FormData();
         formData.append("file", selectedfile);
-        formData.append("username", 'khasd');
+        formData.append("username", selectedusername);
         axios.post('http://localhost:3001/users/me/updateProfile', formData, 
-        
         { headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
             }
+        }).then ((res) => {
+            if (res.data.succes !== null)
+                router.push('/home');
         })
     }
     return (
@@ -53,7 +60,7 @@ const loginSuccess = () => {
         <label >Select image:</label>
         <input type="file" id="img" name="img" accept="image/*" onChange={fileSelectedHundler}/>
         <label >username:</label>
-        <input type="text" id="username" name="username"/>
+        <input type="text" id="username" name="username" onChange={fileSelectedHundlerusername}/>
         <input type="submit" value="Login"/>
         </form>
     </div>
