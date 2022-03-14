@@ -9,18 +9,6 @@ import SignIN from '../components/Signin'
 import { useState } from 'react'
 
 const App = ({data}) => {
-  const user = {
-    firstname: "amine",
-    lastname: "haddad",
-  }
-  // const [dataAction, setDataAction] = useState({name: '', description: ''});
-
-  //   const _handleChangeName = (data) => {
-  //       if(data.name)
-  //           setDataAction( prevState  => ({ ...prevState,   name : data.name }));
-  //       if(data.description)
-  //           setDataAction( prevState  => ({ ...prevState,   description : data.description }));
-  //   };
   return (
     <Background>
       <Navbar />
