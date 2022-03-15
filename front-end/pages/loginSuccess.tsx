@@ -55,15 +55,14 @@ const loginSuccess = () => {
         })
     }
     return (
-      <div className="container">
-             <form onSubmit={handleSubmit} encType="multipart/form-data">
-              <input type="file" className="custom-file-input" name="img" accept="image/*" onChange={fileSelectedHundler} />
+      <div className="container-form">
+             <form onSubmit={handleSubmit} className="myform" encType="multipart/form-data">
+              <input type="file" className="custom-file-input" name="img" accept="image/*" placeholder="Select Avatar" onChange={fileSelectedHundler} />
               <br />
               <input type="text" id="username" name="username" placeholder="Username" onChange={fileSelectedHundlerusername}/>
               <br />
               <input type="submit" value="Login"/>
               </form>
-      
         <div className="drops">
           <div className="drop drop-1"></div>
           <div className="drop drop-2"></div>
@@ -76,16 +75,3 @@ const loginSuccess = () => {
 }
 
 export default loginSuccess;
-        {/*// <Background>
-            // <Player />
-            // <div className="form">
-            //     <form onSubmit={handleSubmit} encType="multipart/form-data">
-            //     <label >Select image:</label>
-            //     <input type="file" id="img" name="img" accept="image/*" onChange={fileSelectedHundler}/>
-            //     <br />
-            //     <label >username:</label>
-            //     <input type="text" id="username" name="username" onChange={fileSelectedHundlerusername}/>
-            //     <input type="submit" value="Login"/>
-            //     </form>
-            // </div>
-        // </Background>*/}

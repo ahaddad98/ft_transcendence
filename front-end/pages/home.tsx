@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import HomeNavbar from "../components/HomeNavbar"
+import LeaderBoard  from "../components/LeaderBoard";
 
 const Home = () => {
     const [data, setData] = useState({})
@@ -24,20 +25,9 @@ const Home = () => {
         <div>
             <HomeNavbar data={data}>
                 </HomeNavbar>
+            <LeaderBoard />
         </div>
     )
 }
 
-// export async function getStaticProps(context) {
-//     const fetchData = async () => {
-//         const response = await axios.get('http://localhost:3001/users/me', {headers: 
-//         { Authorization: `Bearer ${localStorage.getItem('token')}` }});
-//         return response.data;
-//     };
-//     const result = await fetchData();
-//     // will be passed to the page component as props
-//     return {
-//         props :{result}
-//     }
-//   }
 export default Home;
