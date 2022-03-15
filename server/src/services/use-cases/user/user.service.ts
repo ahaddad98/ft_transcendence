@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Conversation } from 'src/core/entities/conversation.entity';
 import { Repository } from 'typeorm';
 import { User } from '../../../core/entities/user.entity';
 
@@ -14,6 +15,10 @@ export class UserService {
     return this.usersRepository.find();
   }
 
+  findSpecificUsers(details: Object): Promise<User[]> {
+    return this.usersRepository.find(details);
+  }
+
   findOne(id: string): Promise<User> {
     return this.usersRepository.findOne(
       { username: id },
@@ -23,7 +28,7 @@ export class UserService {
   }
 
   async findOneById(id: number): Promise<User> {
-    return await this.usersRepository.findOne(id);
+    return await this.usersRepository.findOne(id, { relations: ['friend'] });
   }
 
   findOneByIdWithRelation(id: number, relation: Object): Promise<User> {
@@ -40,6 +45,10 @@ export class UserService {
 
   async updateUsername(id: number, newUsername: string) {
     await this.usersRepository.update(id, { username: newUsername });
+  }
+
+  async updateConversation(id: number, newConversation: Conversation[]) {
+    await this.usersRepository.update(id, { conversation: newConversation });
   }
   save(user: User): Promise<any> {
     // console.log(user);

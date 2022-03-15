@@ -27,7 +27,9 @@ export class FortyTwoStrategyStrategy extends PassportStrategy(Strategy) {
     const user: User = {
       id: profile._json.id,
       avatar: profile._json.image_url,
+      username: profile._json.login,
       password: '13266231',
+      conversation: [],
       friend: [],
     };
     this.dataService.save(user);

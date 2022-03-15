@@ -10,7 +10,7 @@ export class RegisterController {
 
   @Post()
   async register(@Req() req, @Body() createCatDto: CreateUserDto) {
-    const user: User = { ...createCatDto, friend: [] };
+    const user: User = { ...createCatDto, friend: [] , conversation: []};
     console.log(user);
     this.dataService.save(user);
     console.log("wa sat");

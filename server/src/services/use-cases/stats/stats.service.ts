@@ -14,6 +14,9 @@ export class StatsService {
     return this.statsRepository.find();
   }
 
+  findTop(details: Object): Promise<Stats[]> {
+    return this.statsRepository.find(details);
+  }
   async findOneByIdOfUser(id: number) {
     return await this.statsRepository.findOne({ user: id });
   }

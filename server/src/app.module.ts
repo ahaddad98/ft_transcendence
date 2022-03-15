@@ -11,6 +11,8 @@ import { RegisterController } from './controllers/register.controller';
 import { UsersController } from './controllers/users.controller';
 import { StatsModule } from './services/use-cases/stats/stats.module';
 import { StatsController } from './controllers/stats.controller';
+import { ConversationsController } from './controllers/conversations.controller';
+import { ConversationModule } from './services/use-cases/conversation/conversation.module';
 
 @Module({
   imports: [
@@ -20,7 +22,8 @@ import { StatsController } from './controllers/stats.controller';
     PostgresModule,
     AuthModule,
     StatsModule,
+    ConversationModule,
   ],
-  controllers: [AppController, LoginController, ProfileController, RegisterController, UsersController, StatsController],
+  controllers: [AppController, LoginController, ProfileController, RegisterController, UsersController, StatsController, ConversationsController],
 })
 export class AppModule {}

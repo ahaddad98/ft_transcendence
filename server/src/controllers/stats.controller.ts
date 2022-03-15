@@ -31,9 +31,20 @@ export class StatsController {
     return this.statsService.findAll();
   }
 
-  @Get(':id')
-  findOneStats(@Param('id') id: number){
-    return this.statsService.findOneById(id)
+  @Get('top/:number')
+  findTopStats(@Param('number') number: number) {
+    return this.statsService.findTop({
+      relations: ['user'],
+      order: {
+        level: 'DESC',
+        wins: 'DESC',
+      },
+      take: number,
+    });
   }
 
+  @Get(':id')
+  findOneStats(@Param('id') id: number) {
+    return this.statsService.findOneById(id);
+  }
 }
