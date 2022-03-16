@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import HomeNavbar from "../components/HomeNavbar"
 import LeaderBoard  from "../components/LeaderBoard";
-
+import ChannlesList from "../components/ChannelsList";
 const Home = () => {
     const [data, setData] = useState({})
     const fetchData = async () => {
@@ -22,10 +22,16 @@ const Home = () => {
     }, [])
     
     return (
-        <div>
-            <HomeNavbar data={data}>
+            <div >
+        <HomeNavbar data={data}>
                 </HomeNavbar>
+            <div className="flex flex-row ">
             <LeaderBoard />
+            {/* <div> */}
+                
+            <ChannlesList />
+            {/* </div> */}
+            </div>
         </div>
     )
 }
