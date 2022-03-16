@@ -16,14 +16,14 @@ import { User } from 'src/core/entities/user.entity';
 import { DataService } from 'src/services/data/data.service';
 import { FriendService } from 'src/services/use-cases/friend/friend.service';
 import { UserService } from 'src/services/use-cases/user/user.service';
-import { v4 as uuidv4 } from 'uuid';
 import path = require('path');
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import {
   saveImageToStorage,
   fullImagePath,
 } from 'src/services/helpers/image-storage';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
+import { HistoryService } from 'src/services/use-cases/history/history.service';
 
 @Controller('users')
 export class UsersController {
@@ -31,6 +31,7 @@ export class UsersController {
     private dataService: DataService,
     private usersService: UserService,
     private friendsService: FriendService,
+    private historyService: HistoryService,
   ) {}
 
   @Get()
@@ -55,9 +56,32 @@ export class UsersController {
   @Get('me/friends')
   @UseGuards(JwtAuthGuard)
   async findMyFriends(@Req() req) {
-    return await this.usersService.findOneById(req.user.id).then((user) => {
-      return this.dataService.findAllFriendOfUser(user);
-    });
+    const user = await this.usersService.findOneById(req.user.id);
+    return this.dataService.findAllFriendOfUser(user);
+  }
+
+  @Get('me/history')
+  @UseGuards(JwtAuthGuard)
+  async findMyHistory(@Req() req) {
+    let profile: Object;
+    let histories: Object[] = [];
+    const newUser = await this.usersService.findOneById(req.user.id);
+    profile = { username: newUser.username, avatar: newUser.avatar };
+    const history = await this.historyService.findByUser(newUser);
+    await Promise.all(
+      history.map(async (element) => {
+        const info: User = await this.usersService.findOneById(element.enemyId);
+        histories.push({
+          id: element.id,
+          win: element.win,
+          createdAt: element.createdAt,
+          username: info.username,
+          avatar: info.avatar,
+        });
+      }),
+    );
+    profile = { ...profile, histories };
+    return profile;
   }
 
   @Post('me/updateProfile')
@@ -79,22 +103,39 @@ export class UsersController {
     return await this.dataService.addFriend(req.user.id, friend);
   }
 
+  @Post('me/history/:bool/:id')
+  @UseGuards(JwtAuthGuard)
+  async addNewStat(
+    @Req() req,
+    @Param('bool') win: string,
+    @Param('id') userId: number,
+  ) {
+    // console.log(typeof win);
+    const check: boolean = win === 'true';
+    return await this.dataService.addNewStat(req.user.id, check, userId);
+    // return await this.historyService.addNewStat(req.user.id, win, userId);
+  }
+
   @Delete('me/friends/:friendId')
   @UseGuards(JwtAuthGuard)
   async deleteFriend(@Req() req, @Param('friendId') friend: number) {
     return this.dataService.deleteFriend(req.user.id, friend);
   }
-  
+
   @Put('me/avatar')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file', saveImageToStorage))
-  uploadAvatar(
-    @UploadedFile() file: Express.Multer.File, @Req() req): Object {
+  uploadAvatar(@UploadedFile() file: Express.Multer.File, @Req() req): Object {
     if (!file) return of({ error: 'haram walah haram' });
     this.usersService.updateAvatar(req.user.id, fullImagePath(file.filename));
     return { succes: 'avatar is updated' };
   }
 
+  @Delete('me')
+  @UseGuards(JwtAuthGuard)
+  removeMyAccount(@Req() req) {
+    this.usersService.remove(req.user.id);
+  }
 
   @Get(':id')
   findOneUser(@Param('id') id: string) {
@@ -116,8 +157,6 @@ export class UsersController {
   }
 
   // Post
-
-
 
   @Put(':id/stats/:stat')
   async updateStats(@Param('id') id: number, @Param('stat') stat: string) {

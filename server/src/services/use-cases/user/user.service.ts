@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Conversation } from 'src/core/entities/conversation.entity';
+import { History } from 'src/core/entities/history.entity';
 import { Repository } from 'typeorm';
 import { User } from '../../../core/entities/user.entity';
 
@@ -35,8 +36,8 @@ export class UserService {
     return this.usersRepository.findOne(id, relation);
   }
 
-  async remove(id: number): Promise<void> {
-    await this.usersRepository.delete(id);
+  async remove(userId: number): Promise<void> {
+    await this.usersRepository.delete(userId) // hna 3andi mushkil);
   }
 
   async updateAvatar(id: number, path: string) {
@@ -49,6 +50,10 @@ export class UserService {
 
   async updateConversation(id: number, newConversation: Conversation[]) {
     await this.usersRepository.update(id, { conversation: newConversation });
+  }
+
+  async updateHistory(id: number, newHistory: History[]) {
+    await this.usersRepository.update(id, { history: newHistory });
   }
   save(user: User): Promise<any> {
     // console.log(user);
