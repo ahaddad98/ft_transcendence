@@ -11,14 +11,15 @@ import { User } from './user.entity';
 
 @Entity()
 export class Conversation {
-
   @PrimaryGeneratedColumn()
   id?: number;
 
-  // @OneToMany((type) => Message, (message) => message.conversation)
-  // message?: Message[];
+  @OneToMany((type) => Message, (message) => message.conversation)
+  message?: Message[];
 
-  @ManyToMany((type) => User, (user) => user.conversation, { onDelete: 'CASCADE' })
+  @ManyToMany((type) => User, (user) => user.conversation, {
+    onDelete: 'CASCADE',
+  })
   user: User[];
 
   @Column({ type: 'timestamptz', default: 'NOW()' })

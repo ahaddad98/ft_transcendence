@@ -10,10 +10,13 @@ export class ConversationService {
     private conversationRepository: Repository<Conversation>,
   ) {}
 
-  findAll(): Promise<Conversation[]> {
-    return this.conversationRepository.find();
+  async findAll(): Promise<Conversation[]> {
+    return await this.conversationRepository.find({relations: ['user']});
   }
 
+  async findSpecificConversation() // hadi hta n9adha ghada daruri wa mo2akad
+  {
+  }
   async saveNewConversation(conversation: Conversation) {
     return await this.conversationRepository.save(conversation);
   }

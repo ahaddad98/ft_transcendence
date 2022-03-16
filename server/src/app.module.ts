@@ -14,6 +14,8 @@ import { StatsController } from './controllers/stats.controller';
 import { ConversationsController } from './controllers/conversations.controller';
 import { ConversationModule } from './services/use-cases/conversation/conversation.module';
 import { HistoryModule } from './services/use-cases/history/history.module';
+import { MessagesController } from './controllers/messages.controller';
+import { MessageModule } from './services/use-cases/message/message.module';
 
 @Module({
   imports: [
@@ -25,7 +27,8 @@ import { HistoryModule } from './services/use-cases/history/history.module';
     StatsModule,
     ConversationModule,
     HistoryModule,
+    MessageModule,
   ],
-  controllers: [AppController, LoginController, ProfileController, RegisterController, UsersController, StatsController, ConversationsController],
+  controllers: [AppController, LoginController, ProfileController, RegisterController, UsersController, StatsController, ConversationsController, MessagesController],
 })
 export class AppModule {}

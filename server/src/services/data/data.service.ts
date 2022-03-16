@@ -6,6 +6,7 @@ import { FriendService } from '../use-cases/friend/friend.service';
 import { StatsService } from '../use-cases/stats/stats.service';
 import { Stats } from 'src/core/entities/stats.entity';
 import { HistoryService } from '../use-cases/history/history.service';
+import { MessageService } from '../use-cases/message/message.service';
 
 @Injectable()
 export class DataService {
@@ -14,6 +15,7 @@ export class DataService {
     private statsService: StatsService,
     private friendsService: FriendService,
     private historyService: HistoryService,
+    private mesagesSercvice: MessageService,
     private jwtService: JwtService,
   ) {}
 
@@ -134,6 +136,10 @@ export class DataService {
       case 'lose':
         return await this.statsService.updateLoses(id);
     }
+  }
+
+  async newMessage(sender: number, receiver: number) {
+    // const conversation: await 
   }
 
   login(user: any) {

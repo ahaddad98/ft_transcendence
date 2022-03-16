@@ -9,8 +9,8 @@ export class Message{
     @Column()
     senderId: number;
 
-    // @ManyToOne((type) => Conversation, (conversation) => conversation.message, {onDelete: 'CASCADE'})
-    // conversation: Conversation;
+    @ManyToOne((type) => Conversation, (conversation) => conversation.message, {onDelete: 'CASCADE'})
+    conversation: Conversation;
 
     @Column({type: 'timestamptz'})
     createdAt: Date;

@@ -84,6 +84,13 @@ export class UsersController {
     return profile;
   }
 
+  @Post('me/messages/:id')
+  @UseGuards(JwtAuthGuard)
+  async newMessage(@Req() req, @Param('id') id: number) {
+    
+  }
+
+
   @Post('me/updateProfile')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file', saveImageToStorage))
