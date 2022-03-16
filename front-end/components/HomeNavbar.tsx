@@ -42,8 +42,29 @@ const HomeNavbar = (props) => {
                   </span>
                   <img id="" src="/notif.svg" className="h-7"/>
               </a>
-              <a className="flex items-center hover:text-gray-200" href="#">
-                <img id="" src="/avatar.svg" className="h-7"/>
+              <a className="flex items-center hover:text-gray-200">
+                    <div className="relative group">
+                        <button type="button" className="flex flex-row items-center w-full px-4 py-4 mt-2 text-base font-bold text-left uppercase bg-transparent rounded-lg md:w-auto md:inline md:mt-0 md:ml-4 focus:outline-none font-montserrat">
+                            <span><img id="" src="/avatar.svg" className="h-7 w-auto h-6 rounded-full" alt=""/></span>
+                        </button>
+                        <div className="absolute z-10 hidden bg-grey-200 group-hover:block bg-white">
+                            <ul className="py-1" aria-labelledby="dropdownBottomButton">
+                                <li>
+                                    <a href="#" className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Dashboard</a>
+                                  </li>
+                                  <li>
+                                    <a href="#" className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
+                                  </li>
+                                  <li>
+                                    <a href="#" className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Earnings</a>
+                                  </li>
+                                  <li>
+                                    <a href="#" className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+                                  </li>
+                                </ul>
+                        </div>
+                    </div>  
+
               </a>
             </div>
           </div>

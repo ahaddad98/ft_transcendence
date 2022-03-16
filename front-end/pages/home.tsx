@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import HomeNavbar from "../components/HomeNavbar"
 import LeaderBoard  from "../components/LeaderBoard";
 import ChannlesList from "../components/ChannelsList";
+
 const Home = () => {
     const [data, setData] = useState({})
     const fetchData = async () => {
