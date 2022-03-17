@@ -15,7 +15,7 @@ const HomeNavbar = (props) => {
     <div className="flex flex-wrap bg-orange-400">
       <section className=" relative mx-auto">
         <nav className="flex justify-between bg-orange-400 text-white w-screen">
-          <div className="px-2 xl:px-2 py-2 flex w-full items-center">
+          <div className="px-20  py-2 flex w-full items-center">
             <div className="w-1/4">
             <a className="text-3xl font-bold font-heading" href="#">
               HOME
