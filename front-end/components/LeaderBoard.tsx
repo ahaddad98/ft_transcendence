@@ -3,7 +3,7 @@ import React from "react";
 const LeaderBoard = () => {
     return (
       <div className="mt-20 w-1/2">
-      <div className=" max-w-2xl mx-auto">
+      <div className="  w-10/12 mx-auto">
         <div className="p-4 max-w-md-83 bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
           <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-white">LEADER BOARD</h3>
