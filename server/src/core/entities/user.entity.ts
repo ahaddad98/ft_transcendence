@@ -33,7 +33,7 @@ export class User {
   @OneToOne((type) => Stats, (stats) => stats.user)
   stats?: Stats;
 
-  @JoinTable()
-  @ManyToMany((type) => Conversation, (conversation) => conversation.user)
-  conversation: Conversation[];
+  // @JoinTable()
+  // @ManyToMany((type) => Conversation, (conversation) => conversation.user)
+  // conversation: Conversation[];
 }

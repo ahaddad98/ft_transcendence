@@ -13,6 +13,8 @@ import { StatsModule } from './services/use-cases/stats/stats.module';
 import { StatsController } from './controllers/stats.controller';
 import { ConversationsController } from './controllers/conversations.controller';
 import { ConversationModule } from './services/use-cases/conversation/conversation.module';
+import { MessagesController } from './controllers/messages.controller';
+import { MessageModule } from './services/use-cases/message/message.module';
 
 @Module({
   imports: [
@@ -23,7 +25,8 @@ import { ConversationModule } from './services/use-cases/conversation/conversati
     AuthModule,
     StatsModule,
     ConversationModule,
+    MessageModule,
   ],
-  controllers: [AppController, LoginController, ProfileController, RegisterController, UsersController, StatsController, ConversationsController],
+  controllers: [AppController, LoginController, ProfileController, RegisterController, UsersController, StatsController, ConversationsController, MessagesController],
 })
 export class AppModule {}
