@@ -23,10 +23,10 @@ const HomeNavbar = (props) => {
             </div>
             <div className="w-1/2 flex flex-row justify-arround">
             <ul className="hidden md:flex px-2 mx-auto font-semibold font-heading space-x-12">
-              <li><a className="hover:text-gray-200" href="#">Watch Now</a></li>
-              <li><a className="hover:text-gray-200" href="#">PlayGame</a></li>
-              <li><a className="hover:text-gray-200" href="/friend">Friends</a></li>
-              <li><a className="hover:text-gray-200" href="/userslist">Users List</a></li>
+              <li><Link href="/watchnow"><a className="hover:text-gray-200" >Watch Now</a></Link></li>
+              <li><Link href="/playgame"><a className="hover:text-gray-200" >PlayGame</a></Link></li>
+              <li><Link href="/friend"><a className="hover:text-gray-200" >Friends</a></Link></li>
+              <li><Link href="/userslist"><a className="hover:text-gray-200" >Users List</a></Link></li>
             </ul>
             </div>
             <div className="w-1/4 space-x-5 flex flex-row justify-end">
