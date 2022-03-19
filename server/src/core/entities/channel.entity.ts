@@ -19,6 +19,9 @@ export class Channel {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ unique: true })
+  name: string;
+
   @OneToMany((type) => User, (user) => user.channel)
   user: User[];
 

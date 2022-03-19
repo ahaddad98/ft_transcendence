@@ -10,8 +10,8 @@ export class ConversationService {
     private conversationRepository: Repository<Conversation>,
   ) {}
 
-  findAll(): Promise<Conversation[]> {
-    return this.conversationRepository.find();
+  async findAll(): Promise<Conversation[]> {
+    return await this.conversationRepository.find({relations: ['user']});
   }
 
   async findConversationById(id: number): Promise<Conversation> {

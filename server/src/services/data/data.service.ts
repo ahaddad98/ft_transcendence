@@ -5,6 +5,8 @@ import { User } from 'src/core/entities/user.entity';
 import { FriendService } from '../use-cases/friend/friend.service';
 import { StatsService } from '../use-cases/stats/stats.service';
 import { Stats } from 'src/core/entities/stats.entity';
+import { HistoryService } from '../use-cases/history/history.service';
+import { MessageService } from '../use-cases/message/message.service';
 
 @Injectable()
 export class DataService {
@@ -12,6 +14,8 @@ export class DataService {
     private usersService: UserService,
     private statsService: StatsService,
     private friendsService: FriendService,
+    private historyService: HistoryService,
+    private mesagesSercvice: MessageService,
     private jwtService: JwtService,
   ) {}
 
@@ -43,20 +47,46 @@ export class DataService {
   async addFriend(userId: number, friendId: number) {
     // let newUser: User;
     // try {
-      await this.usersService.findOneById(friendId).then((element) => {
-        if (element === undefined) return  { error: 'error' };
-        this.usersService
+    return await this.usersService
+      .findOneById(friendId)
+      .then(async (element) => {
+        if (element === undefined) return { error: 'error' };
+        return await this.usersService
           .findOneByIdWithRelation(userId, { relations: ['friend'] })
-          .then((newUser) => {
+          .then(async (newUser) => {
             if (newUser.friend.find((element) => element.friend == friendId)) {
               console.log('friend is already in the list');
               return { error: 'friend is already in the list' };
-              // newUser = data;
             }
-            this.friendsService.save(friendId, newUser).then((data) => {
-              newUser.friend.push(data);
-              this.usersService.save(newUser).then((element) => element);
-            }); // hna jabt data dyal user bal friends dyalo
+            console.log('first');
+            await this.friendsService.save(friendId, newUser); // hna jabt data dyal user bal friends dyalo
+          });
+      });
+  }
+
+  async addNewStat(me: number, win: boolean, playerTwo: number) {
+    return await this.usersService
+      .findOneById(playerTwo)
+      .then(async (player) => {
+        if (player === undefined)
+          return { status: 500, error: 'Player enemi not found' };
+        return await this.usersService
+          .findOneByIdWithRelation(me, { relations: ['history'] })
+          .then(async (user) => {
+            return await this.historyService
+              .addNewStat(user, win, playerTwo)
+              .then(async (history) => {
+                // user.history.push(history);
+                if (win === true) console.log('win');
+                else console.log('lose');
+                // const ss = (win === 'true') ? 'win' : 'lose';
+                // console.log(ss);
+                await this.updateStats(me, win === true ? 'win' : 'lose');
+                return await this.usersService.findOneByIdWithRelation(me, {
+                  relations: ['history'],
+                });
+                // await this.usersService.updateHistory(me, user.history);
+              });
           });
       });
   }
@@ -98,13 +128,18 @@ export class DataService {
     } else console.log('wala a sahbi ma blansh');
   }
 
-  updateStats(id: number, type: string) {
+  async updateStats(id: number, type: string) {
+    console.log(type);
     switch (type) {
       case 'win':
-        return this.statsService.updateWins(id);
+        return await this.statsService.updateWins(id);
       case 'lose':
-        return this.statsService.updateLoses(id);
+        return await this.statsService.updateLoses(id);
     }
+  }
+
+  async newMessage(sender: number, receiver: number) {
+    // const conversation: await 
   }
 
   login(user: any) {

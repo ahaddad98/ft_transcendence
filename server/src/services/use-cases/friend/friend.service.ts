@@ -34,7 +34,7 @@ export class FriendService {
     await this.friendRepository.delete(conditions);
   }
 
-  async save(friendId: number, newUser: User): Promise<Friend> {
+  async save(friendId: number, newUser: User){
     const friend: Friend = new Friend();
     friend.friend = friendId;
     friend.user = newUser;

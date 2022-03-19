@@ -16,14 +16,14 @@ import { User } from 'src/core/entities/user.entity';
 import { DataService } from 'src/services/data/data.service';
 import { FriendService } from 'src/services/use-cases/friend/friend.service';
 import { UserService } from 'src/services/use-cases/user/user.service';
-import { v4 as uuidv4 } from 'uuid';
 import path = require('path');
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import {
   saveImageToStorage,
   fullImagePath,
 } from 'src/services/helpers/image-storage';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
+import { HistoryService } from 'src/services/use-cases/history/history.service';
 
 @Controller('users')
 export class UsersController {
@@ -60,6 +60,13 @@ export class UsersController {
     });
   }
 
+  @Post('me/messages/:id')
+  @UseGuards(JwtAuthGuard)
+  async newMessage(@Req() req, @Param('id') id: number) {
+    
+  }
+
+
   @Post('me/updateProfile')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file', saveImageToStorage))
@@ -77,6 +84,19 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   async addNewFriend(@Req() req, @Param('friendId') friend: number) {
     return await this.dataService.addFriend(req.user.id, friend);
+  }
+
+  @Post('me/history/:bool/:id')
+  @UseGuards(JwtAuthGuard)
+  async addNewStat(
+    @Req() req,
+    @Param('bool') win: string,
+    @Param('id') userId: number,
+  ) {
+    // console.log(typeof win);
+    const check: boolean = win === 'true';
+    return await this.dataService.addNewStat(req.user.id, check, userId);
+    // return await this.historyService.addNewStat(req.user.id, win, userId);
   }
 
   @Delete('me/friends/:friendId')

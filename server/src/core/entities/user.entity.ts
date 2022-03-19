@@ -13,6 +13,7 @@ import {
 import { Friend } from '../../core/entities/friend.entity';
 import { Channel } from './channel.entity';
 import { Conversation } from './conversation.entity';
+import { History } from './history.entity';
 import { Stats } from './stats.entity';
 
 @Entity()
@@ -29,8 +30,14 @@ export class User {
   @Column({ nullable: true })
   avatar?: string;
 
+  @Column()
+  email: string;
+
   @OneToMany((type) => Friend, (friend) => friend.user)
   friend: Friend[];
+
+  @OneToMany((type) => History, (history) => history.user)
+  history?: History[];
 
   @OneToOne((type) => Stats, (stats) => stats.user)
   stats?: Stats;

@@ -30,6 +30,16 @@ import { ChannelModule } from './services/use-cases/channel/channel.module';
     MessageModule,
     ChannelModule,
   ],
-  controllers: [AppController, LoginController, ProfileController, RegisterController, UsersController, StatsController, ConversationsController, MessagesController, ChannelsController],
+  controllers: [
+    AppController,
+    LoginController,
+    ProfileController,
+    RegisterController,
+    UsersController,
+    StatsController,
+    ConversationsController,
+    MessagesController,
+    ChannelsController,
+  ],
 })
 export class AppModule {}
