@@ -10,21 +10,19 @@ import { Avatar, CssBaseline } from '@mui/material';
 import MediaQuery from "react-responsive";
 import avat from "../public/avatar.svg"
 const HomeNavbar = (props) => {
-  const [isopen, setIsopen] = React.useState(false);   
-  console.log(props);
-  
-  // React.useEffect (() =>{
-  //     console.log(props.data.avatar);
-  //     } ,[props.data.avatar])
+
+  const [isopen, setIsopen] = React.useState(false);
         return (
     <div className="flex flex-wrap bg-orange-400">
       <section className=" relative mx-auto">
         <nav className="flex justify-between bg-orange-400 text-white w-screen">
           <div className="px-20  py-2 flex w-full items-center">
             <div className="w-1/4">
-            <a className="text-3xl font-bold font-heading" href="#">
-              HOME
-            </a>
+              <Link href="/home">
+                <a className="text-3xl font-bold font-heading">
+                  HOME
+                </a>
+              </Link>
             </div>
             <div className="w-1/2 flex flex-row justify-arround">
             <ul className="hidden md:flex px-2 mx-auto font-semibold font-heading space-x-12">

@@ -11,7 +11,7 @@ export class StatsService {
   ) {}
 
   findAll(): Promise<Stats[]> {
-    return this.statsRepository.find();
+    return this.statsRepository.find({relations:['user']});
   }
 
   findTop(details: Object): Promise<Stats[]> {

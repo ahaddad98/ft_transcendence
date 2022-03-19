@@ -2,10 +2,10 @@ import React from "react";
 
 import HomeNavbar from "../components/HomeNavbar";
 
-const UsersList = () => {
+const UsersList = (props) => {
     return (
         <div>
-            <HomeNavbar />
+            <HomeNavbar data={props}/>
             <div className="mb-16">
                 <div className="container flex justify-center mx-auto pt-16">
                     <div>

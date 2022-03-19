@@ -1,6 +1,6 @@
 import React from "react";
 
-const HistoryGame = () => {
+const HistoryGame = (props) => {
     return (
         <div className="mt-20 w-1/2">
         <div className=" w-10/12 mx-auto">
