@@ -7,10 +7,17 @@ import { Repository } from 'typeorm';
 export class MessageService {
   constructor(
     @InjectRepository(Message)
-    private messagesRepository: Repository<Message>,
+    private messageRepository: Repository<Message>,
   ) {}
 
   async findAll(): Promise<Message[]> {
-    return this.messagesRepository.find();
+    return await this.messageRepository.find();
+  }
+
+  async addNewMessage(message: Message): Promise<Message>{
+      return await this.messageRepository.save(message)
+  }
+  async removeMessage(id: number) {
+    await this.messageRepository.delete(id);
   }
 }

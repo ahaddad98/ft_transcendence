@@ -29,22 +29,21 @@ import { HistoryService } from 'src/services/use-cases/history/history.service';
 export class UsersController {
   constructor(
     private dataService: DataService,
-    private usersService: UserService,
-    private friendsService: FriendService,
-    private historyService: HistoryService,
+    private userService: UserService,
+    private friendService: FriendService,
   ) {}
 
   @Get()
   @UseGuards(JwtAuthGuard)
   findAllUsers() {
-    return this.usersService.findAll();
+    return this.userService.findAll();
   }
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
   async findMyData(@Req() req) {
     console.log('samir');
-    return this.usersService.findOneById(req.user.id);
+    return this.userService.findOneById(req.user.id);
   }
 
   @Get('me/stats')
@@ -56,32 +55,9 @@ export class UsersController {
   @Get('me/friends')
   @UseGuards(JwtAuthGuard)
   async findMyFriends(@Req() req) {
-    const user = await this.usersService.findOneById(req.user.id);
-    return this.dataService.findAllFriendOfUser(user);
-  }
-
-  @Get('me/history')
-  @UseGuards(JwtAuthGuard)
-  async findMyHistory(@Req() req) {
-    let profile: Object;
-    let histories: Object[] = [];
-    const newUser = await this.usersService.findOneById(req.user.id);
-    profile = { username: newUser.username, avatar: newUser.avatar };
-    const history = await this.historyService.findByUser(newUser);
-    await Promise.all(
-      history.map(async (element) => {
-        const info: User = await this.usersService.findOneById(element.enemyId);
-        histories.push({
-          id: element.id,
-          win: element.win,
-          createdAt: element.createdAt,
-          username: info.username,
-          avatar: info.avatar,
-        });
-      }),
-    );
-    profile = { ...profile, histories };
-    return profile;
+    return await this.userService.findOneById(req.user.id).then((user) => {
+      return this.dataService.findAllFriendOfUser(user);
+    });
   }
 
   @Post('me/messages/:id')
@@ -98,9 +74,9 @@ export class UsersController {
     console.log(file);
     console.log(req.body);
     if (file)
-      this.usersService.updateAvatar(req.user.id, fullImagePath(file.filename));
+      this.userService.updateAvatar(req.user.id, fullImagePath(file.filename));
     if (req.body.username)
-      this.usersService.updateUsername(req.user.id, req.body.username);
+      this.userService.updateUsername(req.user.id, req.body.username);
     return { succes: 'Profile is updated' };
   }
 
@@ -134,24 +110,18 @@ export class UsersController {
   @UseInterceptors(FileInterceptor('file', saveImageToStorage))
   uploadAvatar(@UploadedFile() file: Express.Multer.File, @Req() req): Object {
     if (!file) return of({ error: 'haram walah haram' });
-    this.usersService.updateAvatar(req.user.id, fullImagePath(file.filename));
+    this.userService.updateAvatar(req.user.id, fullImagePath(file.filename));
     return { succes: 'avatar is updated' };
-  }
-
-  @Delete('me')
-  @UseGuards(JwtAuthGuard)
-  removeMyAccount(@Req() req) {
-    this.usersService.remove(req.user.id);
   }
 
   @Get(':id')
   findOneUser(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+    return this.userService.findOne(id);
   }
 
   @Get(':id/friends')
   async findAllFriends(@Param('id') id: number) {
-    return await this.usersService.findOneById(id).then((user) => {
+    return await this.userService.findOneById(id).then((user) => {
       return this.dataService.findAllFriendOfUser(user);
     });
   }
@@ -171,8 +141,9 @@ export class UsersController {
   }
 
   @Delete(':id')
-  removeUser(@Param('id') id: number) {
-    return this.usersService.remove(id);
+  async removeUser(@Param('id') id: number) {
+    await this.userService.remove(id);
+    return { status: 201, message: 'User deleted' };
   }
 
   // @Post(':id/friends/:friendId')
@@ -190,7 +161,7 @@ export class UsersController {
   //   @Param('id') id: number,
   // ): Object {
   //   if (!file) return of({ error: 'haram walah haram' });
-  //   this.usersService.updateAvatar(id, fullImagePath(file.filename));
+  //   this.userService.updateAvatar(id, fullImagePath(file.filename));
   //   return { succes: 'avatar is updated' };
   // }
 }

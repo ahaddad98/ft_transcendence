@@ -13,9 +13,10 @@ import { StatsModule } from './services/use-cases/stats/stats.module';
 import { StatsController } from './controllers/stats.controller';
 import { ConversationsController } from './controllers/conversations.controller';
 import { ConversationModule } from './services/use-cases/conversation/conversation.module';
-import { HistoryModule } from './services/use-cases/history/history.module';
 import { MessagesController } from './controllers/messages.controller';
 import { MessageModule } from './services/use-cases/message/message.module';
+import { ChannelsController } from './controllers/channels.controller';
+import { ChannelModule } from './services/use-cases/channel/channel.module';
 
 @Module({
   imports: [
@@ -26,9 +27,19 @@ import { MessageModule } from './services/use-cases/message/message.module';
     AuthModule,
     StatsModule,
     ConversationModule,
-    HistoryModule,
     MessageModule,
+    ChannelModule,
   ],
-  controllers: [AppController, LoginController, ProfileController, RegisterController, UsersController, StatsController, ConversationsController, MessagesController],
+  controllers: [
+    AppController,
+    LoginController,
+    ProfileController,
+    RegisterController,
+    UsersController,
+    StatsController,
+    ConversationsController,
+    MessagesController,
+    ChannelsController,
+  ],
 })
 export class AppModule {}

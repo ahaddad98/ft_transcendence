@@ -8,36 +8,36 @@ import { Friend } from '../../../core/entities/friend.entity';
 export class FriendService {
   constructor(
     @InjectRepository(Friend)
-    private friendsRepository: Repository<Friend>,
+    private friendRepository: Repository<Friend>,
   ) {}
 
   findAll(): Promise<Friend[]> {
-    return this.friendsRepository.find();
+    return this.friendRepository.find();
   }
 
   findAllByUser(userSearch: User) {
-    return this.friendsRepository.find({ user: userSearch });
+    return this.friendRepository.find({ user: userSearch });
   }
 
   // findAllOfUser():  Promise<Friend[]> {
-  //     // return this.friendsRepository.find({userId :});
+  //     // return this.friendRepository.find({userId :});
   // }
   findOne(id: string): Promise<Friend> {
-    return this.friendsRepository.findOne(id);
+    return this.friendRepository.findOne(id);
   }
 
   async remove(id: string): Promise<void> {
-    await this.friendsRepository.delete(id);
+    await this.friendRepository.delete(id);
   }
 
   async deleteFriend(conditions: Object): Promise<void> {
-    await this.friendsRepository.delete(conditions);
+    await this.friendRepository.delete(conditions);
   }
 
   async save(friendId: number, newUser: User){
     const friend: Friend = new Friend();
     friend.friend = friendId;
     friend.user = newUser;
-    return await this.friendsRepository.save(friend);
+    return await this.friendRepository.save(friend);
   }
 }
