@@ -4,12 +4,14 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Friend } from '../../core/entities/friend.entity';
+import { Channel } from './channel.entity';
 import { Conversation } from './conversation.entity';
 import { Stats } from './stats.entity';
 
@@ -33,7 +35,6 @@ export class User {
   @OneToOne((type) => Stats, (stats) => stats.user)
   stats?: Stats;
 
-  // @JoinTable()
-  // @ManyToMany((type) => Conversation, (conversation) => conversation.user)
-  // conversation: Conversation[];
+  @ManyToOne((type) => Channel, (channel) => channel.user)
+  channel?: Channel;
 }
