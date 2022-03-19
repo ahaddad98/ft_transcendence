@@ -17,7 +17,7 @@ const validMimeTypes: validMimeType[] = [
 
 export const saveImageToStorage = {
   storage: diskStorage({
-    destination: './src/avatar',
+    destination: '../front-end/public/',
     filename: (req, file, cb) => {
       // console.log(file);
       const filename: string =
@@ -35,6 +35,6 @@ export const saveImageToStorage = {
 
 export const fullImagePath = (filename: string): string => {
   const imagesFolderPath = process.cwd() + '/src/avatar';
-  const fullPath = imagesFolderPath + '/' + filename;
+  const fullPath = '/' + filename;
   return fullPath;
 };

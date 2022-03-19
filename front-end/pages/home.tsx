@@ -28,11 +28,11 @@ const Home = () => {
             <div >
                 <HomeNavbar data={data}>
                 </HomeNavbar>
-                <div className="flex flex-row">
+                {/* <div className="flex flex-row">
                     <LeaderBoard />
                     <HistoryGame />
                 </div>
-                <ChannlesList />
+                <ChannlesList /> */}
         </div>
     )
 }
