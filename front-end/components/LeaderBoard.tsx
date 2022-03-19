@@ -3,13 +3,10 @@ import React from "react";
 const LeaderBoard = () => {
     return (
       <div className="mt-20 w-1/2">
-      <div className=" max-w-2xl mx-auto">
-        <div className="p-4 max-w-md bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+      <div className="  w-10/12 mx-auto">
+        <div className="p-4 max-w-md-83 bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
           <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-white">LEADER BOARD</h3>
-              <a href="#" className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">
-                  View all
-              </a>
          </div>
          <div className="flow-root">
               <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -27,6 +24,9 @@ const LeaderBoard = () => {
                               </p>
                           </div>
                           <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                              Status
+                          </div>
+                          <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                               Score
                           </div>
                       </div>
@@ -34,7 +34,7 @@ const LeaderBoard = () => {
                   <li className=" y-3 sm:py-4">
                       <div className="flex items-center space-x-4">
                     <div>
-                      1ST
+                      1st
                       </div>
                           <div className="flex-shrink-0">
                               <img className="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-1.jpg" alt="Neil image" />
@@ -46,6 +46,9 @@ const LeaderBoard = () => {
                               <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                                   BADBOY@gmail.com
                               </p>
+                          </div>
+                          <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                              ONLINE
                           </div>
                           <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                               Level 1
@@ -54,6 +57,9 @@ const LeaderBoard = () => {
                   </li>
                   <li className="py-3 sm:py-4">
                       <div className="flex items-center space-x-4">
+                      <div>
+                      2nd
+                      </div>
                           <div className="flex-shrink-0">
                               <img className="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-1.jpg" alt="Neil image" />
                           </div>
@@ -66,11 +72,46 @@ const LeaderBoard = () => {
                               </p>
                           </div>
                           <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                              320xp
+                              ONLINE
+                          </div>
+                          <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                              level 2
+                          </div>
+                      </div>
+                  </li>
+                  <li className="py-3 sm:py-4">
+                      <div className="flex items-center space-x-4">
+                      <div>
+                          3rd
+                      </div>
+                          <div className="flex-shrink-0">
+                              <img className="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-1.jpg" alt="Neil image" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                  BADBOY
+                              </p>
+                              <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+                                  BADBOY@gmail.com
+                              </p>
+                          </div>
+                          <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                              Offline
+                          </div>
+                          <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                              level 3
                           </div>
                       </div>
                   </li>
               </ul>
+              <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
+				    <div role="button" aria-label="MAIN BUTTON"  className="inline-flex mt-2 xs:mt-0 bg-orange-500	">
+				    	<button
+                            className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                            View all
+                        </button>
+				    </div>
+			    </div>
          </div>
         </div>
       </div>
