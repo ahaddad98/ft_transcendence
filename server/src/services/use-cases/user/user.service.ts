@@ -8,50 +8,50 @@ import { User } from '../../../core/entities/user.entity';
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private userRepository: Repository<User>,
   ) {}
 
   findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+    return this.userRepository.find();
   }
 
   findSpecificUsers(details: Object): Promise<User[]> {
-    return this.usersRepository.find(details);
+    return this.userRepository.find(details);
   }
 
   findOne(id: string): Promise<User> {
-    return this.usersRepository.findOne(
+    return this.userRepository.findOne(
       { username: id },
       { relations: ['friend'] },
     );
-    // return this.usersRepository.findOne({ username: id });
+    // return this.userRepository.findOne({ username: id });
   }
 
   async findOneById(id: number): Promise<User> {
-    return await this.usersRepository.findOne(id, { relations: ['friend'] });
+    return await this.userRepository.findOne(id, { relations: ['friend'] });
   }
 
   findOneByIdWithRelation(id: number, relation: Object): Promise<User> {
-    return this.usersRepository.findOne(id, relation);
+    return this.userRepository.findOne(id, relation);
   }
 
   async remove(id: number): Promise<void> {
-    await this.usersRepository.delete(id);
+    await this.userRepository.delete(id);
   }
 
   async updateAvatar(id: number, path: string) {
-    await this.usersRepository.update(id, { avatar: path });
+    await this.userRepository.update(id, { avatar: path });
   }
 
   async updateUsername(id: number, newUsername: string) {
-    await this.usersRepository.update(id, { username: newUsername });
+    await this.userRepository.update(id, { username: newUsername });
   }
 
-  async updateConversation(id: number, newConversation: Conversation[]) {
-    await this.usersRepository.update(id, { conversation: newConversation });
-  }
+  // async updateConversation(id: number, newConversation: Conversation[]) {
+  //   await this.userRepository.update(id, { conversation: newConversation });
+  // }
   save(user: User): Promise<any> {
     // console.log(user);
-    return this.usersRepository.save(user);
+    return this.userRepository.save(user);
   }
 }
