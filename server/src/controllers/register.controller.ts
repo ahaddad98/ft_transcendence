@@ -8,12 +8,12 @@ import { DataService } from 'src/services/data/data.service';
 export class RegisterController {
   constructor(private readonly dataService: DataService) {}
 
-  @Post()
-  async register(@Req() req, @Body() createCatDto: CreateUserDto) {
-    const user: User = { ...createCatDto, friend: [] };
-    console.log(user);
-    this.dataService.save(user);
-    console.log('wa sat');
-    return createCatDto;
-  }
+  // @Post()
+  // async register(@Req() req, @Body() createCatDto: CreateUserDto) {
+  //   const user: User = { ...createCatDto, friend: [] };
+  //   console.log(user);
+  //   this.dataService.save(user);
+  //   console.log('wa sat');
+  //   return createCatDto;
+  // }
 }

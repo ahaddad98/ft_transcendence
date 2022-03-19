@@ -15,11 +15,15 @@ export class HistoryService {
     return this.historyRepository.find();
   }
 
+  async findByUserId(id: number) {
+    return this.historyRepository.findOne(id);
+  }
   findByUser(newUser: User): Promise<History[]> {
     return this.historyRepository.find({ user: newUser });
   }
 
   async addNewStat(user: User, win: boolean, PlayerTwo: number) {
+    // const salt
     const history: History = new History();
     history.enemyId = PlayerTwo;
     history.user = user;

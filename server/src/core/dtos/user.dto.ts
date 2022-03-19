@@ -1,3 +1,4 @@
+import { isInt } from 'class-validator';
 export class CreateUserDto {
   id: number;
 

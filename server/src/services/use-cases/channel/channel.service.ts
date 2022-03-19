@@ -13,4 +13,8 @@ export class ChannelService {
   async findAll() {
     return await this.channelRepository.find();
   }
+
+  async save(channel: Channel) {
+    return await this.channelRepository.save(channel);
+  }
 }
