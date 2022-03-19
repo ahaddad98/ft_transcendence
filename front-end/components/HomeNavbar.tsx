@@ -26,6 +26,7 @@ const HomeNavbar = (props) => {
               <li><a className="hover:text-gray-200" href="#">Watch Now</a></li>
               <li><a className="hover:text-gray-200" href="#">PlayGame</a></li>
               <li><a className="hover:text-gray-200" href="/friend">Friends</a></li>
+              <li><a className="hover:text-gray-200" href="/userslist">Users List</a></li>
             </ul>
             </div>
             <div className="w-1/4 space-x-5 flex flex-row justify-end">

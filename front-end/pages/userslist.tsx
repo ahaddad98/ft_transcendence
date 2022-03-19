@@ -1,14 +1,15 @@
 import React from "react";
+
 import HomeNavbar from "../components/HomeNavbar";
 
-const Friend = () => {
+const UsersList = () => {
     return (
         <div>
             <HomeNavbar />
             <div className="mb-16">
                 <div className="container flex justify-center mx-auto pt-16">
                     <div>
-                        <h1 className="xl:text-4xl text-3xl text-center text-gray-800 font-extrabold pb-6 sm:w-4/6 w-5/6 mx-auto">FRIENDS LIST</h1>
+                        <h1 className="xl:text-4xl text-3xl text-center text-gray-800 font-extrabold pb-6 sm:w-4/6 w-5/6 mx-auto">USERS LIST</h1>
                     </div>
                 </div>
                 <div className="w-full bg-gray-100 px-10 pt-10">
@@ -30,7 +31,7 @@ const Friend = () => {
 				                            <div role="button" aria-label="MAIN BUTTON"  className="inline-flex mt-2 xs:mt-0 bg-orange-500	">
 				                            	<button
                                                     className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                                                    Unfriend
+                                                    ADD
                                                 </button>
 				                            </div>
 			                            </div>
@@ -53,7 +54,7 @@ const Friend = () => {
 				                            <div role="button" aria-label="MAIN BUTTON"  className="inline-flex mt-2 xs:mt-0 bg-orange-500	">
 				                            	<button
                                                     className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                                                    Unfriend
+                                                    ADD
                                                 </button>
 				                            </div>
 			                            </div>
@@ -76,7 +77,7 @@ const Friend = () => {
 				                            <div role="button" aria-label="MAIN BUTTON"  className="inline-flex mt-2 xs:mt-0 bg-orange-500	">
 				                            	<button
                                                     className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                                                    Unfriend
+                                                    ADD
                                                 </button>
 				                            </div>
 			                            </div>
@@ -99,7 +100,7 @@ const Friend = () => {
 				                            <div role="button" aria-label="MAIN BUTTON"  className="inline-flex mt-2 xs:mt-0 bg-orange-500	">
 				                            	<button
                                                     className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                                                    Unfriend
+                                                    ADD
                                                 </button>
 				                            </div>
 			                            </div>
@@ -113,4 +114,4 @@ const Friend = () => {
         </div>
     )
 }
-export default Friend;
+export default UsersList;
