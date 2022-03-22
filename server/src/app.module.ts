@@ -17,6 +17,9 @@ import { MessagesController } from './controllers/messages.controller';
 import { MessageModule } from './services/use-cases/message/message.module';
 import { ChannelsController } from './controllers/channels.controller';
 import { ChannelModule } from './services/use-cases/channel/channel.module';
+import { HistoryController } from './controllers/history.controller';
+import { HistoryModule } from './services/use-cases/history/history.module';
+import { FriendsController } from './controllers/friends.controller';
 
 @Module({
   imports: [
@@ -26,6 +29,7 @@ import { ChannelModule } from './services/use-cases/channel/channel.module';
     PostgresModule,
     AuthModule,
     StatsModule,
+    HistoryModule,
     ConversationModule,
     MessageModule,
     ChannelModule,
@@ -34,12 +38,13 @@ import { ChannelModule } from './services/use-cases/channel/channel.module';
     AppController,
     LoginController,
     ProfileController,
-    RegisterController,
     UsersController,
     StatsController,
     ConversationsController,
     MessagesController,
     ChannelsController,
+    FriendsController,
+    HistoryController,
   ],
 })
 export class AppModule {}

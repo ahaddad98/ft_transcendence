@@ -28,6 +28,31 @@ export class DataService {
     return null;
   }
 
+  async getProfileOfUser(id: number) {
+    let user: User = await this.usersService.findOneById(id);
+    let numberFriends = await this.friendsService.findAllByUser(user);
+    console.log(numberFriends.length);
+    const statsUser: Object = user.stats;
+    const userInfo: Object = {
+      id: user.id,
+      username: user.username,
+      avatar: user.avatar,
+      email: user.email,
+      stats: statsUser,
+      numberOfFriends: numberFriends.length
+    }
+    return userInfo;
+  }
+
+  async validateUserChannel(username: string, pass: string): Promise<any> {
+    const user = await this.usersService.findOne(username);
+    // if (user && user.password === pass) {
+    const { password, ...result } = user;
+    return result;
+    // }
+    // return null;
+  }
+
   async findAllFriendOfUser(user: User) {
     let id: number[];
     let friends: User[] = [];
@@ -139,7 +164,7 @@ export class DataService {
   }
 
   async newMessage(sender: number, receiver: number) {
-    // const conversation: await 
+    // const conversation: await
   }
 
   login(user: any) {

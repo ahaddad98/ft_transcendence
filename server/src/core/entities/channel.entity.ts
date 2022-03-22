@@ -22,6 +22,9 @@ export class Channel {
   @Column({ unique: true })
   name: string;
 
+  @Column({ nullable: true })
+  avatar: string;
+
   @OneToMany((type) => User, (user) => user.channel)
   user: User[];
 
@@ -34,4 +37,7 @@ export class Channel {
   @OneToOne((type) => Conversation, (conversation) => conversation.channel)
   @JoinColumn()
   conversation: Conversation;
+
+  @Column({ type: 'timestamptz' })
+  createdAt: Date;
 }

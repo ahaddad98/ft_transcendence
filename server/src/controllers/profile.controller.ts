@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { DataService } from 'src/services/data/data.service';
 import { JwtAuthGuard } from '../frameworks/auth/jwt/jwt-auth.guard';
 
@@ -10,5 +10,11 @@ export class ProfileController {
   @Get('')
   getProfile(@Req() req) {
     return req.user;
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  async getMyProfile(@Req() req) {
+    return await this.dataService.getProfileOfUser(req.user.id);
   }
 }

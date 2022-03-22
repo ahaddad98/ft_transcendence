@@ -20,11 +20,4 @@ export class LoginController {
     const token = this.dataService.login(req.user);
     return res.redirect(`http://localhost:3000/loginSuccess?token=${token}`);
   }
-
-  @Post('local')
-  @UseGuards(LocalAuthGuard)
-  async login(@Req() req) {
-    console.log('w');
-    return req.user;
-  }
 }

@@ -13,4 +13,17 @@ export class ChannelService {
   async findAll() {
     return await this.channelRepository.find();
   }
+
+  async findChannelById(id: number)
+  {
+    return await this.channelRepository.findOne(id, {relations: ['user']});
+  }
+  async save(channel: Channel) {
+    return await this.channelRepository.save(channel);
+  }
+
+  async remove(id: number){
+    console.log('siri')
+    return await this.channelRepository.delete(id);
+  }
 }

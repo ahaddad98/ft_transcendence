@@ -42,6 +42,6 @@ export class User {
   @OneToOne((type) => Stats, (stats) => stats.user)
   stats?: Stats;
 
-  @ManyToOne((type) => Channel, (channel) => channel.user)
+  @ManyToOne((type) => Channel, (channel) => channel.user, { onDelete: 'SET NULL' })
   channel?: Channel;
 }

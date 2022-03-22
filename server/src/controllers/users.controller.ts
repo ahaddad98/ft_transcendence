@@ -46,6 +46,12 @@ export class UsersController {
     return this.userService.findOneById(req.user.id);
   }
 
+  @Get('me/all')
+  @UseGuards(JwtAuthGuard)
+  async findMyAllUsers(@Req() req) {
+    return this.userService.findAllExceptMyProfile(req.user.id);
+  }
+
   @Get('me/stats')
   @UseGuards(JwtAuthGuard)
   async findMyStats(@Req() req) {
