@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 
 const HistoryGame = (props) => {
+    const [viewclick, setViewclick] = useState(false);
     return (
         <div className="mt-20 w-1/2">
         <div className=" w-10/12 mx-auto">

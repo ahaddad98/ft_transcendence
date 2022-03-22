@@ -89,10 +89,13 @@ const LeaderBoard = (props) => {
                 <path d="M6 6L18 18" stroke="currentColor" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </button>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-white">LEADER BOARD</h3>
+         </div>
             <div className="flow-root">
               <ul role="list" className="w-full divide-y divide-gray-200 dark:divide-gray-700">
                   <li className=" y-3 sm:py-4">
-                      <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-12">
                     <div>
                       Rank
                       </div>
@@ -115,7 +118,7 @@ const LeaderBoard = (props) => {
                     {props.data.map((stat, key) =>{
                         return (
                            <li className=" y-3 sm:py-4" key={key}>
-                                <div className="flex items-center space-x-4">
+                                <div className="flex items-center space-x-16">
                                     <div>
                                         {key+1}
                                       </div>

@@ -66,18 +66,22 @@ const HomeNavbar = (props) => {
                             <div className="absolute mb-10 w-32  z-10 bg-grey-200 group-hover:block bg-white">
                             <ul className=" py-1 w-22" aria-labelledby="dropdownBottomButton">
                                 <li>
-                                    <a href="#" className="w-22 block py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">View Profile</a>
+                                    <Link href="/myprofile"><a className="w-22 block py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">View Profile</a>
+                                    </Link>
                                   </li>
                                   <li>
-                                    <a href="#" className="w-22 block py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Edit Profile</a>
+                                    <Link href="/editprofile">
+                                    <a  className="w-22 block py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Edit Profile</a>
+                                    </Link>
                                   </li>
                                   <li>
-                                    <a href="#" className="w-22 block py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+                                    <Link href="/">
+                                    <a className="w-22 block py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+                                    </Link>
                                   </li>
                                 </ul>
                             </div>
                               )}
-                            {/* </div> */}
                     </div>  
 
               </a>
