@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -31,18 +32,24 @@ export class ChannelsController {
   async findAllChannels() {
     return await this.channelService.findAll();
   }
+  
   @Get(':id')
-  justTroling(@Param('id') id: number) {
-    console.log(typeof id);
-    return 'sahbi samir';
+  async findChannelById(@Param('id') id: number) {
+    return await this.channelService.findChannelById(id);
   }
 
-  @Post('me/login')
+  @Post(':id/login')
   @UseGuards(LocalAuthGuard)
   @UseGuards(JwtAuthGuard)
   async login(@Req() req) {
     console.log('w');
     return req.user;
+  }
+
+  @Delete(':id')
+  async deleteChannel(@Param('id') id: number) {
+    await this.channelService.remove(id);
+    return { status: 200, message: 'channel is removed' };
   }
 
   @Post('me')
@@ -60,7 +67,7 @@ export class ChannelsController {
     const hash = await bcrypt.hash(body.password, 10);
     console.log(hash);
     channel.password = hash;
-    channel.avatar = file.filename;
+    channel.avatar = '';
     channel.type = UserType.ADMIN;
     channel.user = [];
     channel.user.push(user);

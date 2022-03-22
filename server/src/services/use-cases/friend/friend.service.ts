@@ -15,8 +15,11 @@ export class FriendService {
     return this.friendRepository.find();
   }
 
-  findAllByUser(userSearch: User) {
-    return this.friendRepository.find({ user: userSearch });
+  async findAllByUser(userSearch: User) {
+    return await this.friendRepository.find({
+      where: { user: userSearch },
+      relations: ['user'],
+    });
   }
 
   // findAllOfUser():  Promise<Friend[]> {
@@ -34,7 +37,7 @@ export class FriendService {
     await this.friendRepository.delete(conditions);
   }
 
-  async save(friendId: number, newUser: User){
+  async save(friendId: number, newUser: User) {
     const friend: Friend = new Friend();
     friend.friend = friendId;
     friend.user = newUser;

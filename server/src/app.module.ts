@@ -19,6 +19,7 @@ import { ChannelsController } from './controllers/channels.controller';
 import { ChannelModule } from './services/use-cases/channel/channel.module';
 import { HistoryController } from './controllers/history.controller';
 import { HistoryModule } from './services/use-cases/history/history.module';
+import { FriendsController } from './controllers/friends.controller';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { HistoryModule } from './services/use-cases/history/history.module';
     ConversationsController,
     MessagesController,
     ChannelsController,
+    FriendsController,
     HistoryController,
   ],
 })
