@@ -26,6 +26,7 @@ export class UserService {
     });
     return allUsers;
   }
+  
   findSpecificUsers(details: Object): Promise<User[]> {
     return this.userRepository.find(details);
   }
