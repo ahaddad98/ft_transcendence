@@ -14,6 +14,7 @@ import { Friend } from '../../core/entities/friend.entity';
 import { Channel } from './channel.entity';
 import { Conversation } from './conversation.entity';
 import { History } from './history.entity';
+import { RequestFriend } from './requestFriend.entity';
 import { Stats } from './stats.entity';
 
 @Entity()
@@ -44,4 +45,10 @@ export class User {
 
   @ManyToOne((type) => Channel, (channel) => channel.user, { onDelete: 'SET NULL' })
   channel?: Channel;
+
+  @OneToMany((type) => RequestFriend, (request) => request.requester)
+  requester?: RequestFriend[];
+
+  @OneToMany((type) => RequestFriend, (request) => request.recipient)
+  recipient?: RequestFriend[];
 }

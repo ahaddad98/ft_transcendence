@@ -49,21 +49,28 @@ export class UsersController {
   @Get('me/all')
   @UseGuards(JwtAuthGuard)
   async findMyAllUsers(@Req() req) {
-    return this.userService.findAllExceptMyProfile(req.user.id);
+    return await this.dataService.findAllExceptMyProfile(req.user.id);
   }
-
+  
   @Get('me/stats')
   @UseGuards(JwtAuthGuard)
   async findMyStats(@Req() req) {
     return this.dataService.findStatsOfUser(req.user.id);
   }
-
+  
   @Get('me/friends')
   @UseGuards(JwtAuthGuard)
   async findMyFriends(@Req() req) {
     return await this.userService.findOneById(req.user.id).then((user) => {
       return this.dataService.findAllFriendOfUser(user);
     });
+  }
+
+  @Get('me/friends/:id')
+  @UseGuards(JwtAuthGuard)
+  async findMyFriend(@Req() req, @Param('id') id: number) {
+    const user = await this.userService.findOneById(req.user.id);
+      return await this.dataService.findAllFriendOfUser(user);
   }
 
   @Post('me/messages/:id')
@@ -99,7 +106,6 @@ export class UsersController {
     @Param('bool') win: string,
     @Param('id') userId: number,
   ) {
-    // console.log(typeof win);
     const check: boolean = win === 'true';
     return await this.dataService.addNewStat(req.user.id, check, userId);
     // return await this.historyService.addNewStat(req.user.id, win, userId);

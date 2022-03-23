@@ -22,6 +22,12 @@ export class FriendService {
     });
   }
 
+  async findMyFriend(userSearch: User, id: number) {
+    return await this.friendRepository.findOne({
+      where: { user: userSearch, friend: id },
+    });
+  }
+  
   // findAllOfUser():  Promise<Friend[]> {
   //     // return this.friendRepository.find({userId :});
   // }

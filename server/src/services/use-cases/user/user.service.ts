@@ -17,16 +17,9 @@ export class UserService {
   }
 
   async findAllExceptMyProfile(id: number) {
-    const users: User[] = await this.userRepository.find({ id: Not(id) });
-    let userObject: Object;
-    let allUsers: Object[] = [];
-    users.map((user) => {
-      userObject = user;
-      return allUsers.push(userObject);
-    });
-    return allUsers;
+    return await this.userRepository.find({ id: Not(id) });
   }
-  
+
   findSpecificUsers(details: Object): Promise<User[]> {
     return this.userRepository.find(details);
   }

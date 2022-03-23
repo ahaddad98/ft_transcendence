@@ -7,6 +7,11 @@ import { StatsService } from '../use-cases/stats/stats.service';
 import { Stats } from 'src/core/entities/stats.entity';
 import { HistoryService } from '../use-cases/history/history.service';
 import { MessageService } from '../use-cases/message/message.service';
+import {
+  RequestFriend,
+  StatusRequest,
+} from 'src/core/entities/requestFriend.entity';
+import { RequestFriendService } from '../use-cases/request-friend/request-friend.service';
 
 @Injectable()
 export class DataService {
@@ -16,6 +21,7 @@ export class DataService {
     private friendsService: FriendService,
     private historyService: HistoryService,
     private mesagesSercvice: MessageService,
+    private requestService: RequestFriendService,
     private jwtService: JwtService,
   ) {}
 
@@ -26,6 +32,33 @@ export class DataService {
       return result;
     }
     return null;
+  }
+
+  async findAllExceptMyProfile(id: number) {
+    const me: User = await this.usersService.findOneById(id);
+    const users: User[] = await this.usersService.findAllExceptMyProfile(id);
+    let allUsers = [];
+    let stats: string;
+    await Promise.all(
+      users.map(async (user) => {
+        let userObject: Object = user;
+        const friend = await this.friendsService.findMyFriend(me, user.id);
+        if (friend === undefined) {
+          const request = await this.requestService.findRequestByUsers(
+            me,
+            user,
+          );
+          if (typeof request !== 'undefined') {
+            if (request.requester.id === me.id) stats = 'requester';
+            else stats = 'recipient';
+          } else stats = 'add';
+        } else stats = 'remove';
+        userObject = { ...userObject, stats };
+        allUsers = [...allUsers, userObject];
+        return allUsers;
+      }),
+    );
+    return allUsers;
   }
 
   async getProfileOfUser(id: number) {
@@ -39,8 +72,8 @@ export class DataService {
       avatar: user.avatar,
       email: user.email,
       stats: statsUser,
-      numberOfFriends: numberFriends.length
-    }
+      numberOfFriends: numberFriends.length,
+    };
     return userInfo;
   }
 
@@ -170,5 +203,12 @@ export class DataService {
   login(user: any) {
     const payload = { username: user.username, sub: user.id };
     return this.jwtService.sign(payload);
+  }
+
+  async sendRequestToNewFriend(myId: number, friendId: number) {
+    const me: User = await this.usersService.findOneById(myId);
+    const friend: User = await this.usersService.findOneById(friendId);
+
+    return await this.requestService.sendRequestToNewFriend(me, friend);
   }
 }
