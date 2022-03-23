@@ -54,7 +54,6 @@ const HomeNavbar = (props) => {
               </a>
               <a className="flex items-center hover:text-gray-200">
                     <div className="relative group bg-transparent">
-                      {/* <div className=" flex flex-row items-center"> */}
                         <button type="button" className="flex flex-row items-center w-full px-2 py-2 mt-2 text-base font-bold text-left uppercase bg-transparent rounded-lg md:w-auto md:inline md:mt-0 md:ml-4 focus:outline-none font-montserrat"
                           onClick={()=>{
                             setIsopen(!isopen)
@@ -76,14 +75,14 @@ const HomeNavbar = (props) => {
                                   </li>
                                   <li>
                                     <Link href="/">
-                                    <a className="w-22 block py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+                                    <a className="w-22 block py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out </a>
+                                      {/* {localStorage.removeItem("token")} */}
                                     </Link>
                                   </li>
                                 </ul>
                             </div>
                               )}
                     </div>  
-
               </a>
             </div>
           </div>
