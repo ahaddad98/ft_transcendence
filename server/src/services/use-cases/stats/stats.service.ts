@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Stats } from 'src/core/entities/stats.entity';
-import { Repository, SubjectWithoutIdentifierError } from 'typeorm';
+import { Repository} from 'typeorm';
 
 @Injectable()
 export class StatsService {
@@ -11,7 +11,13 @@ export class StatsService {
   ) {}
 
   findAll(): Promise<Stats[]> {
-    return this.statsRepository.find();
+    return this.statsRepository.find({
+      relations: ['user'],
+      order: {
+        level: 'DESC',
+        wins: 'DESC',
+      },
+    });
   }
 
   findTop(details: Object): Promise<Stats[]> {
@@ -26,30 +32,27 @@ export class StatsService {
   }
 
   async updateWins(id: number) {
-    return await this.findOneByIdOfUser(id).then(async (data) => {
-      if (!data) console.log('undefined');
-      ++data.xp;
-      if (data.xp === data.xpForLevel) {
-        data.xp = 0;
-        data.xpForLevel = Math.round(data.xpForLevel * 1.5);
-        data.level++;
-      }
-      await this.statsRepository.update(data.id, {
-        wins: data.wins + 1,
-        xp: data.xp,
-        xpForLevel: data.xpForLevel,
-        level: data.level,
-      });
-      // .then((element) => console.log(element));
-      return data;
+    const stat: Stats = await this.findOneByIdOfUser(id);
+    if (!stat) console.log('undefined');
+    ++stat.xp;
+    if (stat.xp === stat.xpForLevel) {
+      stat.xp = 0;
+      stat.xpForLevel = Math.round(stat.xpForLevel * 1.5);
+      stat.level++;
+    }
+    await this.statsRepository.update(stat.id, {
+      wins: stat.wins + 1,
+      xp: stat.xp,
+      xpForLevel: stat.xpForLevel,
+      level: stat.level,
     });
+    return stat;
   }
 
   async updateLoses(id: number) {
-    await this.findOneByIdOfUser(id).then(async (data) => {
-      console.log(data);
-      this.statsRepository.update(data.id, { loses: data.loses + 1 });
-    });
+    const stat = await this.findOneByIdOfUser(id);
+    console.log(stat);
+    await this.statsRepository.update(stat.id, { loses: stat.loses + 1 });
   }
 
   save(stats: Stats): Promise<any> {

@@ -11,7 +11,9 @@ export class ConversationService {
   ) {}
 
   async findAll(): Promise<Conversation[]> {
-    return await this.conversationRepository.find({relations: ['user']});
+    return await this.conversationRepository.find({
+      relations: ['userOne', 'userTwo'],
+    });
   }
 
   async findConversationById(id: number): Promise<Conversation> {
@@ -19,6 +21,25 @@ export class ConversationService {
       relations: ['message'],
     });
   }
+
+  async findConversationByIdWithQuery(id: number): Promise<Conversation> {
+    return await this.conversationRepository
+      .createQueryBuilder('conversation')
+      .leftJoinAndSelect('conversation.message', 'message')
+      .innerJoinAndSelect('message.senderId', 'senderId')
+      .where('conversation.id = :conversationId', { conversationId: id })
+      .getOne();
+  }
+
+  async findConversationWithMessages(id: number) {
+    const conversation: Conversation =
+      await this.conversationRepository.findOne(id, {
+        relations: ['message'],
+      });
+    console.log(conversation);
+    return conversation;
+  }
+
   async saveNewConversation(conversation: Conversation) {
     return await this.conversationRepository.save(conversation);
   }

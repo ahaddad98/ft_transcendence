@@ -9,7 +9,6 @@ config();
 @Injectable()
 export class FortyTwoStrategyStrategy extends PassportStrategy(Strategy) {
   constructor(private dataService: DataService) {
-    //   constructor(private authService: AuthService) {
     super({
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,

@@ -17,6 +17,9 @@ import {
 } from 'src/core/entities/notification.entity';
 import { History, ResultType } from 'src/core/entities/history.entity';
 import { fullImagePath } from '../helpers/image-storage';
+import { Conversation } from 'src/core/entities/conversation.entity';
+import { ConversationService } from '../use-cases/conversation/conversation.service';
+import { Message } from 'src/core/entities/message.entity';
 
 @Injectable()
 export class DataService {
@@ -25,9 +28,10 @@ export class DataService {
     private statsService: StatsService,
     private friendsService: FriendService,
     private historyService: HistoryService,
-    private mesagesSercvice: MessageService,
+    private messageService: MessageService,
     private notificationsService: NotificationService,
     private requestService: RequestService,
+    private conversationService: ConversationService,
     private jwtService: JwtService,
   ) {}
 
@@ -45,10 +49,11 @@ export class DataService {
     const users: User[] = await this.usersService.findAllExceptMyProfile(id);
     let allUsers = [];
     let stats: string;
-    let requestId;
+    let requestId: number;
     console.log(me);
     await Promise.all(
       users.map(async (user) => {
+        requestId = undefined;
         let userObject: Object = user;
         const friend = await this.friendsService.findMyFriend(me, user.id);
         if (friend === undefined) {
@@ -62,11 +67,8 @@ export class DataService {
             else stats = 'recipient';
           } else stats = 'add';
         } else stats = 'remove';
-        if (stats === 'requester' || stats === 'recipient')
-          userObject = { ...userObject, requestId };
-        userObject = { ...userObject, stats };
+        userObject = { ...userObject, requestId, stats };
         allUsers = [...allUsers, userObject];
-        // return allUsers;
       }),
     );
     return allUsers;
@@ -168,11 +170,9 @@ export class DataService {
       await this.usersService.findOneById(friendId).then((element) => {
         if (element === undefined) throw undefined;
       });
-      await this.usersService
-        .findOneByIdWithRelation(userId, { relations: ['friend'] })
-        .then((data) => {
-          newUser = data;
-        }); // hna jabt data dyal user bal friends dyalo
+      newUser = await this.usersService.findOneByIdWithRelation(userId, {
+        relations: ['friend'],
+      });
       await this.friendsService.deleteFriend({
         user: newUser,
         friend: friendId,
@@ -197,10 +197,6 @@ export class DataService {
       await this.statsService.save(stats);
       console.log('tsayva a sahbi');
     } else console.log('wala a sahbi ma blansh');
-  }
-
-  async newMessage(sender: number, receiver: number) {
-    // const conversation: await
   }
 
   login(user: any) {
@@ -259,5 +255,27 @@ export class DataService {
       fullImagePath(file.filename),
     );
     return { message: 'avatar is updated' };
+  }
+
+  async sendNewMessage(req, id: number) {
+    console.log(req.body);
+    const conversation: Conversation =
+      await this.conversationService.findConversationById(id);
+    const message: Message = new Message();
+    message.content = req.body.message;
+    message.senderId = req.user.id;
+    message.conversation = conversation;
+    message.createdAt = new Date();
+    this.conversationService.updateTime(conversation.id, {
+      updatedAt: new Date(),
+    });
+    return await this.messageService.addNewMessage(message);
+  }
+
+  async findConversationWithMessages(id: number) {
+    const conversation: Conversation =
+      await this.conversationService.findConversationByIdWithQuery(id);
+    console.log(conversation);
+    return conversation;
   }
 }
