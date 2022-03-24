@@ -79,36 +79,10 @@ export class UsersController {
     
   }
 
-
-  @Post('me/updateProfile')
-  @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('file', saveImageToStorage))
-  uploadProfile(@UploadedFile() file: Express.Multer.File, @Req() req): Object {
-    console.log(file);
-    console.log(req.body);
-    if (file)
-      this.userService.updateAvatar(req.user.id, fullImagePath(file.filename));
-    if (req.body.username)
-      this.userService.updateUsername(req.user.id, req.body.username);
-    return { succes: 'Profile is updated' };
-  }
-
   @Post('me/friends/:friendId')
   @UseGuards(JwtAuthGuard)
   async addNewFriend(@Req() req, @Param('friendId') friend: number) {
     return await this.dataService.addFriend(req.user.id, friend);
-  }
-
-  @Post('me/history/:bool/:id')
-  @UseGuards(JwtAuthGuard)
-  async addNewStat(
-    @Req() req,
-    @Param('bool') win: string,
-    @Param('id') userId: number,
-  ) {
-    const check: boolean = win === 'true';
-    return await this.dataService.addNewStat(req.user.id, check, userId);
-    // return await this.historyService.addNewStat(req.user.id, win, userId);
   }
 
   @Delete('me/friends/:friendId')
@@ -127,7 +101,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOneUser(@Param('id') id: string) {
+  findOneUser(@Param('id') id: number) {
     return this.userService.findOne(id);
   }
 
@@ -147,10 +121,10 @@ export class UsersController {
 
   // Post
 
-  @Put(':id/stats/:stat')
-  async updateStats(@Param('id') id: number, @Param('stat') stat: string) {
-    return this.dataService.updateStats(id, stat); // khasni n9ad hadi
-  }
+  // @Put(':id/stats/:stat')
+  // async updateStats(@Param('id') id: number, @Param('stat') stat: string) {
+  //   return this.dataService.updateStats(id, stat); // khasni n9ad hadi
+  // }
 
   @Delete(':id')
   async removeUser(@Param('id') id: number) {

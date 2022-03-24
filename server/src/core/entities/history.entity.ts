@@ -1,16 +1,28 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from './user.entity';
+
+export enum ResultType {
+  VICTORY = 'victory',
+  DEFEAT = 'defeat',
+}
 
 @Entity()
 export class History {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
-  @Column()
-  enemyId: number;
+  @ManyToOne(() => User)
+  @JoinColumn()
+  enemy: User;
 
-  @Column()
-  win: boolean;
+  @Column({ type: 'enum', enum: ResultType })
+  result: ResultType;
 
   @ManyToOne((type) => User, (user) => user.history, { onDelete: 'CASCADE' })
   user: User;

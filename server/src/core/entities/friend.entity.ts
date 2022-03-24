@@ -11,4 +11,7 @@ export class Friend {
 
   @Column()
   friend: number;
+  
+  @Column({ type: 'timestamptz', default: 'NOW()' })
+  createdAt?: Date;
 }

@@ -7,11 +7,16 @@ import { StatsService } from '../use-cases/stats/stats.service';
 import { Stats } from 'src/core/entities/stats.entity';
 import { HistoryService } from '../use-cases/history/history.service';
 import { MessageService } from '../use-cases/message/message.service';
+import { Request, RequestType } from 'src/core/entities/request.entity';
+import { RequestService } from '../use-cases/request/request.service';
+import { Friend } from 'src/core/entities/friend.entity';
+import { NotificationService } from '../use-cases/notification/notification.service';
 import {
-  RequestFriend,
-  StatusRequest,
-} from 'src/core/entities/requestFriend.entity';
-import { RequestFriendService } from '../use-cases/request-friend/request-friend.service';
+  Notification,
+  NotificationType,
+} from 'src/core/entities/notification.entity';
+import { History, ResultType } from 'src/core/entities/history.entity';
+import { fullImagePath } from '../helpers/image-storage';
 
 @Injectable()
 export class DataService {
@@ -21,16 +26,17 @@ export class DataService {
     private friendsService: FriendService,
     private historyService: HistoryService,
     private mesagesSercvice: MessageService,
-    private requestService: RequestFriendService,
+    private notificationsService: NotificationService,
+    private requestService: RequestService,
     private jwtService: JwtService,
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
-    if (user && user.password === pass) {
-      const { password, ...result } = user;
-      return result;
-    }
+    // const user = await this.usersService.findOne(username);
+    // if (user && user.password === pass) {
+    // const { password, ...result } = user;
+    // return result;
+    // }
     return null;
   }
 
@@ -39,23 +45,28 @@ export class DataService {
     const users: User[] = await this.usersService.findAllExceptMyProfile(id);
     let allUsers = [];
     let stats: string;
+    let requestId;
+    console.log(me);
     await Promise.all(
       users.map(async (user) => {
         let userObject: Object = user;
         const friend = await this.friendsService.findMyFriend(me, user.id);
         if (friend === undefined) {
-          const request = await this.requestService.findRequestByUsers(
+          const request = await this.requestService.findFriendRequestByUsers(
             me,
             user,
           );
           if (typeof request !== 'undefined') {
+            requestId = request.id;
             if (request.requester.id === me.id) stats = 'requester';
             else stats = 'recipient';
           } else stats = 'add';
         } else stats = 'remove';
+        if (stats === 'requester' || stats === 'recipient')
+          userObject = { ...userObject, requestId };
         userObject = { ...userObject, stats };
         allUsers = [...allUsers, userObject];
-        return allUsers;
+        // return allUsers;
       }),
     );
     return allUsers;
@@ -78,10 +89,10 @@ export class DataService {
   }
 
   async validateUserChannel(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
+    // const user = await this.usersService.findOne(username);
     // if (user && user.password === pass) {
-    const { password, ...result } = user;
-    return result;
+    // const { password, ...result } = user;
+    // return result;
     // }
     // return null;
   }
@@ -103,50 +114,52 @@ export class DataService {
   }
 
   async addFriend(userId: number, friendId: number) {
-    // let newUser: User;
-    // try {
-    return await this.usersService
-      .findOneById(friendId)
-      .then(async (element) => {
-        if (element === undefined) return { error: 'error' };
-        return await this.usersService
-          .findOneByIdWithRelation(userId, { relations: ['friend'] })
-          .then(async (newUser) => {
-            if (newUser.friend.find((element) => element.friend == friendId)) {
-              console.log('friend is already in the list');
-              return { error: 'friend is already in the list' };
-            }
-            console.log('first');
-            await this.friendsService.save(friendId, newUser); // hna jabt data dyal user bal friends dyalo
-          });
-      });
+    const friend = await this.usersService.findOneById(friendId);
+    if (typeof friend === undefined) return { error: 'error' };
+    const user = await this.usersService.findOneByIdWithRelation(userId, {
+      relations: ['friend'],
+    });
+    if (user.friend.find((friend) => friend.friend == friendId)) {
+      console.log('friend is already in the list');
+      return { error: 'friend is already in the list' };
+    }
+    console.log('first');
+    const newFriend: Friend = new Friend();
+    newFriend.user = user;
+    newFriend.friend = friendId;
+    await this.friendsService.save(newFriend);
+    const newFriend1: Friend = new Friend();
+    newFriend1.user = friend;
+    newFriend1.friend = userId;
+    await this.friendsService.save(newFriend1);
+    return { stats: 200, message: 'friend is add' };
   }
 
-  async addNewStat(me: number, win: boolean, playerTwo: number) {
-    return await this.usersService
-      .findOneById(playerTwo)
-      .then(async (player) => {
-        if (player === undefined)
-          return { status: 500, error: 'Player enemi not found' };
-        return await this.usersService
-          .findOneByIdWithRelation(me, { relations: ['history'] })
-          .then(async (user) => {
-            return await this.historyService
-              .addNewStat(user, win, playerTwo)
-              .then(async (history) => {
-                // user.history.push(history);
-                if (win === true) console.log('win');
-                else console.log('lose');
-                // const ss = (win === 'true') ? 'win' : 'lose';
-                // console.log(ss);
-                await this.updateStats(me, win === true ? 'win' : 'lose');
-                return await this.usersService.findOneByIdWithRelation(me, {
-                  relations: ['history'],
-                });
-                // await this.usersService.updateHistory(me, user.history);
-              });
-          });
-      });
+  async addNewResult(userId1: number, userId2: number, result: ResultType) {
+    const playerTwo: User = await this.usersService.findOneById(userId2);
+    if (typeof playerTwo === undefined)
+      return { status: 500, error: 'Player enemi not found' };
+    const playerOne: User = await this.usersService.findOneByIdWithRelation(
+      userId1,
+      { relations: ['history'] },
+    );
+
+    const history: History = new History();
+    history.user = playerOne;
+    history.enemy = playerTwo;
+    history.result = result;
+    await this.updateStats(userId1, result);
+    return await this.historyService.addNewResult(history);
+  }
+
+  async updateStats(id: number, type: ResultType) {
+    console.log(type);
+    switch (type) {
+      case ResultType.VICTORY:
+        return await this.statsService.updateWins(id);
+      case ResultType.DEFEAT:
+        return await this.statsService.updateLoses(id);
+    }
   }
 
   async deleteFriend(userId: number, friendId: number) {
@@ -186,16 +199,6 @@ export class DataService {
     } else console.log('wala a sahbi ma blansh');
   }
 
-  async updateStats(id: number, type: string) {
-    console.log(type);
-    switch (type) {
-      case 'win':
-        return await this.statsService.updateWins(id);
-      case 'lose':
-        return await this.statsService.updateLoses(id);
-    }
-  }
-
   async newMessage(sender: number, receiver: number) {
     // const conversation: await
   }
@@ -209,6 +212,52 @@ export class DataService {
     const me: User = await this.usersService.findOneById(myId);
     const friend: User = await this.usersService.findOneById(friendId);
 
-    return await this.requestService.sendRequestToNewFriend(me, friend);
+    const newRequest = await this.requestService.sendRequestToNewFriend(
+      me,
+      friend,
+    );
+    const notification: Notification = new Notification();
+    notification.user = newRequest.recipient;
+    notification.sender = newRequest.requester;
+    notification.type = NotificationType.REQUEST;
+    await this.notificationsService.sendNotificationForRequest(notification);
+    console.log('salam');
+    return newRequest;
+  }
+
+  async acceptRequestToNewFriend(
+    reqId: number,
+    myId: number,
+    friendId: number,
+  ) {
+    this.requestService.removeRequestById(reqId);
+    return await this.addFriend(myId, friendId);
+  }
+
+  async findMyNotifications(myId: number) {
+    const me: User = await this.usersService.findOneById(myId);
+    return this.notificationsService.findMyNotifications(me);
+  }
+
+  async updateProfile(file: Express.Multer.File, req) {
+    if (file || req.body.username) {
+      if (file)
+        await this.usersService.updateAvatar(
+          req.user.id,
+          fullImagePath(file.filename),
+        );
+      if (req.body.username)
+        await this.usersService.updateUsername(req.user.id, req.body.username);
+      return { message: 'Profile is updated' };
+    } else return { message: 'Profile not updated' };
+  }
+
+  async updateAvatar(file: Express.Multer.File, req) {
+    if (!file) return { message: 'avatar not updated' };
+    await this.usersService.updateAvatar(
+      req.user.id,
+      fullImagePath(file.filename),
+    );
+    return { message: 'avatar is updated' };
   }
 }

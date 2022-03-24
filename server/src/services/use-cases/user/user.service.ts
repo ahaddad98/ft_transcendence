@@ -23,9 +23,10 @@ export class UserService {
   findSpecificUsers(details: Object): Promise<User[]> {
     return this.userRepository.find(details);
   }
-  findOne(id: string): Promise<User> {
+  findOne(userId: number): Promise<User> {
+    console.log('salam')
     return this.userRepository.findOne(
-      { username: id },
+      { id: userId },
       { relations: ['friend'] },
     );
     // return this.userRepository.findOne({ username: id });

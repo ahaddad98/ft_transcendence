@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -34,11 +35,14 @@ export class Conversation {
   })
   type?: ConversationType;
 
-  @Column()
-  userOneId: number;
+  
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  userOne: User;
 
-  @Column()
-  userTwoId: number;
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  userTwo: User;
 
   @Column({ type: 'timestamptz', default: 'NOW()' })
   createdAt?: Date;

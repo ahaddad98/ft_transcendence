@@ -1,20 +1,34 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Conversation } from './conversation.entity';
+import { Notification } from './notification.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class Message {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  senderId: number;
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  senderId: User;
 
-  @ManyToOne((type) => Conversation, (conversation) => conversation.message, {onDelete: 'CASCADE'})
+  @ManyToOne((type) => Conversation, (conversation) => conversation.message, {
+    onDelete: 'CASCADE',
+  })
   conversation: Conversation;
 
   @Column()
   content: string;
 
-  @Column({ type: 'timestamptz' })
-  createdAt: Date;
+  // @ManyToOne((type) => Notification, (notification) => notification.message)
+  // notification: Notification;
+
+  @Column({ type: 'timestamptz', default: 'NOW()' })
+  createdAt?: Date;
 }

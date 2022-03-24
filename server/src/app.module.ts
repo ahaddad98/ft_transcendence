@@ -20,8 +20,10 @@ import { ChannelModule } from './services/use-cases/channel/channel.module';
 import { HistoryController } from './controllers/history.controller';
 import { HistoryModule } from './services/use-cases/history/history.module';
 import { FriendsController } from './controllers/friends.controller';
-import { RequestFriendModule } from './services/use-cases/request-friend/request-friend.module';
-import { RequestFriendController } from './controllers/request.controller';
+import { RequestModule } from './services/use-cases/request/request.module';
+import { RequestController } from './controllers/request.controller';
+import { NotificationModule } from './services/use-cases/notification/notification.module';
+import { NotificationsController } from './controllers/notifications.controller';
 
 @Module({
   imports: [
@@ -35,7 +37,8 @@ import { RequestFriendController } from './controllers/request.controller';
     ConversationModule,
     MessageModule,
     ChannelModule,
-    RequestFriendModule,
+    RequestModule,
+    NotificationModule,
   ],
   controllers: [
     AppController,
@@ -48,7 +51,8 @@ import { RequestFriendController } from './controllers/request.controller';
     ChannelsController,
     FriendsController,
     HistoryController,
-    RequestFriendController,
+    RequestController,
+    NotificationsController,
   ],
 })
 export class AppModule {}
