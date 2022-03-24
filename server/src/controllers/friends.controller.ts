@@ -34,6 +34,13 @@ export class FriendsController {
     return await this.friendsService.findAll();
   }
 
+  @Get('users/me')
+  @UseGuards(JwtAuthGuard)
+  async findMyFriends(@Req() req) {
+    const user: User = await this.usersService.findOneById(req.user.id);
+    return await this.dataService.findAllFriendOfUser(user);
+  }
+
   @Post('users/me/:friendId')
   @UseGuards(JwtAuthGuard)
   async addNewFriend(@Req() req, @Param('friendId') friend: number) {

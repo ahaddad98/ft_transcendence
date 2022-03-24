@@ -258,17 +258,27 @@ export class DataService {
   }
 
   async sendNewMessage(req, id: number) {
-    console.log(req.body);
+    // console.log(req.body);
     const conversation: Conversation =
       await this.conversationService.findConversationById(id);
     const message: Message = new Message();
     message.content = req.body.message;
-    message.senderId = req.user.id;
+    message.sender = req.user.id;
     message.conversation = conversation;
     message.createdAt = new Date();
     this.conversationService.updateTime(conversation.id, {
       updatedAt: new Date(),
     });
+    // TODO  hadi anriglha ghada insh'allah
+    const usersConversation: Conversation =
+      await this.conversationService.findUsersOfConversationById(id);
+    console.log(usersConversation);
+    // const notification: Notification = new Notification();
+    // notification.user = newRequest.recipient;
+    // notification.sender = message.sender;
+    // notification.type = NotificationType.MESSAGE;
+    // await this.notificationsService.sendNotificationForRequest(notification);
+    // khasni nfakar f blan dyal channel ki andir lih
     return await this.messageService.addNewMessage(message);
   }
 

@@ -22,6 +22,15 @@ export class ConversationService {
     });
   }
 
+  async findUsersOfConversationById(id: number) {
+    return await this.conversationRepository
+      .createQueryBuilder('conversation')
+      .innerJoinAndSelect('conversation.userOne', 'userOne')
+      .innerJoinAndSelect('conversation.userTwo', 'userTwo')
+      .where('conversation.id = :conversationId', { conversationId: id })
+      .getOne();
+  }
+
   async findConversationByIdWithQuery(id: number): Promise<Conversation> {
     return await this.conversationRepository
       .createQueryBuilder('conversation')

@@ -34,6 +34,7 @@ export class Conversation {
     default: ConversationType.PRIVATE,
   })
   type?: ConversationType;
+  
 
   
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
