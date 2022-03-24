@@ -1,4 +1,5 @@
 import axios from "axios";
+import Link from "next/link";
 import React, { useEffect } from "react";
 import HomeNavbar from "./HomeNavbar";
 
@@ -7,26 +8,15 @@ const Profile = (props, butt) => {
       username: props.mydata.username,
       avatar: props.mydata.avatar
     }
-    useEffect (()=>{
-        console.log(props.mydata);
-    }, [props.mydata])
     return (
         <div className="profile-page">
-
         <HomeNavbar data={data}/>
             <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css" />
           <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" />
         <section className="relative block h-500-px">
-            <div className="absolute top-0 w-full h-full bg-center bg-cover bg-orange-500">
-                <span id="blackOverlay" className="w-full h-full absolute opacity-50 bg-black"></span>
-            </div>
-            <div className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden h-70-px" >
-                <svg className="absolute bottom-0 overflow-hidden" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" version="1.1" viewBox="0 0 2560 100" x="0" y="0">
-                    <polygon className="text-blueGray-200 fill-current" points="2560 0 2560 100 0 100"></polygon>
-                </svg>
-            </div>
+            
         </section>
-        <section className="relative py-16 bg-blueGray-200">
+        <section className="relative py-16 bg-white">
             <div className="container mx-auto px-4">
               <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
                 <div className="px-6">
@@ -38,9 +28,13 @@ const Profile = (props, butt) => {
                     </div>
                     <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
                       <div className="py-6 px-3 mt-32 sm:mt-0">
-                        <button className="bg-pink-500 active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150" type="button">
-                          Edit Profile
-                        </button>
+                          <Link href="/EditProfile">
+
+                      <button
+                              className="text-sm bg-orange-500 text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                              Edit profile
+                          </button>
+                      </Link>
                       </div>
                     </div>
                     <div className="w-full lg:w-4/12 px-4 lg:order-1">
