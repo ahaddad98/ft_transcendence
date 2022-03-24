@@ -1,19 +1,16 @@
 import {
   Column,
   Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryColumn,
-  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Friend } from '../../core/entities/friend.entity';
 import { Channel } from './channel.entity';
-import { Conversation } from './conversation.entity';
 import { History } from './history.entity';
+import { Notification } from './notification.entity';
+import { Request } from './request.entity';
 import { Stats } from './stats.entity';
 
 @Entity()
@@ -42,6 +39,20 @@ export class User {
   @OneToOne((type) => Stats, (stats) => stats.user)
   stats?: Stats;
 
-  @ManyToOne((type) => Channel, (channel) => channel.user, { onDelete: 'SET NULL' })
+  @ManyToOne((type) => Channel, (channel) => channel.user, {
+    onDelete: 'SET NULL',
+  })
   channel?: Channel;
+
+  @OneToMany((type) => Request, (request) => request.requester)
+  requester?: Request[];
+
+  @OneToMany((type) => Request, (request) => request.recipient)
+  recipient?: Request[];
+
+  @OneToMany((type) => Notification, (notification) => notification.user)
+  notification?: Notification[];
+
+  @Column({ type: 'timestamptz', default: 'NOW()' })
+  createdAt?: Date;
 }

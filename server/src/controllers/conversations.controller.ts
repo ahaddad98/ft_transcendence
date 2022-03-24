@@ -46,13 +46,15 @@ export class ConversationsController {
 
   @Post(':id')
   @UseGuards(JwtAuthGuard)
-  async addNewConversation(@Req() req, @Param('id') user2: string) {
-    const users = await this.userService.findSpecificUsers({
-      where: [{ id: req.user.id }, { id: user2 }],
-    });
+  async addNewConversation(@Req() req, @Param('id') userId2: number) {
+    // const users = await this.userService.findSpecificUsers({
+    //   where: [{ id: req.user.id }, { id: user2 }],
+    // });
+    const user1 = await this.userService.findOneById(req.user.id);
+    const user2 = await this.userService.findOneById(userId2);
     let conversation: Conversation = new Conversation();
-    conversation.userOneId = req.user.id;
-    conversation.userTwoId = parseInt(user2);
+    conversation.userOne = user1;
+    conversation.userTwo = user2;
     return await this.conversationService.saveNewConversation(conversation);
   }
 

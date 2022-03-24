@@ -38,6 +38,6 @@ export class Channel {
   @JoinColumn()
   conversation: Conversation;
 
-  @Column({ type: 'timestamptz' })
-  createdAt: Date;
+  @Column({ type: 'timestamptz', default: 'NOW()' })
+  createdAt?: Date;
 }

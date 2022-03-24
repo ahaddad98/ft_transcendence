@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { User } from 'src/core/entities/user.entity';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
 import { FriendService } from 'src/services/use-cases/friend/friend.service';
@@ -23,4 +23,11 @@ export class FriendsController {
   async getAllFriends() {
     return await this.friendsService.findAll();
   }
+
+  @Delete(':id')
+  async removeFriend(@Param('id') id: number) {
+    return await this.friendsService.remove(id);
+  }
+
+  
 }

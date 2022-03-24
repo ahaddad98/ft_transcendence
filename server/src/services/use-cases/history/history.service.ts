@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { History } from 'src/core/entities/history.entity';
+import { History, ResultType } from 'src/core/entities/history.entity';
 import { User } from 'src/core/entities/user.entity';
 import { Repository } from 'typeorm';
 
@@ -12,7 +12,16 @@ export class HistoryService {
   ) {}
 
   findAll(): Promise<History[]> {
-    return this.historyRepository.find();
+    return this.historyRepository.find({relations: ['user', 'enemy']});
+  }
+
+  async findHistoriesByResult(result: string) {
+    return await this.historyRepository.find({
+      where: {
+        result: result,
+      },
+      relations: ['user', 'enemy'],
+    });
   }
 
   async findByUserId(id: number) {
@@ -22,12 +31,10 @@ export class HistoryService {
     return this.historyRepository.find({ user: newUser });
   }
 
-  async addNewStat(user: User, win: boolean, PlayerTwo: number) {
-    // const salt
-    const history: History = new History();
-    history.enemyId = PlayerTwo;
-    history.user = user;
-    history.win = win;
-    return this.historyRepository.save(history);
+  async addNewWin(userId1: number, userId2: number) {}
+
+  async addNewResult(history: History) {
+    return await this.historyRepository.save(history);
   }
+
 }
