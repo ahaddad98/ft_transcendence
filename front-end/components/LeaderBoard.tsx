@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Modal from "@material-tailwind/react/Modal";
 
 const LeaderBoard = (props) => {
+  console.log(props);
   const [viewclick, setViewclick] = useState(false);
   return (
     <div className="mt-20 w-1/2">
@@ -105,16 +106,16 @@ const LeaderBoard = (props) => {
                 <path
                   d="M18 6L6 18"
                   stroke="currentColor"
-                  stroke-width="1.66667"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1.66667"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M6 6L18 18"
                   stroke="currentColor"
-                  stroke-width="1.66667"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1.66667"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </button>

@@ -45,7 +45,7 @@ const loginSuccess = () => {
         var formData = new FormData();
         formData.append("file", selectedfile);
         formData.append("username", selectedusername);
-        axios.post('http://localhost:3001/users/me/updateProfile', formData, 
+        axios.post('http://localhost:3001/profile/update/users/me', formData, 
         { headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
             }

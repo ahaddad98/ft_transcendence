@@ -28,6 +28,4 @@ export class FriendsController {
   async removeFriend(@Param('id') id: number) {
     return await this.friendsService.remove(id);
   }
-
-  
 }
