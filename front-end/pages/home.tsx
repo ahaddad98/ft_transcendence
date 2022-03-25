@@ -42,13 +42,31 @@ const Home = () => {
             console.log(err);    
         });
     }, [])
+    const [history, setHistory] = useState([])
+    const fetchhistory = async () => {
+        const response = await axios.get('http://localhost:3001/history', {headers: 
+        { Authorization: `Bearer ${localStorage.getItem('token')}` }});
+        return response;
+    };
+    useEffect (() => {
+        fetchhistory()
+        .then((res) => {
+            if (res.data)
+            {
+                setHistory(res.data);
+            }
+        })
+        .catch((err) => {
+            console.log(err);    
+        });
+    }, [])
     return (
-            <div >
+            <div>
                 <HomeNavbar data={data}>
                 </HomeNavbar>
                 <div className="flex flex-row">
                     <LeaderBoard data={stats}/>
-                    <HistoryGame data={data}/>
+                    <HistoryGame data={history}/>
                 </div>
                 <ChannlesList />
         </div>
