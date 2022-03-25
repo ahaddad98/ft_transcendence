@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Channel } from './channel.entity';
+import { ConversationUser } from './conversation-user.entity';
 import { Message } from './message.entity';
 import { User } from './user.entity';
 
@@ -34,17 +35,13 @@ export class Conversation {
     default: ConversationType.PRIVATE,
   })
   type?: ConversationType;
+
+  @OneToMany(
+    (type) => ConversationUser,
+    (conversationUser) => conversationUser.conversation,
+  )
+  conversationUser: ConversationUser[];
   
-
-  
-  @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  @JoinColumn()
-  userOne: User;
-
-  @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  @JoinColumn()
-  userTwo: User;
-
   @Column({ type: 'timestamptz', default: 'NOW()' })
   createdAt?: Date;
 

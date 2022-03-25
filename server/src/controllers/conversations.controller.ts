@@ -42,6 +42,13 @@ export class ConversationsController {
     // return await this.conversationService.findConversationWithMessages(id);
   }
 
+  @Get('users/me')
+  @UseGuards(JwtAuthGuard)
+  async getAllMyConversations(@Req() req) {
+    console.log('salam');
+    return await this.dataService.getAllMyConversations(req.user.id);
+  }
+
   @Get('users/me/:id')
   @UseGuards(JwtAuthGuard)
   async findConversationByUsersId(@Req() req, @Param('id') id: number) {
@@ -58,18 +65,16 @@ export class ConversationsController {
   @Post('users/me/:id')
   @UseGuards(JwtAuthGuard)
   async addNewConversation(@Req() req, @Param('id') userId2: number) {
-    const user1 = await this.userService.findOneById(req.user.id);
-    const user2 = await this.userService.findOneById(userId2);
-    let conversation: Conversation = new Conversation();
-    conversation.userOne = user1;
-    conversation.userTwo = user2;
-    return await this.conversationService.saveNewConversation(conversation);
+    return await this.dataService.addNewPrivateConversation(
+      req.user.id,
+      userId2,
+    );
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   async deleteConversation(@Param('id') id: number) {
-    await this.conversationService.remove(id);
-    return { status: 201, message: 'Conversation deleted' };
+    return await this.conversationService.remove(id);
+    // return { status: 201, message: 'Conversation deleted' };
   }
 }

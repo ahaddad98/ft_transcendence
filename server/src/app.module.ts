@@ -24,6 +24,8 @@ import { RequestModule } from './services/use-cases/request/request.module';
 import { RequestController } from './controllers/request.controller';
 import { NotificationModule } from './services/use-cases/notification/notification.module';
 import { NotificationsController } from './controllers/notifications.controller';
+import { ConversationUserModule } from './services/use-cases/conversation-user/conversation-user.module';
+import { ConversationUserController } from './controllers/conversation-user.controller';
 
 @Module({
   imports: [
@@ -39,6 +41,7 @@ import { NotificationsController } from './controllers/notifications.controller'
     ChannelModule,
     RequestModule,
     NotificationModule,
+    ConversationUserModule,
   ],
   controllers: [
     AppController,
@@ -53,6 +56,7 @@ import { NotificationsController } from './controllers/notifications.controller'
     HistoryController,
     RequestController,
     NotificationsController,
+    ConversationUserController,
   ],
 })
 export class AppModule {}

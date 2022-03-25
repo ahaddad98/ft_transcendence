@@ -12,7 +12,7 @@ export class ConversationService {
 
   async findAll(): Promise<Conversation[]> {
     return await this.conversationRepository.find({
-      relations: ['userOne', 'userTwo'],
+      relations: ['conversationUser', 'conversationUser.user'],
     });
   }
 
@@ -67,6 +67,6 @@ export class ConversationService {
     return await this.conversationRepository.update(id, details);
   }
   async remove(id: number) {
-    await this.conversationRepository.delete(id);
+    return await this.conversationRepository.delete(id);
   }
 }
