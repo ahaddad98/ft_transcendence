@@ -12,17 +12,17 @@ const ListUseres = (props) => {
           },
     });
   };
-  const hundelClick2 = async (e, id) => {
+  const hundelClick2 = async (e, req_id) => {
     e.preventDefault();
-    axios.post(`http://localhost:3001/requests/users/me/friends/${id}`, {
+    axios.delete(`http://localhost:3001/requests/${req_id}`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
     });
   };
-  const hundelClick3 = async (e, id) => {
+  const hundelClick3 = async (e, req_id,id) => {
     e.preventDefault();
-    axios.delete(`http://localhost:3001/requests/id/${id}`, {
+    axios.post(`http://localhost:3001/requests/${req_id}/users/me/friends/${id}/accept`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -36,7 +36,8 @@ const ListUseres = (props) => {
           },
     });
   };
-
+  console.log(props.data);
+  
   return (
     <div>
       <HomeNavbar data={props.mydata} />
@@ -100,13 +101,13 @@ const ListUseres = (props) => {
                               <div className="flex flex-row ">
                             <button
                               className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r "
-                              onClick={(e) => hundelClick2(e, stat.id)}
+                              onClick={(e) => hundelClick2(e, stat.requestId)}
                             >
                                 <div>Cancel</div>
                             </button>
                             <button
                               className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                              onClick={(e) => hundelClick3(e, stat.id)}
+                              onClick={(e) => hundelClick3(e, stat.requestId ,stat.id)}
                             >
                                 <div>Accept</div>
                             </button>
@@ -115,7 +116,7 @@ const ListUseres = (props) => {
                             {stat.stats === "requester" && (
                             <button
                               className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                              onClick={(e) => hundelClick3(e, stat.id)}
+                              onClick={(e) => hundelClick3(e, stat.requestId,stat.id)}
                             >
                                 <div>{stat.stats}</div>
                             </button>
