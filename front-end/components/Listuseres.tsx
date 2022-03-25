@@ -4,14 +4,36 @@ import React from "react";
 import HomeNavbar from "./HomeNavbar";
 
 const ListUseres = (props) => {
-  const hindelClick = async (e, id) => {
+  const hundelClick1 = async (e, id) => {
     e.preventDefault();
-    axios.post(`http://localhost:3001/request/users/me/friends/${id}`, {
+    axios.post(`http://localhost:3001/requests/users/me/friends/${id}`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-    }).then((res)=>{
-        console.log(res);
+    });
+  };
+  const hundelClick2 = async (e, id) => {
+    e.preventDefault();
+    axios.post(`http://localhost:3001/requests/users/me/friends/${id}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+    });
+  };
+  const hundelClick3 = async (e, id) => {
+    e.preventDefault();
+    axios.delete(`http://localhost:3001/requests/id/${id}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+    });
+  };
+  const hundelClick4 = async (e, id) => {
+    e.preventDefault();
+    axios.post(`http://localhost:3001/requests/users/me/friends/${id}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
     });
   };
 
@@ -66,14 +88,38 @@ const ListUseres = (props) => {
                             aria-label="MAIN BUTTON"
                             className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
                           >
+                            {stat.stats === "add" && (
                             <button
                               className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                              onClick={(e) => hindelClick(e, stat.id)}
+                              onClick={(e) => hundelClick1(e, stat.id)}
                             >
-                              {stat.stats !== "remove" && (
                                 <div>{stat.stats}</div>
-                              )}
                             </button>
+                              )}
+                            {stat.stats === "recipient" && (
+                              <div className="flex flex-row ">
+                            <button
+                              className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r "
+                              onClick={(e) => hundelClick2(e, stat.id)}
+                            >
+                                <div>Cancel</div>
+                            </button>
+                            <button
+                              className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                              onClick={(e) => hundelClick3(e, stat.id)}
+                            >
+                                <div>Accept</div>
+                            </button>
+                              </div>
+                              )}
+                            {stat.stats === "requester" && (
+                            <button
+                              className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                              onClick={(e) => hundelClick3(e, stat.id)}
+                            >
+                                <div>{stat.stats}</div>
+                            </button>
+                              )}
                           </div>
                         </div>
                       </div>
