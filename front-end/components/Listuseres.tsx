@@ -4,10 +4,16 @@ import React from "react";
 import HomeNavbar from "./HomeNavbar";
 
 const ListUseres = (props) => {
-  const hindelClick = async (e) =>{
-    // e.preventDefault();
-    axios.post('http://localhost:3001/request/users/me/friends/'+{})
-  }
+  const hindelClick = async (e, id) => {
+    e.preventDefault();
+    axios.post(`http://localhost:3001/request/users/me/friends/${id}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+    }).then((res)=>{
+        console.log(res);
+    });
+  };
 
   return (
     <div>
@@ -60,11 +66,12 @@ const ListUseres = (props) => {
                             aria-label="MAIN BUTTON"
                             className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
                           >
-                            <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r" onClick={hindelClick}>
+                            <button
+                              className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                              onClick={(e) => hindelClick(e, stat.id)}
+                            >
                               {stat.stats !== "remove" && (
-                                <div>
-                                    {stat.stats}
-                                </div>
+                                <div>{stat.stats}</div>
                               )}
                             </button>
                           </div>
