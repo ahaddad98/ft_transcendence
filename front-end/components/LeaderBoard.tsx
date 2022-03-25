@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import Modal from "@material-tailwind/react/Modal";
 
 const LeaderBoard = (props) => {
-  console.log(props);
   const [viewclick, setViewclick] = useState(false);
   return (
     <div className="mt-20 w-1/2">

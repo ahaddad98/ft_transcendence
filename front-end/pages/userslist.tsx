@@ -5,7 +5,7 @@ import HomeNavbar from "../components/HomeNavbar";
 import ListUseres from "../components/Listuseres";
 
 const UsersList = () => {
-    const [data, setData] = useState({})
+    const [data, setData] = useState()
     
     const fetchData = async () => {
         const response = await axios.get('http://localhost:3001/users/me/all', {headers: 
