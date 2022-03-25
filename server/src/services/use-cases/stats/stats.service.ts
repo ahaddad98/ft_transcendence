@@ -11,9 +11,6 @@ export class StatsService {
   ) {}
 
   findAll(): Promise<Stats[]> {
-<<<<<<< HEAD
-    return this.statsRepository.find({relations:['user']});
-=======
     return this.statsRepository.find({
       relations: ['user'],
       order: {
@@ -21,7 +18,6 @@ export class StatsService {
         wins: 'DESC',
       },
     });
->>>>>>> 07ab9bf81056e6a8abf44fe758780098e581a437
   }
 
   findTop(details: Object): Promise<Stats[]> {
