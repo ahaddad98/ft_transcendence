@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -52,4 +53,6 @@ export class ProfileController {
   uploadAvatar(@UploadedFile() file: Express.Multer.File, @Req() req): Object {
     return this.dataService.updateAvatar(file, req);
   }
+
+
 }

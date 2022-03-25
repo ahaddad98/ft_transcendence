@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Conversation } from 'src/core/entities/conversation.entity';
 import { Friend } from 'src/core/entities/friend.entity';
 import { History } from 'src/core/entities/history.entity';
 import { Message } from 'src/core/entities/message.entity';
@@ -9,8 +10,8 @@ import { Notification } from 'src/core/entities/notification.entity';
 import { Request } from 'src/core/entities/request.entity';
 import { Stats } from 'src/core/entities/stats.entity';
 import { User } from 'src/core/entities/user.entity';
-import { DataModule } from 'src/services/data/data.module';
 import { DataService } from 'src/services/data/data.service';
+import { ConversationService } from 'src/services/use-cases/conversation/conversation.service';
 import { FriendService } from 'src/services/use-cases/friend/friend.service';
 import { HistoryService } from 'src/services/use-cases/history/history.service';
 import { MessageService } from 'src/services/use-cases/message/message.service';
@@ -38,6 +39,7 @@ import { FortyTwoStrategyStrategy } from './o-auth/42.strategy';
       Message,
       Request,
       Notification,
+      Conversation,
     ]),
   ],
   providers: [
@@ -52,6 +54,7 @@ import { FortyTwoStrategyStrategy } from './o-auth/42.strategy';
     HistoryService,
     RequestService,
     NotificationService,
+    ConversationService,
   ],
 
   exports: [JwtModule],
