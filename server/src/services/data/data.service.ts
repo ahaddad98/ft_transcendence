@@ -17,6 +17,11 @@ import {
 } from 'src/core/entities/notification.entity';
 import { History, ResultType } from 'src/core/entities/history.entity';
 import { fullImagePath } from '../helpers/image-storage';
+import { Conversation } from 'src/core/entities/conversation.entity';
+import { ConversationService } from '../use-cases/conversation/conversation.service';
+import { Message } from 'src/core/entities/message.entity';
+import { ConversationUser } from 'src/core/entities/conversation-user.entity';
+import { ConversationUserService } from '../use-cases/conversation-user/conversation-user.service';
 
 @Injectable()
 export class DataService {
@@ -25,9 +30,11 @@ export class DataService {
     private statsService: StatsService,
     private friendsService: FriendService,
     private historyService: HistoryService,
-    private mesagesSercvice: MessageService,
+    private messageService: MessageService,
     private notificationsService: NotificationService,
     private requestService: RequestService,
+    private conversationService: ConversationService,
+    private conversationUserService: ConversationUserService,
     private jwtService: JwtService,
   ) {}
 
@@ -45,10 +52,11 @@ export class DataService {
     const users: User[] = await this.usersService.findAllExceptMyProfile(id);
     let allUsers = [];
     let stats: string;
-    let requestId;
+    let requestId: number;
     console.log(me);
     await Promise.all(
       users.map(async (user) => {
+        requestId = undefined;
         let userObject: Object = user;
         const friend = await this.friendsService.findMyFriend(me, user.id);
         if (friend === undefined) {
@@ -62,11 +70,8 @@ export class DataService {
             else stats = 'recipient';
           } else stats = 'add';
         } else stats = 'remove';
-        if (stats === 'requester' || stats === 'recipient')
-          userObject = { ...userObject, requestId };
-        userObject = { ...userObject, stats };
+        userObject = { ...userObject, requestId, stats };
         allUsers = [...allUsers, userObject];
-        // return allUsers;
       }),
     );
     return allUsers;
@@ -168,11 +173,9 @@ export class DataService {
       await this.usersService.findOneById(friendId).then((element) => {
         if (element === undefined) throw undefined;
       });
-      await this.usersService
-        .findOneByIdWithRelation(userId, { relations: ['friend'] })
-        .then((data) => {
-          newUser = data;
-        }); // hna jabt data dyal user bal friends dyalo
+      newUser = await this.usersService.findOneByIdWithRelation(userId, {
+        relations: ['friend'],
+      });
       await this.friendsService.deleteFriend({
         user: newUser,
         friend: friendId,
@@ -197,10 +200,6 @@ export class DataService {
       await this.statsService.save(stats);
       console.log('tsayva a sahbi');
     } else console.log('wala a sahbi ma blansh');
-  }
-
-  async newMessage(sender: number, receiver: number) {
-    // const conversation: await
   }
 
   login(user: any) {
@@ -259,5 +258,72 @@ export class DataService {
       fullImagePath(file.filename),
     );
     return { message: 'avatar is updated' };
+  }
+
+  async sendNewMessage(req, id: number) {
+    // console.log(req.body);
+    const conversation: Conversation =
+      await this.conversationService.findConversationById(id);
+    const message: Message = new Message();
+    message.content = req.body.message;
+    message.sender = req.user.id;
+    message.conversation = conversation;
+    message.createdAt = new Date();
+    this.conversationService.updateTime(conversation.id, {
+      updatedAt: new Date(),
+    });
+    // TODO  hadi anriglha ghada insh'allah
+    // const usersConversation: Conversation =
+    //   await this.conversationService.findUsersOfConversationById(id);
+    // console.log(usersConversation);
+    // const notification: Notification = new Notification();
+    // notification.user = newRequest.recipient;
+    // notification.sender = message.sender;
+    // notification.type = NotificationType.MESSAGE;
+    // await this.notificationsService.sendNotificationForRequest(notification);
+    // khasni nfakar f blan dyal channel ki andir lih
+    return await this.messageService.addNewMessage(message);
+  }
+
+  async findConversationWithMessages(id: number) {
+    const conversation: Conversation =
+      await this.conversationService.findConversationByIdWithQuery(id);
+    console.log(conversation);
+    return conversation;
+  }
+
+  async getallMessageOfoneOfmyConversations(conversationId: number) {
+    const conversation: Conversation =
+      await this.conversationService.findConversationById(conversationId);
+    return await this.messageService.getallMessageOfoneOfmyConversations(
+      conversation,
+    );
+  }
+
+  async addNewPrivateConversation(myId: number, userId: number) {
+    const user1 = await this.usersService.findOneById(myId);
+    const user2 = await this.usersService.findOneById(userId);
+    let conversation: Conversation = new Conversation();
+    conversation = await this.conversationService.saveNewConversation(
+      conversation,
+    );
+    let conversationUser: ConversationUser = new ConversationUser();
+    conversationUser.conversation = conversation;
+    conversationUser.user = user1;
+    this.conversationUserService.save(conversationUser);
+    let conversationUser2: ConversationUser = new ConversationUser();
+    conversationUser2.conversation = conversation;
+    conversationUser2.user = user2;
+    this.conversationUserService.save(conversationUser2);
+    return conversation;
+  }
+
+  async getAllMyConversations(id: number) {
+    const user = await this.usersService.findOneById(id);
+    console.log(user)
+    const conversationUser =
+      this.conversationUserService.findallMyConversations(user);
+    
+    return conversationUser;
   }
 }

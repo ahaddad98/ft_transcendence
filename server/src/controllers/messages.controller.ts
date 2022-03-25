@@ -1,7 +1,16 @@
-import { Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { Conversation } from 'src/core/entities/conversation.entity';
 import { Message } from 'src/core/entities/message.entity';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
+import { DataService } from 'src/services/data/data.service';
 import { ConversationService } from 'src/services/use-cases/conversation/conversation.service';
 import { MessageService } from 'src/services/use-cases/message/message.service';
 
@@ -10,6 +19,7 @@ export class MessagesController {
   constructor(
     private messageService: MessageService,
     private conversationService: ConversationService,
+    private dataService: DataService,
   ) {}
 
   @Get()
@@ -17,24 +27,25 @@ export class MessagesController {
     return this.messageService.findAll();
   }
 
-  @Post('me/conversations/:id')
+  @Get('users/me/conversations/:ConversationId')
   @UseGuards(JwtAuthGuard)
-  async sendNewMessage(@Req() req, @Param('id') id: number) {
+  async getallMessageOfoneOfmyConversations(@Param('ConversationId') id: number) {
+    return await this.dataService.getallMessageOfoneOfmyConversations(id);
+  }
+
+  @Post('users/me/conversations/:ConversationId')
+  @UseGuards(JwtAuthGuard)
+  async sendNewMessage(@Req() req, @Param('ConversationId') id: number) {
     try {
-      console.log(req.body);
-      const conversation: Conversation =
-        await this.conversationService.findConversationById(id);
-      const message: Message = new Message();
-      message.content = req.body.message;
-      message.senderId = req.user.id;
-      message.conversation = conversation;
-      message.createdAt = new Date();
-      this.conversationService.updateTime(conversation.id, {
-        updatedAt: new Date(),
-      });
-      return await this.messageService.addNewMessage(message);
+      return await this.dataService.sendNewMessage(req, id);
     } catch (err) {
       console.log(err);
     }
+  }
+
+  @Delete('id')
+  @UseGuards(JwtAuthGuard)
+  async deleteMessage(@Param('id') id: number) {
+    return await this.messageService.removeMessage(id);
   }
 }
