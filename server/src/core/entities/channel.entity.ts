@@ -9,11 +9,6 @@ import {
 import { Conversation } from './conversation.entity';
 import { User } from './user.entity';
 
-export enum UserType {
-  ADMIN = 'admin',
-  USER = 'user',
-}
-
 @Entity()
 export class Channel {
   @PrimaryGeneratedColumn()
@@ -25,14 +20,14 @@ export class Channel {
   @Column({ nullable: true })
   avatar: string;
 
+  @OneToOne(() => User, {onDelete: "CASCADE"})
+  admin: User;
+
   @OneToMany((type) => User, (user) => user.channel)
   user: User[];
 
   @Column()
   password: string;
-
-  @Column({ type: 'enum', enum: UserType, default: UserType.USER })
-  type?: UserType;
 
   @OneToOne((type) => Conversation, (conversation) => conversation.channel)
   @JoinColumn()

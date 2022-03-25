@@ -9,7 +9,7 @@ export class ConversationUser {
 
   @ManyToOne(() => User)
   @JoinColumn()
-  user: User;
+  user?: User;
 
   @ManyToOne((type) => Conversation, (conversation) => conversation.conversationUser ,{ onDelete: 'CASCADE' })
   @JoinColumn()

@@ -22,6 +22,10 @@ import { ConversationService } from '../use-cases/conversation/conversation.serv
 import { Message } from 'src/core/entities/message.entity';
 import { ConversationUser } from 'src/core/entities/conversation-user.entity';
 import { ConversationUserService } from '../use-cases/conversation-user/conversation-user.service';
+import { CreateChannelDto } from 'src/core/dtos/channel.dto';
+import { Channel } from 'src/core/entities/channel.entity';
+import * as bcrypt from 'bcrypt';
+import { ChannelService } from '../use-cases/channel/channel.service';
 
 @Injectable()
 export class DataService {
@@ -35,6 +39,7 @@ export class DataService {
     private requestService: RequestService,
     private conversationService: ConversationService,
     private conversationUserService: ConversationUserService,
+    private channelService: ChannelService,
     private jwtService: JwtService,
   ) {}
 
@@ -317,13 +322,60 @@ export class DataService {
     this.conversationUserService.save(conversationUser2);
     return conversation;
   }
+  async addNewChannelConversation(myId: number) {
+    const user1 = await this.usersService.findOneById(myId);
+    let conversation: Conversation = new Conversation();
+    conversation = await this.conversationService.saveNewConversation(
+      conversation,
+    );
+    let conversationUser: ConversationUser = new ConversationUser();
+    conversationUser.conversation = conversation;
+    conversationUser.user = user1;
+    this.conversationUserService.save(conversationUser);
+    return conversation;
+  }
+
+  async addNewUserToChannelConversation(
+    userId: number,
+    conversationId: number,
+  ) {
+    const newConversation: Conversation =
+      await this.conversationService.findConversationById(conversationId);
+    const newUser: User = await this.usersService.findOneById(userId);
+    const conversationUser: ConversationUser = new ConversationUser();
+    conversationUser.conversation = newConversation;
+    conversationUser.user = newUser;
+    this.conversationUserService.save(conversationUser);
+    return newConversation;
+  }
 
   async getAllMyConversations(id: number) {
     const user = await this.usersService.findOneById(id);
-    console.log(user)
+    console.log(user);
     const conversationUser =
       this.conversationUserService.findallMyConversations(user);
-    
+
     return conversationUser;
+  }
+  async addNewChannel(
+    file: Express.Multer.File,
+    body: CreateChannelDto,
+    myId: number,
+  ) {
+    const user: User = await this.usersService.findOneById(myId);
+    const channel: Channel = new Channel();
+    channel.name = body.name;
+    const hash = await bcrypt.hash(body.password, 10);
+    channel.password = hash;
+    channel.avatar = '';
+    channel.user = [];
+    channel.admin = user;
+    this.addNewChannelConversation(myId);
+    return await this.channelService.save(channel);
+  }
+
+  async addNewUserToChannel(channelId: number, UserId: number){
+    const newUser: User = await this.usersService.findOneById(UserId);
+    // const newChannel: 
   }
 }
