@@ -9,15 +9,10 @@ import {
 import { Conversation } from './conversation.entity';
 import { User } from './user.entity';
 
-export enum UserType {
-  ADMIN = 'admin',
-  USER = 'user',
-}
-
 @Entity()
 export class Channel {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column({ unique: true })
   name: string;
@@ -25,14 +20,15 @@ export class Channel {
   @Column({ nullable: true })
   avatar: string;
 
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  admin: User;
+
   @OneToMany((type) => User, (user) => user.channel)
-  user: User[];
+  user?: User[];
 
   @Column()
   password: string;
-
-  @Column({ type: 'enum', enum: UserType, default: UserType.USER })
-  type?: UserType;
 
   @OneToOne((type) => Conversation, (conversation) => conversation.channel)
   @JoinColumn()

@@ -12,19 +12,19 @@ export class FriendService {
   ) {}
 
   findAll(): Promise<Friend[]> {
-    return this.friendRepository.find();
+    return this.friendRepository.find({relations: ['user', 'friend']});
   }
 
   async findAllByUser(userSearch: User) {
     return await this.friendRepository.find({
       where: { user: userSearch },
-      relations: ['user'],
+      relations: ['friend'],
     });
   }
 
-  async findMyFriend(userSearch: User, id: number) {
+  async findMyFriend(userSearch: User, friend: User) {
     return await this.friendRepository.findOne({
-      where: { user: userSearch, friend: id },
+      where: { user: userSearch, friend: friend },
     });
   }
   

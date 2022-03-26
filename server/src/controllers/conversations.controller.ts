@@ -62,9 +62,27 @@ export class ConversationsController {
     }
   }
 
-  @Post('users/me/:id')
+  @Post('channel/create/users/me')
   @UseGuards(JwtAuthGuard)
-  async addNewConversation(@Req() req, @Param('id') userId2: number) {
+  async addNewChannelConversation(@Req() req) {
+    return await this.dataService.addNewChannelConversation(req.user.id);
+  }
+
+  @Post('channel/add/users/:id/conversation/:conversationId')
+  @UseGuards(JwtAuthGuard)
+  async addNewUserToChannelConversation(
+    @Param('id') userId: number,
+    @Param('conversationId') conversationId: number,
+  ) {
+    return await this.dataService.addNewUserToChannelConversation(
+      userId,
+      conversationId,
+    );
+  }
+
+  @Post('private/users/me/:id')
+  @UseGuards(JwtAuthGuard)
+  async addNewPrivateConversation(@Req() req, @Param('id') userId2: number) {
     return await this.dataService.addNewPrivateConversation(
       req.user.id,
       userId2,
