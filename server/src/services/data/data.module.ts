@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { channel } from 'diagnostics_channel';
+import { ChannelUser } from 'src/core/entities/channel-user.entity';
 import { Channel } from 'src/core/entities/channel.entity';
 import { ConversationUser } from 'src/core/entities/conversation-user.entity';
 import { Conversation } from 'src/core/entities/conversation.entity';
@@ -12,6 +13,7 @@ import { Request } from 'src/core/entities/request.entity';
 import { Stats } from 'src/core/entities/stats.entity';
 import { User } from 'src/core/entities/user.entity';
 import { AuthModule } from 'src/frameworks/auth/auth.module';
+import { ChannelUserService } from '../use-cases/channel-user/channel-user.service';
 import { ChannelService } from '../use-cases/channel/channel.service';
 import { ConversationUserService } from '../use-cases/conversation-user/conversation-user.service';
 import { ConversationService } from '../use-cases/conversation/conversation.service';
@@ -37,6 +39,7 @@ import { DataService } from './data.service';
       Conversation,
       Channel,
       ConversationUser,
+      ChannelUser,
     ]),
     AuthModule,
   ],
@@ -52,6 +55,7 @@ import { DataService } from './data.service';
     ConversationService,
     ChannelService,
     ConversationUserService,
+    ChannelUserService,
   ],
   exports: [DataService],
 })

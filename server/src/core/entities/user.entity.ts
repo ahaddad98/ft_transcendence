@@ -18,9 +18,6 @@ export class User {
   @PrimaryColumn()
   id: number;
 
-  @Column()
-  password: string;
-
   @Column({ unique: true, nullable: true })
   username?: string;
 
@@ -39,10 +36,10 @@ export class User {
   @OneToOne((type) => Stats, (stats) => stats.user)
   stats?: Stats;
 
-  @ManyToOne((type) => Channel, (channel) => channel.user, {
-    onDelete: 'SET NULL',
-  })
-  channel?: Channel;
+  // @ManyToOne((type) => Channel, (channel) => channel.user, {
+  //   onDelete: 'SET NULL',
+  // })
+  // channel?: Channel;
 
   @OneToMany((type) => Request, (request) => request.requester)
   requester?: Request[];

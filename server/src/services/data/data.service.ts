@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../use-cases/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/core/entities/user.entity';
@@ -25,10 +25,12 @@ import { ConversationService } from '../use-cases/conversation/conversation.serv
 import { Message } from 'src/core/entities/message.entity';
 import { ConversationUser } from 'src/core/entities/conversation-user.entity';
 import { ConversationUserService } from '../use-cases/conversation-user/conversation-user.service';
-import { CreateChannelDto } from 'src/core/dtos/channel.dto';
-import { Channel } from 'src/core/entities/channel.entity';
+import { CreateChannelDto, CreatePublicChannelDto } from 'src/core/dtos/channel.dto';
+import { Channel, ChannelType } from 'src/core/entities/channel.entity';
 import * as bcrypt from 'bcrypt';
 import { ChannelService } from '../use-cases/channel/channel.service';
+import { ChannelUser, UserType } from 'src/core/entities/channel-user.entity';
+import { ChannelUserService } from '../use-cases/channel-user/channel-user.service';
 
 @Injectable()
 export class DataService {
@@ -43,16 +45,22 @@ export class DataService {
     private conversationService: ConversationService,
     private conversationUserService: ConversationUserService,
     private channelService: ChannelService,
+    private channelUserService: ChannelUserService,
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    // const user = await this.usersService.findOne(username);
-    // if (user && user.password === pass) {
-    // const { password, ...result } = user;
-    // return result;
-    // }
-    return null;
+  async validateUser(channelId: number, req): Promise<any> {
+    const channel: Channel = await this.channelService.findChannelById(
+      channelId,
+    );
+    if (!req.body.password) throw new UnauthorizedException();
+    const check = await bcrypt.compare(req.body.password, channel.password);
+    console.log(check);
+    if (channel && check) {
+      return await this.addNewUserToChannel(channelId, req.user.id);
+    }
+    throw new UnauthorizedException();
+    // return false;
   }
 
   async findAllExceptMyProfile(id: number) {
@@ -114,9 +122,9 @@ export class DataService {
   async findAllFriendOfUser(user: User) {
     let id: number[];
     let friends: User[] = [];
-   return await this.friendsService.findAllByUser(user)
-  //  .then((data) => {
-      // id = data.map((element) => element.friend);
+    return await this.friendsService.findAllByUser(user);
+    //  .then((data) => {
+    // id = data.map((element) => element.friend);
     // );
     // await Promise.all(
     //   id.map(async (element) => {
@@ -327,6 +335,7 @@ export class DataService {
     this.conversationUserService.save(conversationUser2);
     return conversation;
   }
+
   async addNewChannelConversation(myId: number) {
     const user1 = await this.usersService.findOneById(myId);
     let conversation: Conversation = new Conversation();
@@ -363,29 +372,87 @@ export class DataService {
 
     return conversationUser;
   }
-  async addNewChannel(
+
+  async addNewPrivateChannel(
     file: Express.Multer.File,
     body: CreateChannelDto,
     myId: number,
   ) {
     const user: User = await this.usersService.findOneById(myId);
-    const channel: Channel = new Channel();
+    let channel: Channel = new Channel();
     channel.name = body.name;
     const hash = await bcrypt.hash(body.password, 10);
+    channel.type = ChannelType.PRIVATE;
     channel.password = hash;
     channel.avatar = '';
-    channel.admin = user;
-    channel.user = [];
+    channel.owner = user;
     channel.conversation = await this.addNewChannelConversation(myId);
-    return await this.channelService.save(channel);
+    channel = await this.channelService.save(channel);
+    console.log('salam');
+    await this.addNewUserToChannel(channel.id, user.id);
+    return channel;
+  }
+
+  async addNewPublicChannel(
+    file: Express.Multer.File,
+    body: CreatePublicChannelDto,
+    myId: number,
+  ) {
+    const user: User = await this.usersService.findOneById(myId);
+    let channel: Channel = new Channel();
+    channel.type = ChannelType.PUBLIC;
+    channel.name = body.name;
+    channel.avatar = '';
+    channel.owner = user;
+    channel.conversation = await this.addNewChannelConversation(myId);
+    channel = await this.channelService.save(channel);
+    console.log('first')
+    await this.addNewUserToChannel(channel.id, user.id);
+    return channel;
   }
 
   async addNewUserToChannel(channelId: number, userId: number) {
     const newUser: User = await this.usersService.findOneById(userId);
-    const channel: Channel = await this.channelService.findChannelById(
+    const newChannel: Channel = await this.channelService.findChannelById(
       channelId,
     );
-    channel.user.push(newUser);
-    return await this.channelService.updateUsersList(channelId, channel.user);
+    const channelUser: ChannelUser = new ChannelUser();
+    channelUser.channel = newChannel;
+    channelUser.user = newUser;
+    channelUser.userType = UserType.OWNER;
+    console.log(newUser);
+    console.log(newChannel);
+    await this.addNewUserToChannelConversation(
+      newUser.id,
+      newChannel.conversation.id,
+    );
+    return await this.channelUserService.save(channelUser);
   }
+
+  async listUsersOfChannel(channelId: number, myId: number) {
+    const newChannel: Channel = await this.channelService.findChannelById(
+      channelId,
+    );
+    const newUser: User = await this.usersService.findOneById(myId);
+    return await this.channelUserService.findAllUsersInChannel(
+      newChannel,
+      newUser,
+    );
+  }
+
+  async leavesTheChannel(channelId: number, myId: number) {
+    const newChannel: Channel = await this.channelService.findChannelById(
+      channelId,
+    );
+    const newUser: User = await this.usersService.findOneById(myId);
+    const chanelUser = await this.channelUserService.findbyChannelAndUser(
+      newChannel,
+      newUser,
+    );
+    if (newUser.id === newChannel.owner.id)
+      return await this.channelService.remove(newChannel);
+    return await this.channelUserService.remove(chanelUser.id);
+  }
+
+  async addUserToBeAdminInChannel(channelId: number, myId: number) {}
 }
