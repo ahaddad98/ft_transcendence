@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
+import Modal from "@material-tailwind/react/Modal";
+
 const ChannlesList = () => {
+	const [createchannel, setCreatechannel] = useState(false);
     return (
         <div className="flex justify-center">
             <div className="w-3/5 mt-14 bg-white p-8 rounded-md">
@@ -9,10 +12,62 @@ const ChannlesList = () => {
 					</div>
 					<div className="flex items-center justify-between">
 						<div className="lg:ml-40 ml-10 space-x-8">
-							<button className="hover:bg-orange-400 bg-orange-500 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer">Create Channel</button>
+							<button className="hover:bg-orange-400 bg-orange-500 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer"
+							onClick={() => {
+								setCreatechannel(!createchannel);
+							  }}
+							>
+								Create Channel
+							</button>
 						</div>
 					</div>
 				</div>
+				{
+					<Modal size="md" active={createchannel} toggler={() => setCreatechannel(false)}>
+					<div className="w-full md:w-auto dark:bg-gray-800 flex flex-col justify-center items-center bg-white py-4 px-4 md:px-24 xl:py-4 xl:px-18">
+					  <button
+						onClick={() => {
+						  setCreatechannel(false);
+						}}
+						className="text-gray-800 dark:text-gray-400 absolute top-8 right-8 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800"
+						aria-label="close"
+					  >
+						<svg
+						  width="24"
+						  height="24"
+						  viewBox="0 0 24 24"
+						  fill="none"
+						  xmlns="http://www.w3.org/2000/svg"
+						>
+						  <path
+							d="M18 6L6 18"
+							stroke="currentColor"
+							strokeWidth="1.66667"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						  />
+						  <path
+							d="M6 6L18 18"
+							stroke="currentColor"
+							strokeWidth="1.66667"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						  />
+						</svg>
+					  </button>
+  						<form>
+  						    <div className="space-y-4">
+  						      <h1 className="text-center text-2xl font-semibold text-gray-600">Create Channel</h1>
+  						      <div>
+  						        <label htmlFor="email" className="block mb-1 text-gray-600 font-semibold">Name</label>
+  						        <input type="text" className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full" />
+  						      </div>
+  						    </div>
+  						    <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide">Create</button>
+  						</form>
+						</div>
+				  </Modal>
+				}
 		<div>
 			<div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
 				<div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
@@ -73,8 +128,7 @@ const ChannlesList = () => {
 								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
 									<span
                                         className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                        <span aria-hidden
-                                            className="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+                                        
 									<span className="relative">Active</span>
 									</span>
 								</td>
@@ -110,8 +164,7 @@ const ChannlesList = () => {
 								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
 									<span
                                         className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                        <span aria-hidden
-                                            className="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+                                        
 									<span className="relative">Active</span>
 									</span>
 								</td>
@@ -147,8 +200,7 @@ const ChannlesList = () => {
 								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
 									<span
                                         className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                        <span aria-hidden
-                                            className="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+                                        
 									<span className="relative">Active</span>
 									</span>
 								</td>
