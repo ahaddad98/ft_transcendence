@@ -12,7 +12,7 @@ import { User } from './user.entity';
 @Entity()
 export class Channel {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column({ unique: true })
   name: string;
@@ -20,11 +20,12 @@ export class Channel {
   @Column({ nullable: true })
   avatar: string;
 
-  @OneToOne(() => User, {onDelete: "CASCADE"})
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn()
   admin: User;
 
   @OneToMany((type) => User, (user) => user.channel)
-  user: User[];
+  user?: User[];
 
   @Column()
   password: string;

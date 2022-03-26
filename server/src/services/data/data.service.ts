@@ -17,7 +17,10 @@ import {
 } from 'src/core/entities/notification.entity';
 import { History, ResultType } from 'src/core/entities/history.entity';
 import { fullImagePath } from '../helpers/image-storage';
-import { Conversation } from 'src/core/entities/conversation.entity';
+import {
+  Conversation,
+  ConversationType,
+} from 'src/core/entities/conversation.entity';
 import { ConversationService } from '../use-cases/conversation/conversation.service';
 import { Message } from 'src/core/entities/message.entity';
 import { ConversationUser } from 'src/core/entities/conversation-user.entity';
@@ -63,7 +66,8 @@ export class DataService {
       users.map(async (user) => {
         requestId = undefined;
         let userObject: Object = user;
-        const friend = await this.friendsService.findMyFriend(me, user.id);
+        const friend = await this.friendsService.findMyFriend(me, user);
+        console.log('salam');
         if (friend === undefined) {
           const request = await this.requestService.findFriendRequestByUsers(
             me,
@@ -110,17 +114,18 @@ export class DataService {
   async findAllFriendOfUser(user: User) {
     let id: number[];
     let friends: User[] = [];
-    await this.friendsService.findAllByUser(user).then((data) => {
-      id = data.map((element) => element.friend);
-    });
-    await Promise.all(
-      id.map(async (element) => {
-        await this.usersService
-          .findOneById(element)
-          .then((element) => friends.push(element));
-      }),
-    );
-    return friends;
+   return await this.friendsService.findAllByUser(user)
+  //  .then((data) => {
+      // id = data.map((element) => element.friend);
+    // );
+    // await Promise.all(
+    //   id.map(async (element) => {
+    //     await this.usersService
+    //       .findOneById(element)
+    //       .then((element) => friends.push(element));
+    //   }),
+    // );
+    // return friends;
   }
 
   async addFriend(userId: number, friendId: number) {
@@ -129,18 +134,17 @@ export class DataService {
     const user = await this.usersService.findOneByIdWithRelation(userId, {
       relations: ['friend'],
     });
-    if (user.friend.find((friend) => friend.friend == friendId)) {
+    if (user.friend.find((friend) => friend.friend.id == friendId)) {
       console.log('friend is already in the list');
       return { error: 'friend is already in the list' };
     }
-    console.log('first');
     const newFriend: Friend = new Friend();
     newFriend.user = user;
-    newFriend.friend = friendId;
+    newFriend.friend = friend;
     await this.friendsService.save(newFriend);
     const newFriend1: Friend = new Friend();
     newFriend1.user = friend;
-    newFriend1.friend = userId;
+    newFriend1.friend = user;
     await this.friendsService.save(newFriend1);
     return { stats: 200, message: 'friend is add' };
   }
@@ -234,8 +238,9 @@ export class DataService {
     myId: number,
     friendId: number,
   ) {
-    this.requestService.removeRequestById(reqId);
-    return await this.addFriend(myId, friendId);
+    const result = await this.addFriend(myId, friendId);
+    await this.requestService.removeRequestById(reqId);
+    return result;
   }
 
   async findMyNotifications(myId: number) {
@@ -325,6 +330,7 @@ export class DataService {
   async addNewChannelConversation(myId: number) {
     const user1 = await this.usersService.findOneById(myId);
     let conversation: Conversation = new Conversation();
+    conversation.type = ConversationType.CHANNEL;
     conversation = await this.conversationService.saveNewConversation(
       conversation,
     );
@@ -368,14 +374,18 @@ export class DataService {
     const hash = await bcrypt.hash(body.password, 10);
     channel.password = hash;
     channel.avatar = '';
-    channel.user = [];
     channel.admin = user;
-    this.addNewChannelConversation(myId);
+    channel.user = [];
+    channel.conversation = await this.addNewChannelConversation(myId);
     return await this.channelService.save(channel);
   }
 
-  async addNewUserToChannel(channelId: number, UserId: number){
-    const newUser: User = await this.usersService.findOneById(UserId);
-    // const newChannel: 
+  async addNewUserToChannel(channelId: number, userId: number) {
+    const newUser: User = await this.usersService.findOneById(userId);
+    const channel: Channel = await this.channelService.findChannelById(
+      channelId,
+    );
+    channel.user.push(newUser);
+    return await this.channelService.updateUsersList(channelId, channel.user);
   }
 }

@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 
 @Entity()
@@ -9,9 +16,10 @@ export class Friend {
   @ManyToOne((type) => User, (user) => user.friend, { onDelete: 'CASCADE' })
   user: User;
 
-  @Column()
-  friend: number;
-  
+  @ManyToOne(() => User)
+  @JoinColumn()
+  friend: User;
+
   @Column({ type: 'timestamptz', default: 'NOW()' })
   createdAt?: Date;
 }

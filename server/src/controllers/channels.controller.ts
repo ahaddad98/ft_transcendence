@@ -20,12 +20,14 @@ import { ChannelService } from 'src/services/use-cases/channel/channel.service';
 import { UserService } from 'src/services/use-cases/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { LocalAuthGuard } from 'src/frameworks/auth/local/local-auth.guard';
+import { DataService } from 'src/services/data/data.service';
 
 @Controller('channels')
 export class ChannelsController {
   constructor(
     private channelService: ChannelService,
     private userService: UserService,
+    private dataService: DataService,
   ) {}
 
   @Get()
@@ -59,13 +61,16 @@ export class ChannelsController {
     @UploadedFile() file: Express.Multer.File,
     @Body() body: CreateChannelDto,
     @Req() req,
-    ) {
-      return await this.addNewChannel(file, body, req.user.id);
-    }
-    
-    @Post('add/:channelId/users/me/:id')
-    @UseGuards(JwtAuthGuard) // TODO hadi khasni 
-    async addNewUserToChannel(@Param('channelId') channelId: number, @Param(':id') UserId: number){
-      return await this.addNewUserToChannel
-    }
+  ) {
+    return await this.dataService.addNewChannel(file, body, req.user.id);
+  }
+
+  @Post('add/:channelId/users/me/:id')
+  @UseGuards(JwtAuthGuard) // TODO hadi khasni
+  async addNewUserToChannel(
+    @Param('channelId') channelId: number,
+    @Param(':id') userId: number,
+  ) {
+    return await this.dataService.addNewUserToChannel(channelId, userId);
+  }
 }
