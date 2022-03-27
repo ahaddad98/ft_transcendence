@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Req } from '@nestjs/common';
+import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { Crud, CrudController } from '@nestjsx/crud';
 import { Param } from '@nestjs/common';
 import { Game } from 'src/core/entities/game.entity';
 import { GameService } from 'src/services/use-cases/game/game.service';
+import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
 
 @Crud({
   model: {
@@ -102,5 +103,11 @@ export class GameController implements CrudController<Game> {
   @Get('/history/:id')
   async history(@Param('id') id: number) {
     return await this.service.history(id);
+  }
+
+  @Get('/history/users/me')
+  @UseGuards(JwtAuthGuard)
+  async myHistory(@Req() req) {
+    return await this.service.history(req.user.id);
   }
 }
