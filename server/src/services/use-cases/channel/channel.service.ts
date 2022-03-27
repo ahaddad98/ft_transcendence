@@ -14,7 +14,20 @@ export class ChannelService {
   async findAll() {
     return await this.channelRepository.find();
   }
+  // async findAll() {
+  //   return await this.channelRepository.find();
+  // }
 
+  async searchForOwner(user: User) {
+    const channel = await this.channelRepository.findOne({
+      relations: ['owner'],
+      where: {
+        owner: user,
+      },
+    });
+    if (!channel) return false;
+    return true;
+  }
   async findChannelById(id: number) {
     return await this.channelRepository.findOne(id, {
       relations: ['conversation', 'owner'],

@@ -28,12 +28,14 @@ export class ChannelUserService {
     });
   }
   async findAllUsersInChannel(newChannel: Channel, newUser: User) {
-    return await this.channelUserRepository
+    const salam = await this.channelUserRepository
       .createQueryBuilder('channelUser')
       .leftJoinAndSelect('channelUser.user', 'user')
       .where('channelUser.channel.id = :channel', { channel: newChannel.id })
       .andWhere('channelUser.user.id != :user', { user: newUser.id })
       .getMany();
+    // console.log(salam);
+    return salam;
   }
 
   async save(channelUser: ChannelUser) {

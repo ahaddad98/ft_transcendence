@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Req,
   UnauthorizedException,
   UploadedFile,
@@ -12,7 +13,10 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CreateChannelDto, CreatePublicChannelDto } from 'src/core/dtos/channel.dto';
+import {
+  CreateChannelDto,
+  CreatePublicChannelDto,
+} from 'src/core/dtos/channel.dto';
 import { Channel } from 'src/core/entities/channel.entity';
 import { User } from 'src/core/entities/user.entity';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
@@ -22,6 +26,7 @@ import { UserService } from 'src/services/use-cases/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { LocalAuthGuard } from 'src/frameworks/auth/local/local-auth.guard';
 import { DataService } from 'src/services/data/data.service';
+import { UserType } from 'src/core/entities/channel-user.entity';
 
 @Controller('channels')
 export class ChannelsController {
@@ -82,7 +87,11 @@ export class ChannelsController {
     @Param(':channelId') channelId: number,
     @Req() req,
   ) {
-    return await this.dataService.addNewUserToChannel(channelId, req.user.id);
+    return await this.dataService.addNewUserToChannel(
+      channelId,
+      req.user.id,
+      UserType.USER,
+    );
   }
 
   @Post('join/:channelId/private/users/me')
@@ -94,13 +103,30 @@ export class ChannelsController {
     return await this.dataService.validateUser(channelId, req);
   }
 
-  @Post('add/:channelId/users/me/:id')
+  @Post('add/:channelId/users/me/:id/user')
   @UseGuards(JwtAuthGuard)
   async addNewUserToChannel(
     @Param('channelId') channelId: number,
     @Param(':id') userId: number,
   ) {
-    return await this.dataService.addNewUserToChannel(channelId, userId);
+    return await this.dataService.addNewUserToChannel(
+      channelId,
+      userId,
+      UserType.USER,
+    );
+  }
+
+  @Post('add/:channelId/users/me/:id/admin')
+  @UseGuards(JwtAuthGuard)
+  async addNewAdminToChannel(
+    @Param('channelId') channelId: number,
+    @Param(':id') userId: number,
+  ) {
+    return await this.dataService.addNewUserToChannel(
+      channelId,
+      userId,
+      UserType.ADMIN,
+    );
   }
 
   @Post('add/:channelId/admin/users/:id')
@@ -109,7 +135,7 @@ export class ChannelsController {
     @Param('channelId') channelId: number,
     @Param(':id') userId: number,
   ) {
-    return await this.dataService.addUserToBeAdminInChannel(channelId, userId);
+    return await this.dataService.addUserToBeAdminInChannel(channelId, userId); // TODO hta n9adha
     // return await
   }
 
@@ -128,5 +154,12 @@ export class ChannelsController {
   ) {
     console.log('salam');
     return await this.dataService.leavesTheChannel(channelId, userId);
+  }
+
+  @Put('mute/:channelId/users/:userId')
+  @UseGuards(JwtAuthGuard)
+  async muteUserInTheChannel(@Param(':channelId') channelId: number,
+  @Param('userId') userId: number,) {
+    return await this.dataService.muteUserInChannel(channelId, userId);
   }
 }
