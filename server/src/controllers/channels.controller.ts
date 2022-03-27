@@ -6,12 +6,13 @@ import {
   Param,
   Post,
   Req,
+  UnauthorizedException,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CreateChannelDto } from 'src/core/dtos/channel.dto';
+import { CreateChannelDto, CreatePublicChannelDto } from 'src/core/dtos/channel.dto';
 import { Channel } from 'src/core/entities/channel.entity';
 import { User } from 'src/core/entities/user.entity';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
@@ -40,37 +41,92 @@ export class ChannelsController {
     return await this.channelService.findChannelById(id);
   }
 
-  @Post(':id/login')
-  @UseGuards(LocalAuthGuard)
+  @Get(':id/users/me/all')
   @UseGuards(JwtAuthGuard)
-  async login(@Req() req) {
-    console.log('w');
-    return req.user;
+  async listAllUsersOfChannel(@Param('id') id: number, @Req() req) {
+    return await this.dataService.listUsersOfChannel(id, req.user.id);
   }
 
   @Delete(':id')
   async deleteChannel(@Param('id') id: number) {
-    await this.channelService.remove(id);
+    await this.channelService.delete(id);
     return { status: 200, message: 'channel is removed' };
   }
 
-  @Post('create/users/me/')
+  @Post('create/private/users/me/')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file', saveImageToStorage))
-  async addNewChannel(
+  async addNewPrivateChannel(
     @UploadedFile() file: Express.Multer.File,
     @Body() body: CreateChannelDto,
     @Req() req,
   ) {
-    return await this.dataService.addNewChannel(file, body, req.user.id);
+    return await this.dataService.addNewPrivateChannel(file, body, req.user.id);
+  }
+
+  @Post('create/public/users/me/')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file', saveImageToStorage))
+  async addNewPublicChannel(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: CreatePublicChannelDto,
+    @Req() req,
+  ) {
+    // console.log('salam')
+    return await this.dataService.addNewPublicChannel(file, body, req.user.id);
+  }
+
+  @Post('join/:channelId/public/users/me')
+  @UseGuards(JwtAuthGuard)
+  async JoinToPublicChannel(
+    @Param(':channelId') channelId: number,
+    @Req() req,
+  ) {
+    return await this.dataService.addNewUserToChannel(channelId, req.user.id);
+  }
+
+  @Post('join/:channelId/private/users/me')
+  @UseGuards(JwtAuthGuard)
+  async JoinToPrivateChannel(
+    @Param(':channelId') channelId: number,
+    @Req() req,
+  ) {
+    return await this.dataService.validateUser(channelId, req);
   }
 
   @Post('add/:channelId/users/me/:id')
-  @UseGuards(JwtAuthGuard) // TODO hadi khasni
+  @UseGuards(JwtAuthGuard)
   async addNewUserToChannel(
     @Param('channelId') channelId: number,
     @Param(':id') userId: number,
   ) {
     return await this.dataService.addNewUserToChannel(channelId, userId);
+  }
+
+  @Post('add/:channelId/admin/users/:id')
+  @UseGuards(JwtAuthGuard)
+  async addUserToBeAdmin(
+    @Param('channelId') channelId: number,
+    @Param(':id') userId: number,
+  ) {
+    return await this.dataService.addUserToBeAdminInChannel(channelId, userId);
+    // return await
+  }
+
+  @Delete('leave/:channelId/users/me')
+  @UseGuards(JwtAuthGuard)
+  async leavesTheChannel(@Param(':channelId') channelId: number, @Req() req) {
+    console.log('salam');
+    return await this.dataService.leavesTheChannel(channelId, req.user.id);
+  }
+
+  @Delete('kick/:channelId/users/:userId')
+  @UseGuards(JwtAuthGuard)
+  async kickUserFromTheChannel(
+    @Param(':channelId') channelId: number,
+    @Param('userId') userId: number,
+  ) {
+    console.log('salam');
+    return await this.dataService.leavesTheChannel(channelId, userId);
   }
 }

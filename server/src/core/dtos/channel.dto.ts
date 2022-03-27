@@ -11,3 +11,10 @@ export class CreateChannelDto {
   @MaxLength(20)
   name: string;
 }
+
+export class CreatePublicChannelDto {
+  @IsNotEmpty()
+  @MinLength(5)
+  @MaxLength(20)
+  name: string;
+}

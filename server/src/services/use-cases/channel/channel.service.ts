@@ -12,21 +12,23 @@ export class ChannelService {
   ) {}
 
   async findAll() {
-    return await this.channelRepository.find({relations: ['user']});
+    return await this.channelRepository.find();
   }
 
   async findChannelById(id: number) {
-    return await this.channelRepository.findOne(id, { relations: ['user'] });
+    return await this.channelRepository.findOne(id, {
+      relations: ['conversation', 'owner'],
+    });
   }
   async save(channel: Channel) {
     return await this.channelRepository.save(channel);
   }
 
-  async updateUsersList(id: number, users: User[]) {
-    return await this.channelRepository.update(id, { user: users });
-  }
-  async remove(id: number) {
-    console.log('siri');
+  async delete(id: number) {
     return await this.channelRepository.delete(id);
+  }
+
+  async remove(channel: Channel) {
+    return await this.channelRepository.remove(channel);
   }
 }
