@@ -8,10 +8,8 @@ import {
 } from 'typeorm';
 import { Friend } from '../../core/entities/friend.entity';
 import { Channel } from './channel.entity';
-import { History } from './history.entity';
 import { Notification } from './notification.entity';
 import { Request } from './request.entity';
-import { Stats } from './stats.entity';
 
 @Entity()
 export class User {
@@ -29,13 +27,7 @@ export class User {
 
   @OneToMany((type) => Friend, (friend) => friend.user)
   friend: Friend[];
-
-  @OneToMany((type) => History, (history) => history.user)
-  history?: History[];
-
-  @OneToOne((type) => Stats, (stats) => stats.user)
-  stats?: Stats;
-
+  
   // @ManyToOne((type) => Channel, (channel) => channel.user, {
   //   onDelete: 'SET NULL',
   // })
@@ -52,4 +44,22 @@ export class User {
 
   @Column({ type: 'timestamptz', default: 'NOW()' })
   createdAt?: Date;
+
+  @Column({ type: 'varchar' ,default: 'Moroco' })
+  country?: string;
+
+  @Column({ default: 0 })
+  level?: number;
+
+  @Column({ default: 0 })
+  wins?: number;
+
+  @Column({ default: 0 })
+  loses?: number;
+
+  @Column({ default: 0 })
+  quit?: number;
+
+  @Column({ type: 'boolean', default: false })
+  is_online?: boolean;
 }
