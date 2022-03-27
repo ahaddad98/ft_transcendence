@@ -9,14 +9,21 @@ export class UsersController {
   constructor(
     private dataService: DataService,
     private userService: UserService,
-  ) {}
+    ) {}
 
-  @Get()
+    @Get()
   @UseGuards(JwtAuthGuard)
   findAllUsers() {
     return this.userService.findAll();
   }
-
+  
+  
+    @Get('leaderboard')
+    @UseGuards(JwtAuthGuard)
+    async leaderborad() {
+      return await this.userService.leaderboard();
+    }
+  
   @Get('me')
   @UseGuards(JwtAuthGuard)
   async findMyData(@Req() req) {
@@ -79,15 +86,10 @@ export class UsersController {
     return await this.userService.getRandomUser();
   }
 
-  @Get('/leaderboard/')
-  async leaderborad() {
-    // console.log("leaderborad");
-    return await this.userService.leaderboard();
-  }
-  
   @Delete(':id')
   async removeUser(@Param('id') id: number) {
     await this.userService.remove(id);
     return { status: 201, message: 'User deleted' };
   }
+
 }

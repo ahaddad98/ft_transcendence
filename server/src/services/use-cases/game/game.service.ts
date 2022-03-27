@@ -3,6 +3,7 @@ import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from '../user/user.service';
 import { Game } from 'src/core/entities/game.entity';
+import { User } from 'src/core/entities/user.entity';
 
 @Injectable()
 export class GameService extends TypeOrmCrudService<Game> {
@@ -263,15 +264,67 @@ export class GameService extends TypeOrmCrudService<Game> {
     }
   }
 
-  async history(id: number): Promise<Game[]> {
-    const user = await this.repository
+  async history(id: number) {
+    const game = await this.repository
       .createQueryBuilder('game')
       .leftJoinAndSelect('game.user1', 'user1')
       .leftJoinAndSelect('game.user2', 'user2')
       .where('game.user1.id = :id', { id: id })
       .orWhere('game.user2.id = :id', { id: id })
+      .andWhere('game.is_finished = true')
       .orderBy('game.created_at', 'DESC')
       .getMany();
-    return user;
+
+    let data = [];
+
+    for (let i = 0; i < game.length; i++) {
+      let d = {
+        user1: {
+          avatar: game[i].user1.avatar,
+          score: game[i].score_user1,
+          username: game[i].user1.username,
+          id: game[i].user1.id,
+        },
+        user2: {
+          avatar: game[i].user2.avatar,
+          score: game[i].score_user2,
+          username: game[i].user2.username,
+          id: game[i].user2.id,
+        },
+      };
+      data.push(d);
+    }
+    return data;
+  }
+
+  async historyAll() {
+    const game = await this.repository
+      .createQueryBuilder('game')
+      .leftJoinAndSelect('game.user1', 'user1')
+      .leftJoinAndSelect('game.user2', 'user2')
+      .andWhere('game.is_finished = true')
+      .orderBy('game.created_at', 'DESC')
+      .getMany();
+    let data = [];
+
+    for (let i = 0; i < game.length; i++) {
+      let d = {
+        user1: {
+          avatar: game[i].user1.avatar,
+          score: game[i].score_user1,
+          username: game[i].user1.username,
+          id: game[i].user1.id,
+        },
+        user2: {
+          avatar: game[i].user2.avatar,
+          score: game[i].score_user2,
+          username: game[i].user2.username,
+          id: game[i].user2.id,
+        },
+      };
+      data.push(d);
+    }
+    // console.log(data);
+    return data;
   }
 }

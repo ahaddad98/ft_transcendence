@@ -48,7 +48,7 @@ export class User {
   @Column({ type: 'varchar' ,default: 'Moroco' })
   country?: string;
 
-  @Column({ default: 0 })
+  @Column({ default: 1 })
   level?: number;
 
   @Column({ default: 0 })

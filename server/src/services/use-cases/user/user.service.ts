@@ -35,9 +35,7 @@ export class UserService {
   }
 
   async findOneById(id: number): Promise<User> {
-    return await this.userRepository.findOne(id, {
-      relations: ['history', 'stats'],
-    });
+    return await this.userRepository.findOne(id);
   }
 
   findOneByIdWithRelation(id: number, relation: Object): Promise<User> {
@@ -90,15 +88,16 @@ export class UserService {
   async leaderboard() {
     const user = await this.userRepository
       .createQueryBuilder('user')
-      .orderBy('user.wins', 'ASC')
+      .orderBy('user.level', 'DESC')
       .getMany();
     let winners = [];
     for (let i = 0; i < user.length; i++) {
       let winner = {
-        Name: [user[i].username, user[i].avatar],
-        Rank: user[i].wins,
-        Contry: user[i].country,
-        key: i,
+        avatar: user[i].avatar,
+        username: user[i].username,
+        email: user[i].email,
+        online: user[i].is_online,
+        level: user[i].level,
       };
       winners.push(winner);
     }
