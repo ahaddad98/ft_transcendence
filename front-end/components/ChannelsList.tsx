@@ -137,15 +137,15 @@ const ChannlesList = () => {
                       <p className="text-gray-900 whitespace-no-wrap">43</p>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <div
-                          role="button"
-                          aria-label="MAIN BUTTON"
-                          className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                        >
-                          <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                            Join
-                          </button>
-                        </div>
+                      <div
+                        role="button"
+                        aria-label="MAIN BUTTON"
+                        className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
+                      >
+                        <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                          Join
+                        </button>
+                      </div>
                     </td>
                   </tr>
                   <tr>
@@ -177,16 +177,16 @@ const ChannlesList = () => {
                       <p className="text-gray-900 whitespace-no-wrap">43</p>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-					<div
-                          role="button"
-                          aria-label="MAIN BUTTON"
-                          className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                        >
-                          <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                            Join
-                          </button>
-                        </div>
-					</td>
+                      <div
+                        role="button"
+                        aria-label="MAIN BUTTON"
+                        className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
+                      >
+                        <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                          Join
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                   <tr>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -217,16 +217,16 @@ const ChannlesList = () => {
                       <p className="text-gray-900 whitespace-no-wrap">43</p>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-					<div
-                          role="button"
-                          aria-label="MAIN BUTTON"
-                          className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                        >
-                          <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                            Join
-                          </button>
-                        </div>
-					</td>
+                      <div
+                        role="button"
+                        aria-label="MAIN BUTTON"
+                        className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
+                      >
+                        <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                          Join
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -253,10 +253,12 @@ const ChannlesList = () => {
           toggler={() => setViewchannles(false)}
         >
           <div className="w-full md:w-auto dark:bg-gray-800 flex flex-col justify-center items-center bg-white  md:px-24 xl:py-4 xl:px-18">
-		  <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-white">LEADER BOARD</h3>
-                 </div>
-			<button
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
+                LEADER BOARD
+              </h3>
+            </div>
+            <button
               onClick={() => {
                 setViewchannles(false);
               }}
@@ -287,146 +289,146 @@ const ChannlesList = () => {
               </svg>
             </button>
             <table className="min-w-full leading-normal">
-                <thead>
-                  <tr>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Name
-                    </th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Admin
-                    </th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Created at
-                    </th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Members
-                    </th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 w-10 h-10">
-                          <img
-                            className="w-full h-full rounded-full"
-                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                            alt=""
-                          />
-                        </div>
-                        <div className="ml-3">
-                          <p className="text-gray-900 whitespace-no-wrap">
-                            Vera Carpenter
-                          </p>
-                        </div>
+              <thead>
+                <tr>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Admin
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Created at
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Members
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0 w-10 h-10">
+                        <img
+                          className="w-full h-full rounded-full"
+                          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
+                          alt=""
+                        />
                       </div>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">Admin</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">
-                        Jan 21, 2020
-                      </p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">43</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <div
-                          role="button"
-                          aria-label="MAIN BUTTON"
-                          className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                        >
-                          <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                            Join
-                          </button>
-                        </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 w-10 h-10">
-                          <img
-                            className="w-full h-full rounded-full"
-                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                            alt=""
-                          />
-                        </div>
-                        <div className="ml-3">
-                          <p className="text-gray-900 whitespace-no-wrap">
-                            Vera Carpenter
-                          </p>
-                        </div>
+                      <div className="ml-3">
+                        <p className="text-gray-900 whitespace-no-wrap">
+                          Vera Carpenter
+                        </p>
                       </div>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">Admin</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">
-                        Jan 21, 2020
-                      </p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">43</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-					<div
-                          role="button"
-                          aria-label="MAIN BUTTON"
-                          className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                        >
-                          <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                            Join
-                          </button>
-                        </div>
-					</td>
-                  </tr>
-                  <tr>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 w-10 h-10">
-                          <img
-                            className="w-full h-full rounded-full"
-                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                            alt=""
-                          />
-                        </div>
-                        <div className="ml-3">
-                          <p className="text-gray-900 whitespace-no-wrap">
-                            Vera Carpenter
-                          </p>
-                        </div>
+                    </div>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p className="text-gray-900 whitespace-no-wrap">Admin</p>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p className="text-gray-900 whitespace-no-wrap">
+                      Jan 21, 2020
+                    </p>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p className="text-gray-900 whitespace-no-wrap">43</p>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <div
+                      role="button"
+                      aria-label="MAIN BUTTON"
+                      className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
+                    >
+                      <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                        Join
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0 w-10 h-10">
+                        <img
+                          className="w-full h-full rounded-full"
+                          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
+                          alt=""
+                        />
                       </div>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">Admin</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">
-                        Jan 21, 2020
-                      </p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">43</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-					<div
-                          role="button"
-                          aria-label="MAIN BUTTON"
-                          className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                        >
-                          <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                            Join
-                          </button>
-                        </div>
-					</td>
-                  </tr>
-                </tbody>
-              </table>
+                      <div className="ml-3">
+                        <p className="text-gray-900 whitespace-no-wrap">
+                          Vera Carpenter
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p className="text-gray-900 whitespace-no-wrap">Admin</p>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p className="text-gray-900 whitespace-no-wrap">
+                      Jan 21, 2020
+                    </p>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p className="text-gray-900 whitespace-no-wrap">43</p>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <div
+                      role="button"
+                      aria-label="MAIN BUTTON"
+                      className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
+                    >
+                      <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                        Join
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0 w-10 h-10">
+                        <img
+                          className="w-full h-full rounded-full"
+                          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
+                          alt=""
+                        />
+                      </div>
+                      <div className="ml-3">
+                        <p className="text-gray-900 whitespace-no-wrap">
+                          Vera Carpenter
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p className="text-gray-900 whitespace-no-wrap">Admin</p>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p className="text-gray-900 whitespace-no-wrap">
+                      Jan 21, 2020
+                    </p>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <p className="text-gray-900 whitespace-no-wrap">43</p>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <div
+                      role="button"
+                      aria-label="MAIN BUTTON"
+                      className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
+                    >
+                      <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                        Join
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </Modal>
       )}

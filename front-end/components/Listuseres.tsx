@@ -6,7 +6,7 @@ import HomeNavbar from "./HomeNavbar";
 const ListUseres = (props) => {
   const hundelClick1 = async (e, id) => {
     e.preventDefault();
-    axios.post(`http://localhost:3001/requests/users/me/friends/${id}`, {
+    axios.post(`http://localhost:3001/requests/users/me/friends/${id}`, {},{
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -14,15 +14,15 @@ const ListUseres = (props) => {
   };
   const hundelClick2 = async (e, req_id) => {
     e.preventDefault();
-    axios.delete(`http://localhost:3001/requests/${req_id}`, {
+    axios.delete(`http://localhost:3001/requests/${req_id}`,{
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
     });
   };
   const hundelClick3 = async (e, req_id,id) => {
-    e.preventDefault();
-    axios.post(`http://localhost:3001/requests/${req_id}/users/me/friends/${id}/accept`, {
+    // e.preventDefault();
+    axios.post(`http://localhost:3001/requests/${req_id}/users/me/friends/${id}/accept`,{} ,{
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -30,14 +30,12 @@ const ListUseres = (props) => {
   };
   const hundelClick4 = async (e, id) => {
     e.preventDefault();
-    axios.post(`http://localhost:3001/requests/users/me/friends/${id}`, {
+    axios.post(`http://localhost:3001/requests/users/me/friends/${id}`,{}, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
     });
   };
-  console.log(props.data);
-  
   return (
     <div>
       <HomeNavbar data={props.mydata} />

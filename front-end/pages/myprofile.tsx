@@ -24,7 +24,7 @@ const Myprofile = () => {
         console.log(err);
       });
   }, []);
-  const [myhistory, setMyhistory] = useState({});
+  const [myhistory, setMyhistory] = useState();
 
   const fetchmyhistory = async () => {
     const response = await axios.get("http://localhost:3001/history/users/me", {
@@ -46,6 +46,6 @@ const Myprofile = () => {
   const is_me = {
       check: true,
   }
-  return <div>{hasResult && <Profile mydata={myprofile} myhistory={myhistory} />}</div>;
+  return <div>{hasResult &&  <Profile mydata={myprofile} myhistory={myhistory} />}</div>;
 };
 export default Myprofile;
