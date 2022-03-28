@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, UseFilters } from '@nestjs/common';
 import { UserService } from '../use-cases/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/core/entities/user.entity';
@@ -336,6 +336,47 @@ export class DataService {
     return conversation;
   }
 
+  async findAllChannels(id: number) {
+    const allChannels = await this.channelService.findAllChannels();
+    let arr = [];
+    await Promise.all(
+      allChannels.map(async (newChannel) => {
+        let status: string;
+        const channelUser = await this.findChannelUser(newChannel.id, id);
+        if (!channelUser) status = 'join';
+        else if (channelUser.block === true) status = 'blocked';
+        else status = 'leave';
+        const object = {
+          channel: newChannel,
+          status: status,
+        };
+        arr.push(object);
+      }),
+    );
+    return arr;
+  }
+
+  async findAllMyChannels(id: number) {
+    // TODO hiya bash khasni nbda
+    return await this.channelUserService.findAllMyChannels(id);
+    // const allChannels = await this.channelService.findAllChannels();
+    // let arr = [];
+    // await Promise.all(
+    //   allChannels.map(async (newChannel) => {
+    //     let status: string;
+    //     const channelUser = await this.findChannelUser(newChannel.id, id);
+    //     if (!channelUser) status = 'join';
+    //     else if (channelUser.block === true) status = 'blocked';
+    //     else status = 'leave';
+    //     const object = {
+    //       channel: newChannel,
+    //       status: status,
+    //     };
+    //     arr.push(object);
+    //   }),
+    // );
+    // return arr;
+  }
   async addNewChannelConversation(myId: number) {
     const user1 = await this.usersService.findOneById(myId);
     let conversation: Conversation = new Conversation();
@@ -441,12 +482,25 @@ export class DataService {
     const newChannel: Channel = await this.channelService.findChannelById(
       channelId,
     );
-    console.log(newChannel);
     const newUser: User = await this.usersService.findOneById(myId);
-    return await this.channelUserService.findAllUsersInChannel(
+    const result = await this.channelUserService.findAllUsersInChannel(
       newChannel,
       newUser,
     );
+    const arr = [];
+    for (let i = 0; i < result.length; i++) {
+      let object = {
+        id: result[i].user.id,
+        username: result[i].user.username,
+        avatar: result[i].user.avatar,
+        is_online: result[i].user.is_online,
+        userType: result[i].userType,
+        block: result[i].block,
+        mute: result[i].mute,
+      };
+      arr.push(object);
+    }
+    return arr;
   }
 
   async leavesTheChannel(channelId: number, myId: number) {
@@ -462,10 +516,8 @@ export class DataService {
       return await this.channelService.remove(newChannel);
     return await this.channelUserService.remove(chanelUser.id);
   }
-
-  async addUserToBeAdminInChannel(channelId: number, myId: number) {}
-
-  async muteUserInChannel(channelId: number, myId: number) {
+  // opti
+  async findChannelUser(channelId: number, myId: number) {
     const newChannel: Channel = await this.channelService.findChannelById(
       channelId,
     );
@@ -474,7 +526,34 @@ export class DataService {
       newChannel,
       newUser,
     );
-    chanelUser.mute = true; // TODO hadi an9adha
     return chanelUser;
+  }
+
+  async changeUserToBeAdminInChannel(channelId: number, myId: number) {
+    const chanelUser = await this.findChannelUser(channelId, myId);
+    return await this.channelUserService.updateToBeAdmin(chanelUser.id);
+  }
+
+  async changeAdminToBeUserInChannel(channelId: number, myId: number) {
+    const chanelUser = await this.findChannelUser(channelId, myId);
+    return await this.channelUserService.updateToBeUser(chanelUser.id);
+  }
+
+  async muteUserInChannel(channelId: number, myId: number) {
+    const chanelUser = await this.findChannelUser(channelId, myId);
+    chanelUser.mute = !chanelUser.mute;
+    return await this.channelUserService.updateMute(
+      chanelUser.id,
+      chanelUser.mute,
+    );
+  }
+
+  async blockUserInChannel(channelId: number, myId: number) {
+    const chanelUser = await this.findChannelUser(channelId, myId);
+    chanelUser.block = !chanelUser.block;
+    return await this.channelUserService.updateBlock(
+      chanelUser.id,
+      chanelUser.block,
+    );
   }
 }

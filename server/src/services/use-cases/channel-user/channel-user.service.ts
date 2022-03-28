@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ChannelUser } from 'src/core/entities/channel-user.entity';
+import { use } from 'passport';
+import { ChannelUser, UserType } from 'src/core/entities/channel-user.entity';
 import { Channel } from 'src/core/entities/channel.entity';
 import { User } from 'src/core/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -18,6 +19,30 @@ export class ChannelUserService {
     });
   }
 
+  // async findAllChannels(userId: number) {
+  //   return await this.channelUserRepository
+  //     .createQueryBuilder('channelUser')
+  //     .leftJoinAndSelect('channelUser.channel', 'channel')
+  //     .leftJoinAndSelect('channel.owner', 'owner')
+  //     .innerJoinAndSelect('channelUser.user', 'user')
+  //     // .select('DISTINCT channelUser.channel', 'channel')
+  //     .where('channelUser.user.id = :id', { id: userId })
+  //     .andWhere('channelUser.block = :bool', { bool: false })
+  //     // .orWhere('channelUser.user.id != :id', { id: userId })
+  //     .distinctOn(['channel'])
+  //     .getMany();
+  // }
+
+  async findAllMyChannels(newUser: number) {
+    return await this.channelUserRepository
+      .createQueryBuilder('channelUser')
+      .leftJoinAndSelect('channelUser.channel', 'channel')
+      .innerJoinAndSelect('channel.owner', 'owner')
+      .where('channelUser.user.id = :user', { user: newUser })
+      .andWhere('channelUser.block = :bool', { bool: false })
+      .orderBy('channel.createdAt', 'DESC')
+      .getMany();
+  }
   async findbyChannelAndUser(newChannel: Channel, newUser: User) {
     return await this.channelUserRepository.findOne({
       where: {
@@ -27,19 +52,39 @@ export class ChannelUserService {
       relations: ['user', 'channel'],
     });
   }
+
   async findAllUsersInChannel(newChannel: Channel, newUser: User) {
-    const salam = await this.channelUserRepository
+    return await this.channelUserRepository
       .createQueryBuilder('channelUser')
       .leftJoinAndSelect('channelUser.user', 'user')
       .where('channelUser.channel.id = :channel', { channel: newChannel.id })
       .andWhere('channelUser.user.id != :user', { user: newUser.id })
       .getMany();
     // console.log(salam);
-    return salam;
   }
 
   async save(channelUser: ChannelUser) {
     return await this.channelUserRepository.save(channelUser);
+  }
+
+  async updateMute(id: number, newMute: boolean) {
+    return await this.channelUserRepository.update(id, { mute: newMute });
+  }
+
+  async updateBlock(id: number, newBlock: boolean) {
+    return await this.channelUserRepository.update(id, { block: newBlock });
+  }
+
+  async updateToBeAdmin(id: number) {
+    return await this.channelUserRepository.update(id, {
+      userType: UserType.ADMIN,
+    });
+  }
+
+  async updateToBeUser(id: number) {
+    return await this.channelUserRepository.update(id, {
+      userType: UserType.USER,
+    });
   }
 
   async remove(id: number) {

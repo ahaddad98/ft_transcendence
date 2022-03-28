@@ -7,7 +7,6 @@ import {
   Post,
   Put,
   Req,
-  UnauthorizedException,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -17,14 +16,10 @@ import {
   CreateChannelDto,
   CreatePublicChannelDto,
 } from 'src/core/dtos/channel.dto';
-import { Channel } from 'src/core/entities/channel.entity';
-import { User } from 'src/core/entities/user.entity';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
 import { saveImageToStorage } from 'src/services/helpers/image-storage';
 import { ChannelService } from 'src/services/use-cases/channel/channel.service';
 import { UserService } from 'src/services/use-cases/user/user.service';
-import * as bcrypt from 'bcrypt';
-import { LocalAuthGuard } from 'src/frameworks/auth/local/local-auth.guard';
 import { DataService } from 'src/services/data/data.service';
 import { UserType } from 'src/core/entities/channel-user.entity';
 
@@ -37,8 +32,20 @@ export class ChannelsController {
   ) {}
 
   @Get()
-  async findAllChannels() {
+  async findChannels() {
     return await this.channelService.findAll();
+  }
+
+  @Get('all') // 
+  @UseGuards(JwtAuthGuard)
+  async findAllChannels(@Req() req) {
+    return await this.dataService.findAllChannels(req.user.id);
+  }
+
+  @Get('users/me') // 
+  @UseGuards(JwtAuthGuard)
+  async findAllMyChannels(@Req() req) {
+    return await this.dataService.findAllMyChannels(req.user.id);
   }
 
   @Get(':id')
@@ -87,11 +94,16 @@ export class ChannelsController {
     @Param(':channelId') channelId: number,
     @Req() req,
   ) {
-    return await this.dataService.addNewUserToChannel(
+    const channelUser = await this.dataService.findChannelUser(
       channelId,
       req.user.id,
-      UserType.USER,
     );
+    return channelUser;
+    // return await this.dataService.addNewUserToChannel(
+    //   channelId,
+    //   req.user.id,
+    //   UserType.USER,
+    // );
   }
 
   @Post('join/:channelId/private/users/me')
@@ -129,16 +141,6 @@ export class ChannelsController {
     );
   }
 
-  @Post('add/:channelId/admin/users/:id')
-  @UseGuards(JwtAuthGuard)
-  async addUserToBeAdmin(
-    @Param('channelId') channelId: number,
-    @Param(':id') userId: number,
-  ) {
-    return await this.dataService.addUserToBeAdminInChannel(channelId, userId); // TODO hta n9adha
-    // return await
-  }
-
   @Delete('leave/:channelId/users/me')
   @UseGuards(JwtAuthGuard)
   async leavesTheChannel(@Param(':channelId') channelId: number, @Req() req) {
@@ -156,10 +158,45 @@ export class ChannelsController {
     return await this.dataService.leavesTheChannel(channelId, userId);
   }
 
+  @Put('admin/:channelId/users/:userId')
+  @UseGuards(JwtAuthGuard)
+  async changeUserToBeAdmin(
+    @Param(':channelId') channelId: number,
+    @Param('userId') userId: number,
+  ) {
+    return await this.dataService.changeUserToBeAdminInChannel(
+      channelId,
+      userId,
+    );
+  }
+
+  @Put('user/:channelId/users/:userId')
+  @UseGuards(JwtAuthGuard)
+  async changeAdminToBeUser(
+    @Param(':channelId') channelId: number,
+    @Param('userId') userId: number,
+  ) {
+    return await this.dataService.changeAdminToBeUserInChannel(
+      channelId,
+      userId,
+    );
+  }
+
   @Put('mute/:channelId/users/:userId')
   @UseGuards(JwtAuthGuard)
-  async muteUserInTheChannel(@Param(':channelId') channelId: number,
-  @Param('userId') userId: number,) {
+  async muteUserInTheChannel(
+    @Param(':channelId') channelId: number,
+    @Param('userId') userId: number,
+  ) {
     return await this.dataService.muteUserInChannel(channelId, userId);
+  }
+
+  @Put('block/:channelId/users/:userId')
+  @UseGuards(JwtAuthGuard)
+  async blockUserInTheChannel(
+    @Param(':channelId') channelId: number,
+    @Param('userId') userId: number,
+  ) {
+    return await this.dataService.blockUserInChannel(channelId, userId);
   }
 }
