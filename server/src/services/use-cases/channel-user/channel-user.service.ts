@@ -43,6 +43,7 @@ export class ChannelUserService {
       .orderBy('channel.createdAt', 'DESC')
       .getMany();
   }
+  
   async findbyChannelAndUser(newChannel: Channel, newUser: User) {
     return await this.channelUserRepository.findOne({
       where: {

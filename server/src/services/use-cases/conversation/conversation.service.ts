@@ -63,10 +63,25 @@ export class ConversationService {
       relations: ['message'],
     });
   }
+
+  async findConversationOfChannel(newId: number) {
+    return await this.conversationRepository.findOne({
+      relations: ['channel'],
+      where: {
+        channel: {
+          id: newId,
+        },
+      },
+    });
+  }
   async updateTime(id: number, details: Object) {
     return await this.conversationRepository.update(id, details);
   }
-  async remove(id: number) {
+  async delete(id: number) {
     return await this.conversationRepository.delete(id);
+  }
+
+  async remove(conversation: Conversation) {
+    return await this.conversationRepository.remove(conversation);
   }
 }

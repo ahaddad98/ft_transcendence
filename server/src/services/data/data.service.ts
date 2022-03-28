@@ -24,6 +24,7 @@ import { ConversationUserService } from '../use-cases/conversation-user/conversa
 import {
   CreateChannelDto,
   CreatePublicChannelDto,
+  UpdatePasswordChannelDto,
 } from 'src/core/dtos/channel.dto';
 import { Channel, ChannelType } from 'src/core/entities/channel.entity';
 import * as bcrypt from 'bcrypt';
@@ -358,6 +359,7 @@ export class DataService {
 
   async findAllMyChannels(id: number) {
     // TODO hiya bash khasni nbda
+    console.log('salam');
     return await this.channelUserService.findAllMyChannels(id);
     // const allChannels = await this.channelService.findAllChannels();
     // let arr = [];
@@ -471,10 +473,11 @@ export class DataService {
     channelUser.userType = userType;
     console.log(newUser);
     console.log(newChannel);
-    await this.addNewUserToChannelConversation(
-      newUser.id,
-      newChannel.conversation.id,
-    );
+    if (userType != UserType.OWNER)
+      await this.addNewUserToChannelConversation(
+        newUser.id,
+        newChannel.conversation.id,
+      );
     return await this.channelUserService.save(channelUser);
   }
 
@@ -513,7 +516,7 @@ export class DataService {
       newUser,
     );
     if (newUser.id === newChannel.owner.id)
-      return await this.channelService.remove(newChannel);
+      return await this.removeChannel(channelId); //TODO hna ra khasni nhaydo hta man conv
     return await this.channelUserService.remove(chanelUser.id);
   }
   // opti
@@ -548,12 +551,50 @@ export class DataService {
     );
   }
 
+  async kickUserFormChannelConversation(channelId: number, myId: number) {
+    const conversation: Conversation =
+      await this.conversationService.findConversationOfChannel(channelId);
+    const conversationUser =
+      await this.conversationUserService.findConversationUser(
+        conversation.id,
+        myId,
+      );
+    return await this.conversationUserService.remove(conversationUser);
+  }
+
   async blockUserInChannel(channelId: number, myId: number) {
     const chanelUser = await this.findChannelUser(channelId, myId);
     chanelUser.block = !chanelUser.block;
+    if (chanelUser.block === false)
+      return await this.leavesTheChannel(channelId, myId);
+    await this.kickUserFormChannelConversation(channelId, myId);
     return await this.channelUserService.updateBlock(
       chanelUser.id,
       chanelUser.block,
+    );
+  }
+
+  async removeChannel(id: number) {
+    const channel = await this.channelService.findChannelById(id);
+    if (!channel) return { status: 500, message: 'channel not found' };
+    const conversation: Conversation =
+      await this.conversationService.findConversationOfChannel(id);
+    await this.conversationService.remove(conversation);
+    return await this.channelService.remove(channel);
+  }
+
+  async UpdateChannelPassword(
+    channelId: number,
+    body: UpdatePasswordChannelDto,
+    myId: number,
+  ) {
+    // TODO khasni ndelte users
+    const channel = await this.channelService.findChannelById(channelId);
+    channel.password = await bcrypt.hash(body.password, 10);
+    
+    return await this.channelService.updatePassowrd(
+      channel.id,
+      channel.password,
     );
   }
 }
