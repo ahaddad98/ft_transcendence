@@ -27,7 +27,7 @@ const Myprofile = () => {
   const [myhistory, setMyhistory] = useState();
 
   const fetchmyhistory = async () => {
-    const response = await axios.get("http://localhost:3001/history/users/me", {
+    const response = await axios.get("http://localhost:3001/game/history/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;

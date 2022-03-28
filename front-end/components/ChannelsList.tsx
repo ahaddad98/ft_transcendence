@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 import Modal from "@material-tailwind/react/Modal";
+import Checkbox from "@material-tailwind/react/Checkbox";
+import Radio from "@material-tailwind/react/Radio";
+import ModalHeader from "@material-tailwind/react/ModalHeader";
+import ModalBody from "@material-tailwind/react/ModalBody";
+import ModalFooter from "@material-tailwind/react/ModalFooter";
+import Button from "@material-tailwind/react/Button";
 
 const ChannlesList = () => {
   const [createchannel, setCreatechannel] = useState(false);
@@ -26,12 +32,53 @@ const ChannlesList = () => {
         </div>
         {
           <Modal
-            size="md"
+          // style={{width: "1000px"}}
+          size="lg"
             active={createchannel}
             toggler={() => setCreatechannel(false)}
           >
-            <div className="w-full md:w-auto dark:bg-gray-800 flex flex-col justify-center items-center bg-white py-4 px-4 md:px-24 xl:py-4 xl:px-18">
-              <button
+            <ModalHeader toggler={() => setCreatechannel(false)}>
+              Modal Title
+            </ModalHeader>
+            <div className="w-80">
+              </div>
+            <ModalBody>
+              <form>
+                <div className="space-y-4">
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block mb-1 text-gray-600 font-semibold"
+                    >
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
+                    />
+                  </div>
+                </div>
+                <Radio
+                  color="orange"
+                  text="Option 1"
+                  id="option-1"
+                  name="option"
+                />
+                <Radio
+                  color="orange"
+                  text="Option 2"
+                  id="option-2"
+                  name="option"
+                />
+              </form>
+            </ModalBody>
+            <ModalFooter>
+              <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide">
+                Create
+              </button>
+            </ModalFooter>
+            {/* <div className="w-full md:w-auto dark:bg-gray-800 flex flex-col justify-center items-center bg-white py-4 px-4 md:px-24 xl:py-4 xl:px-18"> */}
+            {/* <button
                 onClick={() => {
                   setCreatechannel(false);
                 }}
@@ -60,30 +107,8 @@ const ChannlesList = () => {
                     strokeLinejoin="round"
                   />
                 </svg>
-              </button>
-              <form>
-                <div className="space-y-4">
-                  <h1 className="text-center text-2xl font-semibold text-gray-600">
-                    Create Channel
-                  </h1>
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block mb-1 text-gray-600 font-semibold"
-                    >
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
-                    />
-                  </div>
-                </div>
-                <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide">
-                  Create
-                </button>
-              </form>
-            </div>
+              </button> */}
+            {/* </div> */}
           </Modal>
         }
         <div>

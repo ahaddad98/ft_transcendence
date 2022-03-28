@@ -9,14 +9,21 @@ export class UsersController {
   constructor(
     private dataService: DataService,
     private userService: UserService,
-  ) {}
+    ) {}
 
-  @Get()
+    @Get()
   @UseGuards(JwtAuthGuard)
   findAllUsers() {
     return this.userService.findAll();
   }
-
+  
+  
+    @Get('leaderboard')
+    @UseGuards(JwtAuthGuard)
+    async leaderborad() {
+      return await this.userService.leaderboard();
+    }
+  
   @Get('me')
   @UseGuards(JwtAuthGuard)
   async findMyData(@Req() req) {
@@ -33,7 +40,7 @@ export class UsersController {
   @Get('me/stats')
   @UseGuards(JwtAuthGuard)
   async findMyStats(@Req() req) {
-    return this.dataService.findStatsOfUser(req.user.id);
+    // return this.dataService.findStatsOfUser(req.user.id);
   }
 
   @Get('me/friends')
@@ -63,10 +70,20 @@ export class UsersController {
     });
   }
 
-  @Get(':id/stats')
-  @UseGuards(JwtAuthGuard)
-  async findStatsOfUser(@Param('id') id: number) {
-    return this.dataService.findStatsOfUser(id);
+  // @Get(':id/stats')
+  // @UseGuards(JwtAuthGuard)
+  // async findStatsOfUser(@Param('id') id: number) {
+  //   return this.dataService.findStatsOfUser(id);
+  // }
+
+  @Get('/next/')
+  async getNextUser() {
+    return await this.userService.getNextUser();
+  }
+
+  @Get('/random/')
+  async getRandomUser() {
+    return await this.userService.getRandomUser();
   }
 
   @Delete(':id')
@@ -74,4 +91,5 @@ export class UsersController {
     await this.userService.remove(id);
     return { status: 201, message: 'User deleted' };
   }
+
 }

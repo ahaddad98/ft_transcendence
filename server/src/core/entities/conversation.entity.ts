@@ -26,7 +26,9 @@ export class Conversation {
   @OneToMany((type) => Message, (message) => message.conversation)
   message?: Message[];
 
-  @OneToOne((type) => Channel, (channel) => channel.conversation)
+  @OneToOne((type) => Channel, (channel) => channel.conversation, {
+    onDelete: 'CASCADE',
+  })
   channel: Channel;
 
   @Column({
@@ -41,7 +43,7 @@ export class Conversation {
     (conversationUser) => conversationUser.conversation,
   )
   conversationUser: ConversationUser[];
-  
+
   @Column({ type: 'timestamptz', default: 'NOW()' })
   createdAt?: Date;
 
