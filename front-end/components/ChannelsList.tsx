@@ -10,6 +10,7 @@ import Button from "@material-tailwind/react/Button";
 const ChannlesList = () => {
   const [createchannel, setCreatechannel] = useState(false);
   const [viewchannels, setViewchannles] = useState(false);
+  const [isprivate , setIsprivate] = useState(false);
   return (
     <div className="flex justify-center">
       <div className="w-3/5 mt-14 bg-white p-8 rounded-md">
@@ -38,7 +39,7 @@ const ChannlesList = () => {
             toggler={() => setCreatechannel(false)}
           >
             <ModalHeader toggler={() => setCreatechannel(false)}>
-              Modal Title
+              Create Channel
             </ModalHeader>
             <div className="w-80">
               </div>
@@ -60,17 +61,32 @@ const ChannlesList = () => {
                 </div>
                 <Radio
                   color="orange"
-                  text="Option 1"
+                  text="Public"
                   id="option-1"
                   name="option"
-                />
+                  onClick={()=>{
+                    setIsprivate(false)
+                  }}
+                >
+                  </Radio>
                 <Radio
                   color="orange"
-                  text="Option 2"
+                  text="Private"
                   id="option-2"
                   name="option"
-                />
+                  onClick={()=>{
+                    setIsprivate(true)
+                  }}
+                  >
+                </Radio>
               </form>
+                {
+                  isprivate && (
+                    <div>
+                      amine
+                    </div>
+                  )
+                }
             </ModalBody>
             <ModalFooter>
               <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide">
