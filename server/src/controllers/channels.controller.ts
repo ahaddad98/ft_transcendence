@@ -76,6 +76,8 @@ export class ChannelsController {
     @Body() body: CreateChannelDto,
     @Req() req,
   ) {
+    console.log(req.body);
+    
     return await this.dataService.addNewPrivateChannel(file, body, req.user.id);
   }
 
@@ -135,6 +137,11 @@ export class ChannelsController {
       channelId,
     );
     if (!channel) return { status: 5565456465, message: 'channel Not Found' };
+    console.log('------------------');
+    console.log(req.body);
+    
+    console.log('------------------');
+    
     if (!channelUser)
       return await this.dataService.validateUser(channelId, req);
     return { status: 5565456465, message: 'you are already in this channel' };

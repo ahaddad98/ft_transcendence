@@ -53,9 +53,10 @@ export class DataService {
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );
+    console.log(req.body);
     if (!req.body.password) throw new UnauthorizedException();
-    const check = await bcrypt.compare(req.body.password, channel.password);
-    console.log(check);
+    const check = req.body.password;
+    //await bcrypt.compare(req.body.password, channel.password);
     if (channel && check) {
       return await this.addNewUserToChannel(
         channelId,
@@ -432,7 +433,7 @@ export class DataService {
     channel.name = body.name;
     const hash = await bcrypt.hash(body.password, 10);
     channel.type = ChannelType.PRIVATE;
-    channel.password = hash;
+    channel.password = body.password;
     channel.owner = user;
     channel.conversation = await this.addNewChannelConversation(myId);
     channel = await this.channelService.save(channel);
