@@ -70,7 +70,7 @@ export class ChannelsController {
 
   @Post('create/private/users/me/')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('file', saveImageToStorage))
+  // @UseInterceptors(FileInterceptor('file', saveImageToStorage))
   async addNewPrivateChannel(
     @UploadedFile() file: Express.Multer.File,
     @Body() body: CreateChannelDto,

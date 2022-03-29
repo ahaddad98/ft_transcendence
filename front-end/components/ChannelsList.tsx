@@ -178,7 +178,7 @@ const ChannlesList = (props) => {
                 <tbody>
                   {props.data.map((stat, key) => {
                     return (
-                      <tr>
+                      <tr key={key}>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 w-10 h-10">
@@ -249,6 +249,8 @@ const ChannlesList = (props) => {
                                           }
                                           }
                                         />
+                                        {/* <Link href="/channel">
+                                        </Link> */}
                                       </div>
                                     </div>
                                     <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide">
@@ -270,91 +272,6 @@ const ChannlesList = (props) => {
                       </tr>
                     );
                   })}
-                  {/* <tr>
-                  </tr>
-                  <tr>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 w-10 h-10">
-                          <img
-                            className="w-full h-full rounded-full"
-                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                            alt=""
-                          />
-                        </div>
-                        <div className="ml-3">
-                          <p className="text-gray-900 whitespace-no-wrap">
-                            Vera Carpenter
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">Admin</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">
-                        Jan 21, 2020
-                      </p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">43</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <div
-                        role="button"
-                        aria-label="MAIN BUTTON"
-                        className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                      >
-                        <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                          Join
-                        </button>
-                      </div>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      9fel
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 w-10 h-10">
-                          <img
-                            className="w-full h-full rounded-full"
-                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                            alt=""
-                          />
-                        </div>
-                        <div className="ml-3">
-                          <p className="text-gray-900 whitespace-no-wrap">
-                            Vera Carpenter
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">Admin</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">
-                        Jan 21, 2020
-                      </p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">43</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <div
-                        role="button"
-                        aria-label="MAIN BUTTON"
-                        className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                      >
-                        <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                          Join
-                        </button>
-                      </div>
-                    </td>
-                  </tr> */}
                 </tbody>
               </table>
               <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between          ">
