@@ -38,7 +38,7 @@ export class ChannelsController {
     return await this.channelService.findAll();
   }
 
-  @Get('all') //
+  @Get('home') //
   @UseGuards(JwtAuthGuard)
   async findAllChannels(@Req() req) {
     return await this.dataService.findAllChannels(req.user.id);
@@ -140,31 +140,31 @@ export class ChannelsController {
     return { status: 5565456465, message: 'you are already in this channel' };
   }
 
-  @Post('add/:channelId/users/me/:id/user')
-  @UseGuards(JwtAuthGuard)
-  async addNewUserToChannel(
-    @Param('channelId') channelId: number,
-    @Param(':id') userId: number,
-  ) {
-    return await this.dataService.addNewUserToChannel(
-      channelId,
-      userId,
-      UserType.USER,
-    );
-  }
+  // @Post('add/:channelId/users/me/:id/user')
+  // @UseGuards(JwtAuthGuard)
+  // async addNewUserToChannel(
+  //   @Param('channelId') channelId: number,
+  //   @Param(':id') userId: number,
+  // ) {
+  //   return await this.dataService.addNewUserToChannel(
+  //     channelId,
+  //     userId,
+  //     UserType.USER,
+  //   );
+  // }
 
-  @Post('add/:channelId/users/me/:id/admin')
-  @UseGuards(JwtAuthGuard)
-  async addNewAdminToChannel(
-    @Param('channelId') channelId: number,
-    @Param(':id') userId: number,
-  ) {
-    return await this.dataService.addNewUserToChannel(
-      channelId,
-      userId,
-      UserType.ADMIN,
-    );
-  }
+  // @Post('add/:channelId/users/me/:id/admin')
+  // @UseGuards(JwtAuthGuard)
+  // async addNewAdminToChannel(
+  //   @Param('channelId') channelId: number,
+  //   @Param(':id') userId: number,
+  // ) {
+  //   return await this.dataService.addNewUserToChannel(
+  //     channelId,
+  //     userId,
+  //     UserType.ADMIN,
+  //   );
+  // }
 
   @Delete('leave/:channelId/users/me')
   @UseGuards(JwtAuthGuard)

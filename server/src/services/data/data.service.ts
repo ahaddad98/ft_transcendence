@@ -31,6 +31,8 @@ import * as bcrypt from 'bcrypt';
 import { ChannelService } from '../use-cases/channel/channel.service';
 import { ChannelUser, UserType } from 'src/core/entities/channel-user.entity';
 import { ChannelUserService } from '../use-cases/channel-user/channel-user.service';
+import { compareAsc, format } from 'date-fns';
+import { channel } from 'diagnostics_channel';
 
 @Injectable()
 export class DataService {
@@ -146,7 +148,7 @@ export class DataService {
     const user = await this.usersService.findOneByIdWithRelation(userId, {
       relations: ['friend'],
     });
-    if (user.friend.find((friend) => friend.friend.id == friendId)) {
+    if (user.friend.find((friend) => friend.friend?.id == friendId)) {
       console.log('friend is already in the list');
       return { error: 'friend is already in the list' };
     }
@@ -344,40 +346,42 @@ export class DataService {
       allChannels.map(async (newChannel) => {
         let status: string;
         const channelUser = await this.findChannelUser(newChannel.id, id);
-        if (!channelUser) status = 'join';
-        else if (channelUser.block === true) status = 'blocked';
-        else status = 'leave';
-        const object = {
-          channel: newChannel,
-          status: status,
-        };
-        arr.push(object);
+        if (channelUser && channelUser.block === false) {
+        } else {
+          if (!channelUser) status = 'join';
+          else if (channelUser.block === true) status = 'blocked';
+          const object = {
+            id: newChannel.id,
+            name: newChannel.name,
+            type: newChannel.type,
+            createdAt: format(newChannel.createdAt, 'MMMM dd,yyyy'),
+            members: newChannel.members,
+            owner: newChannel.owner,
+            status: status,
+          };
+          arr.push(object);
+        }
       }),
     );
     return arr;
   }
 
   async findAllMyChannels(id: number) {
-    // TODO hiya bash khasni nbda
-    console.log('salam');
-    return await this.channelUserService.findAllMyChannels(id);
-    // const allChannels = await this.channelService.findAllChannels();
-    // let arr = [];
-    // await Promise.all(
-    //   allChannels.map(async (newChannel) => {
-    //     let status: string;
-    //     const channelUser = await this.findChannelUser(newChannel.id, id);
-    //     if (!channelUser) status = 'join';
-    //     else if (channelUser.block === true) status = 'blocked';
-    //     else status = 'leave';
-    //     const object = {
-    //       channel: newChannel,
-    //       status: status,
-    //     };
-    //     arr.push(object);
-    //   }),
-    // );
-    // return arr;
+    const channelUser: ChannelUser[] =
+      await this.channelUserService.findAllMyChannels(id);
+    let arr = [];
+    channelUser.map((element) => {
+      const object = {
+        id: element.channel.id,
+        name: element.channel.name,
+        type: element.channel.type,
+        createdAt: format(element.channel.createdAt, 'MMMM dd,yyyy'),
+        members: element.channel.members,
+        role: element.userType,
+      };
+      arr.push(object);
+    });
+    return arr;
   }
   async addNewChannelConversation(myId: number) {
     const user1 = await this.usersService.findOneById(myId);
@@ -429,7 +433,6 @@ export class DataService {
     const hash = await bcrypt.hash(body.password, 10);
     channel.type = ChannelType.PRIVATE;
     channel.password = hash;
-    channel.avatar = '';
     channel.owner = user;
     channel.conversation = await this.addNewChannelConversation(myId);
     channel = await this.channelService.save(channel);
@@ -449,11 +452,9 @@ export class DataService {
     let channel: Channel = new Channel();
     channel.type = ChannelType.PUBLIC;
     channel.name = body.name;
-    channel.avatar = '';
     channel.owner = user;
     channel.conversation = await this.addNewChannelConversation(myId);
     channel = await this.channelService.save(channel);
-    console.log('first');
     await this.addNewUserToChannel(channel.id, user.id, UserType.OWNER);
     return user;
   }
@@ -466,6 +467,10 @@ export class DataService {
     const newUser: User = await this.usersService.findOneById(userId);
     const newChannel: Channel = await this.channelService.findChannelById(
       channelId,
+    );
+    await this.channelService.updateNumberOfMembers(
+      newChannel.id,
+      ++newChannel.members,
     );
     const channelUser: ChannelUser = new ChannelUser();
     channelUser.channel = newChannel;
@@ -519,6 +524,7 @@ export class DataService {
       return await this.removeChannel(channelId); //TODO hna ra khasni nhaydo hta man conv
     return await this.channelUserService.remove(chanelUser.id);
   }
+
   // opti
   async findChannelUser(channelId: number, myId: number) {
     const newChannel: Channel = await this.channelService.findChannelById(
@@ -589,12 +595,28 @@ export class DataService {
     myId: number,
   ) {
     // TODO khasni ndelte users
+    const me: User = await this.usersService.findOneById(myId);
     const channel = await this.channelService.findChannelById(channelId);
     channel.password = await bcrypt.hash(body.password, 10);
-    
-    return await this.channelService.updatePassowrd(
-      channel.id,
-      channel.password,
+
+    const users = await this.channelUserService.findAllUsersInChannel(
+      channel,
+      me,
     );
+
+    await Promise.all(
+      users.map(async (user) => {
+        if (user.userType === UserType.USER) {
+          console.log(user.user)
+          await this.kickUserFormChannelConversation(channel.id, user.user.id);
+          await this.leavesTheChannel(channelId, user.id);
+        }
+      }),
+    );
+    return { status: 200, message: 'password is updated' };
+    // return await this.channelService.updatePassowrd(
+    //   channel.id,
+    //   channel.password,
+    // );
   }
 }
