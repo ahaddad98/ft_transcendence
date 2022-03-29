@@ -7,6 +7,7 @@ import MediaQuery from "react-responsive";
 import axios from 'axios';
 import SignIN from '../components/Signin'
 import { useState } from 'react'
+
 const App = ({data}) => {
   return (
     <Background>

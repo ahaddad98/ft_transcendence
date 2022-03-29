@@ -56,11 +56,15 @@ const ListUseres = (props) => {
             >
               {props.data.map((stat, key) => {
                 return (
-                  <div
-                    role="listitem"
-                    className="xl:w-1/3 sm:w-3/4 md:w-2/5 relative mt-16 mb-32 sm:mb-24 xl:max-w-sm lg:w-2/5"
-                    key={key}
-                  >
+                  <>
+                  {
+                    stat.stats !== "remove" && (
+
+                      <div
+                      role="listitem"
+                      className="xl:w-1/3 sm:w-3/4 md:w-2/5 relative mt-16 mb-32 sm:mb-24 xl:max-w-sm lg:w-2/5"
+                      key={key}
+                      >
                     <div className="rounded overflow-hidden shadow-md bg-white">
                       <div className="absolute -mt-20 w-full flex justify-center">
                         <div className="h-32 w-32">
@@ -69,7 +73,7 @@ const ListUseres = (props) => {
                             alt="Display Picture of Andres Berlin"
                             role="img"
                             className="rounded-full object-cover h-full w-full shadow-md"
-                          />
+                            />
                         </div>
                       </div>
                       <div className="px-6 mt-16">
@@ -86,12 +90,12 @@ const ListUseres = (props) => {
                             role="button"
                             aria-label="MAIN BUTTON"
                             className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                          >
+                            >
                             {stat.stats === "add" && (
-                            <button
+                              <button
                               className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
                               onClick={(e) => hundelClick1(e, stat.id)}
-                            >
+                              >
                                 <div>{stat.stats}</div>
                             </button>
                               )}
@@ -100,22 +104,22 @@ const ListUseres = (props) => {
                             <button
                               className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r "
                               onClick={(e) => hundelClick2(e, stat.requestId)}
-                            >
+                              >
                                 <div>Cancel</div>
                             </button>
                             <button
                               className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
                               onClick={(e) => hundelClick3(e, stat.requestId ,stat.id)}
-                            >
+                              >
                                 <div>Accept</div>
                             </button>
                               </div>
                               )}
                             {stat.stats === "requester" && (
-                            <button
+                              <button
                               className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
                               onClick={(e) => hundelClick3(e, stat.requestId,stat.id)}
-                            >
+                              >
                                 <div>{stat.stats}</div>
                             </button>
                               )}
@@ -124,6 +128,9 @@ const ListUseres = (props) => {
                       </div>
                     </div>
                   </div>
+                                )
+                              }
+              </>
                 );
               })}
             </div>

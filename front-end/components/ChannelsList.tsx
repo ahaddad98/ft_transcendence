@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 import Modal from "@material-tailwind/react/Modal";
+import Checkbox from "@material-tailwind/react/Checkbox";
+import Radio from "@material-tailwind/react/Radio";
+import ModalHeader from "@material-tailwind/react/ModalHeader";
+import ModalBody from "@material-tailwind/react/ModalBody";
+import ModalFooter from "@material-tailwind/react/ModalFooter";
+import Button from "@material-tailwind/react/Button";
+import Link from "next/link";
 
 const ChannlesList = () => {
   const [createchannel, setCreatechannel] = useState(false);
   const [viewchannels, setViewchannles] = useState(false);
+  const [isprivate , setIsprivate] = useState(false);
   return (
     <div className="flex justify-center">
       <div className="w-3/5 mt-14 bg-white p-8 rounded-md">
@@ -26,12 +34,79 @@ const ChannlesList = () => {
         </div>
         {
           <Modal
-            size="md"
+          size="lg"
             active={createchannel}
             toggler={() => setCreatechannel(false)}
           >
-            <div className="w-full md:w-auto dark:bg-gray-800 flex flex-col justify-center items-center bg-white py-4 px-4 md:px-24 xl:py-4 xl:px-18">
-              <button
+            <ModalHeader toggler={() => setCreatechannel(false)}>
+              Create Channel
+            </ModalHeader>
+            <ModalBody>
+              <form>
+                <div className="space-y-4">
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block mb-1 text-gray-600 font-semibold"
+                    >
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
+                    />
+                  </div>
+                </div>
+            <div className="w-80 mb-4">
+              </div>
+                <Radio
+                  color="orange"
+                  text="Public"
+                  id="option-1"
+                  name="option"
+                  onClick={()=>{
+                    setIsprivate(false)
+                  }}
+                >
+                  </Radio>
+                <Radio
+                  color="orange"
+                  text="Private"
+                  id="option-2"
+                  name="option"
+                  className="mb-10"
+                  onClick={()=>{
+                    setIsprivate(true)
+                  }}
+                  >
+                </Radio>
+              </form>
+                {
+                  isprivate && (
+                <div className="space-y-4">
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block mb-1 text-gray-600 font-semibold"
+                    >
+                      Password
+                    </label>
+                    <input
+                      type="text"
+                      className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
+                    />
+                  </div>
+                </div>
+                  )
+                }
+            </ModalBody>
+            <ModalFooter>
+              <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide">
+                Create
+              </button>
+            </ModalFooter>
+            {/* <div className="w-full md:w-auto dark:bg-gray-800 flex flex-col justify-center items-center bg-white py-4 px-4 md:px-24 xl:py-4 xl:px-18"> */}
+            {/* <button
                 onClick={() => {
                   setCreatechannel(false);
                 }}
@@ -60,30 +135,8 @@ const ChannlesList = () => {
                     strokeLinejoin="round"
                   />
                 </svg>
-              </button>
-              <form>
-                <div className="space-y-4">
-                  <h1 className="text-center text-2xl font-semibold text-gray-600">
-                    Create Channel
-                  </h1>
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block mb-1 text-gray-600 font-semibold"
-                    >
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
-                    />
-                  </div>
-                </div>
-                <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide">
-                  Create
-                </button>
-              </form>
-            </div>
+              </button> */}
+            {/* </div> */}
           </Modal>
         }
         <div>
@@ -105,6 +158,8 @@ const ChannlesList = () => {
                       Members
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -143,7 +198,9 @@ const ChannlesList = () => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
                       >
                         <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                          <Link href="/channel">
                           Join
+                          </Link>
                         </button>
                       </div>
                     </td>
@@ -186,6 +243,9 @@ const ChannlesList = () => {
                           Join
                         </button>
                       </div>
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      9fel
                     </td>
                   </tr>
                   <tr>
