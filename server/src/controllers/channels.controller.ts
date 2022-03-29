@@ -7,18 +7,14 @@ import {
   Post,
   Put,
   Req,
-  UploadedFile,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import {
   CreateChannelDto,
   CreatePublicChannelDto,
   UpdatePasswordChannelDto,
 } from 'src/core/dtos/channel.dto';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
-import { saveImageToStorage } from 'src/services/helpers/image-storage';
 import { ChannelService } from 'src/services/use-cases/channel/channel.service';
 import { UserService } from 'src/services/use-cases/user/user.service';
 import { DataService } from 'src/services/data/data.service';
@@ -70,13 +66,8 @@ export class ChannelsController {
 
   @Post('create/private/users/me/')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('file', saveImageToStorage))
-  async addNewPrivateChannel(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() body: CreateChannelDto,
-    @Req() req,
-  ) {
-    return await this.dataService.addNewPrivateChannel(file, body, req.user.id);
+  async addNewPrivateChannel(@Body() body: CreateChannelDto, @Req() req) {
+    return await this.dataService.addNewPrivateChannel(body, req.user.id);
   }
 
   @Put('update/:channelId/password/users/me/')
@@ -86,19 +77,18 @@ export class ChannelsController {
     @Body() body: UpdatePasswordChannelDto,
     @Req() req,
   ) {
-    return await this.dataService.UpdateChannelPassword(channelId, body, req.user.id);
+    return await this.dataService.UpdateChannelPassword(
+      channelId,
+      body,
+      req.user.id,
+    );
   }
 
   @Post('create/public/users/me/')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('file', saveImageToStorage))
-  async addNewPublicChannel(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() body: CreatePublicChannelDto,
-    @Req() req,
-  ) {
+  async addNewPublicChannel(@Body() body: CreatePublicChannelDto, @Req() req) {
     // console.log('salam')
-    return await this.dataService.addNewPublicChannel(file, body, req.user.id);
+    return await this.dataService.addNewPublicChannel(body, req.user.id);
   }
 
   @Post('join/:channelId/public/users/me')

@@ -11,11 +11,11 @@ export class UsersController {
     private userService: UserService,
     ) {}
 
-    @Get()
-  @UseGuards(JwtAuthGuard)
-  findAllUsers() {
-    return this.userService.findAll();
-  }
+  //   @Get()
+  // @UseGuards(JwtAuthGuard)
+  // findAllUsers() {
+  //   return this.userService.findAll();
+  // }
   
   
     @Get('leaderboard')
