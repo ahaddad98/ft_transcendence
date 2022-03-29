@@ -192,17 +192,16 @@ export class DataService {
 
   async deleteFriend(userId: number, friendId: number) {
     try {
-      let newUser: User;
-      await this.usersService.findOneById(friendId).then((element) => {
-        if (element === undefined) throw undefined;
-      });
-      newUser = await this.usersService.findOneByIdWithRelation(userId, {
-        relations: ['friend'],
-      });
-      await this.friendsService.deleteFriend({
-        user: newUser,
-        friend: friendId,
-      });
+      const friend: User = await this.usersService.findOneById(friendId);
+      if (!friend) return { status: 500, message: 'this user is not fount' };
+      const user: User = await this.usersService.findOneById(userId);
+      console.log(user);
+      console.log(friend);
+      const list: Friend[] = await this.friendsService.findTwoFriends(
+        userId,
+        friendId,
+      );
+      return await this.friendsService.removeFriends(list);
     } catch (err) {
       return 'salam';
     }
@@ -228,9 +227,12 @@ export class DataService {
   }
 
   async sendRequestToNewFriend(myId: number, friendId: number) {
+    console.log(myId);
+    console.log(friendId);
+    if (myId == friendId)
+      return { status: 500, message: 'U cant send a request to urself' };
     const me: User = await this.usersService.findOneById(myId);
     const friend: User = await this.usersService.findOneById(friendId);
-
     if (!me || !friend) return { status: 500, message: 'User Not Found' };
     const checkRequest: Request =
       await this.requestService.findFriendRequestByUsers(me, friend);

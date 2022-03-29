@@ -18,10 +18,10 @@ export class RequestController {
     private dataService: DataService,
   ) {}
 
-  // @Get()
-  // async getAllRequest() {
-  //   return await this.requestService.findAll();
-  // }
+  @Get()
+  async getAllRequest() {
+    return await this.requestService.findAll();
+  }
 
   @Post('/users/me/friends/:friendId')
   @UseGuards(JwtAuthGuard)
