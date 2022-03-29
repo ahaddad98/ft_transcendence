@@ -520,8 +520,22 @@ export class DataService {
       newChannel,
       newUser,
     );
-    if (newUser.id === newChannel.owner.id)
-      return await this.removeChannel(channelId); //TODO hna ra khasni nhaydo hta man conv
+    await this.kickUserFormChannelConversation(newChannel.id, newUser.id);
+    if (newUser.id === newChannel.owner.id) {
+      const users = await this.channelUserService.findAllUsersInChannel(
+        newChannel,
+        newUser,
+      );
+      await Promise.all(
+        users.map(async (user) => {
+          await this.kickUserFormChannelConversation(
+            newChannel.id,
+            user.user.id,
+          );
+        }),
+      );
+      return await this.removeChannel(channelId);
+    }
     return await this.channelUserService.remove(chanelUser.id);
   }
 
@@ -584,7 +598,7 @@ export class DataService {
     const channel = await this.channelService.findChannelById(id);
     if (!channel) return { status: 500, message: 'channel not found' };
     const conversation: Conversation =
-      await this.conversationService.findConversationOfChannel(id);
+      await this.conversationService.findConversationOfChannel(channel.id);
     await this.conversationService.remove(conversation);
     return await this.channelService.remove(channel);
   }
@@ -594,30 +608,22 @@ export class DataService {
     body: UpdatePasswordChannelDto,
     myId: number,
   ) {
-    // TODO khasni ndelte users
     const me: User = await this.usersService.findOneById(myId);
     const channel = await this.channelService.findChannelById(channelId);
     channel.password = await bcrypt.hash(body.password, 10);
-
     const users = await this.channelUserService.findAllUsersInChannel(
       channel,
       me,
     );
-
     await Promise.all(
       users.map(async (user) => {
         if (user.userType === UserType.USER) {
           console.log(user.user);
           await this.kickUserFormChannelConversation(channel.id, user.user.id);
-          console.log('salam');
           await this.leavesTheChannel(channelId, user.user.id);
         }
       }),
     );
     return { status: 200, message: 'password is updated' };
-    // return await this.channelService.updatePassowrd(
-    //   channel.id,
-    //   channel.password,
-    // );
   }
 }
