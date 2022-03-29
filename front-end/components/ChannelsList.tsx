@@ -11,6 +11,7 @@ import axios from "axios";
 //http://localhost:3001/join/channelId/private/users/me
 const ChannlesList = (props) => {
   const [isjoin, setIsjoin] = useState(false);
+  const [statuus, setStatus] = useState(0);
   const [selectedname, setSelectedname] = useState("");
   const [selectedpassword, setSelectedPassword] = useState("");
   const [selectedpasswordjoin, setSelectedPasswordjoin] = useState("");
@@ -249,12 +250,15 @@ const ChannlesList = (props) => {
                                           }
                                           }
                                         />
-                                        {/* <Link href="/channel">
-                                        </Link> */}
                                       </div>
                                     </div>
                                     <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide">
-                                      <input type="submit" value="Join" />
+                                      {
+
+                                        <Link href="/channel">
+                                          <input type="submit" value="Join" />
+                                        </Link>
+                                        }
                                     </button>
                                   </form>
                                 </ModalBody>
