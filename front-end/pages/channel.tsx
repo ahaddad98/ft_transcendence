@@ -7,9 +7,9 @@ import CardBody from "@material-tailwind/react/CardBody";
 const Channel = () => {
   return (
     <div className="h-screen flex items-center justify-center">
-      <Card className="relative h-auto sm:h-96 w-auto rounded-lg flex flex-row">
-        <div className="w-64 h-auto">
-          <nav className="flex flex-col bg-orange-400 w-inherit h-inherit px-4 tex-gray-900 border border-orange-500">
+      <Card className="relative h-auto sm:h-96 w-full rounded-lg flex flex-row">
+        <div className="w-64 h-full">
+          <nav className="flex flex-col bg-orange-400 w-3/4 h-3/4 px-4 tex-gray-900 border border-orange-500">
             <div className="flex flex-wrap mt-8 ml-10">
               <div className="w-full">
                 <span className="font-semibold text-white">Ava Harper</span>
@@ -113,17 +113,29 @@ const Channel = () => {
             </div>
           </nav>
         </div>
-        <div>
-          <div className="flex flex-col h-auto w-auto bg-white">
+        <div className="h-inherit w-inherit">
+          <div className="flex flex-col h-96 w-full bg-white ">
             <div
               id="chat"
-              className="flex flex-col mt-2 flex-col-reverse overflow-y-scroll	 space-y-3 mb-20 pb-3 "
+              className="flex flex-col mt-2 flex-col-reverse overflow-y-scroll	 space-y-3 mb-20 pb-3"
             >
               <div className="w-max ml-auto break-all mt-2 mb-1 p-2 rounded-br-none bg-blue-500 rounded-2xl text-white text-left mr-5">
                 2/10
               </div>
               <div className="w-max ml-auto break-all mt-2 mb-1 p-2 rounded-br-none bg-blue-500 rounded-2xl text-white text-left mr-5">
                 But numbers can
+              </div>
+              <div className="other break-all mt-2  ml-5 rounded-bl-none float-none bg-gray-300 mr-auto rounded-2xl p-2">
+                Aww thx!!
+              </div>
+              <div className="other break-all mt-2  ml-5 rounded-bl-none float-none bg-gray-300 mr-auto rounded-2xl p-2">
+                Aww thx!!
+              </div>
+              <div className="other break-all mt-2  ml-5 rounded-bl-none float-none bg-gray-300 mr-auto rounded-2xl p-2">
+                Aww thx!!
+              </div>
+              <div className="other break-all mt-2  ml-5 rounded-bl-none float-none bg-gray-300 mr-auto rounded-2xl p-2">
+                Aww thx!!
               </div>
               <div className="other break-all mt-2  ml-5 rounded-bl-none float-none bg-gray-300 mr-auto rounded-2xl p-2">
                 Aww thx!!
