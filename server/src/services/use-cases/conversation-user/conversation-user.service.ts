@@ -31,7 +31,17 @@ export class ConversationUserService {
       })
       .getMany();
   }
-  
+
+  async findConversationUser(conversationId: number, userId: number) {
+    return await this.conversationUserRepository.findOne({
+      relations: ['conversation', 'user'],
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+    });
+  }
   // async findallMyConversations(newUser: User) {
   //   return await this.conversationUserRepository.find({
   //     where: { user: newUser },
@@ -42,7 +52,11 @@ export class ConversationUserService {
   //   });
   // }
 
-  async remove(id: number) {
+  async delete(id: number) {
     return await this.conversationUserRepository.delete(id);
+  }
+
+  async remove(conversationUser: ConversationUser) {
+    return await this.conversationUserRepository.remove(conversationUser);
   }
 }

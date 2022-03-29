@@ -26,9 +26,6 @@ export class Channel {
   @Column({ unique: true })
   name: string;
 
-  @Column({ nullable: true })
-  avatar: string;
-
   @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn()
   owner: User;
@@ -37,7 +34,7 @@ export class Channel {
   password?: string;
 
   @OneToOne((type) => Conversation, (conversation) => conversation.channel, {
-    onDelete: 'SET NULL',
+    onDelete: 'CASCADE',
   })
   @JoinColumn()
   conversation: Conversation;
@@ -48,4 +45,6 @@ export class Channel {
   @OneToMany((type) => ChannelUser, (channelUser) => channelUser.channel)
   channelUser: ChannelUser[];
 
+  @Column({ type: 'int', default: 0 })
+  members: number;
 }

@@ -92,7 +92,7 @@ export class ConversationsController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   async deleteConversation(@Param('id') id: number) {
-    return await this.conversationService.remove(id);
+    return await this.conversationService.delete(id);
     // return { status: 201, message: 'Conversation deleted' };
   }
 }

@@ -14,7 +14,36 @@ export class ChannelService {
   async findAll() {
     return await this.channelRepository.find();
   }
+  // async findAll() {
+  //   return await this.channelRepository.find();
+  // }
 
+  async findAllChannels() {
+    return await this.channelRepository.find({
+      relations: ['owner'],
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+  }
+
+  async updatePassowrd(id: number, newPassword: string) {
+    return await this.channelRepository.update(id, { password: newPassword });
+  }
+
+  async updateNumberOfMembers(id: number, newMembers: number) {
+    return await this.channelRepository.update(id, { members: newMembers });
+  }
+  async searchForOwner(user: User) {
+    const channel = await this.channelRepository.findOne({
+      relations: ['owner'],
+      where: {
+        owner: user,
+      },
+    });
+    if (!channel) return false;
+    return true;
+  }
   async findChannelById(id: number) {
     return await this.channelRepository.findOne(id, {
       relations: ['conversation', 'owner'],

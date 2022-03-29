@@ -18,3 +18,10 @@ export class CreatePublicChannelDto {
   @MaxLength(20)
   name: string;
 }
+
+export class UpdatePasswordChannelDto {
+  @IsNotEmpty()
+  @MinLength(5)
+  @MaxLength(10)
+  password: string;
+}

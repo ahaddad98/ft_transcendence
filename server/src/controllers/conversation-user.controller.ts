@@ -12,6 +12,6 @@ export class ConversationUserController {
 
   @Delete(':id')
   async remove(@Param('id') id: number) {
-    return await this.conversationUserService.remove(id);
+    return await this.conversationUserService.delete(id);
   }
 }

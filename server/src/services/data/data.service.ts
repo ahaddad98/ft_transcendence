@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, UseFilters } from '@nestjs/common';
 import { UserService } from '../use-cases/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/core/entities/user.entity';
@@ -24,12 +24,15 @@ import { ConversationUserService } from '../use-cases/conversation-user/conversa
 import {
   CreateChannelDto,
   CreatePublicChannelDto,
+  UpdatePasswordChannelDto,
 } from 'src/core/dtos/channel.dto';
 import { Channel, ChannelType } from 'src/core/entities/channel.entity';
 import * as bcrypt from 'bcrypt';
 import { ChannelService } from '../use-cases/channel/channel.service';
 import { ChannelUser, UserType } from 'src/core/entities/channel-user.entity';
 import { ChannelUserService } from '../use-cases/channel-user/channel-user.service';
+import { compareAsc, format } from 'date-fns';
+import { channel } from 'diagnostics_channel';
 
 @Injectable()
 export class DataService {
@@ -54,7 +57,11 @@ export class DataService {
     const check = await bcrypt.compare(req.body.password, channel.password);
     console.log(check);
     if (channel && check) {
-      return await this.addNewUserToChannel(channelId, req.user.id);
+      return await this.addNewUserToChannel(
+        channelId,
+        req.user.id,
+        UserType.USER,
+      );
     }
     throw new UnauthorizedException();
     // return false;
@@ -157,30 +164,30 @@ export class DataService {
   }
 
   // async addNewResult(userId1: number, userId2: number, result: ResultType) {
-    // const playerTwo: User = await this.usersService.findOneById(userId2);
-    // if (typeof playerTwo === undefined)
-    //   return { status: 500, error: 'Player enemi not found' };
-    // const playerOne: User = await this.usersService.findOneByIdWithRelation(
-    //   userId1,
-    //   { relations: ['history'] },
-    // );
+  // const playerTwo: User = await this.usersService.findOneById(userId2);
+  // if (typeof playerTwo === undefined)
+  //   return { status: 500, error: 'Player enemi not found' };
+  // const playerOne: User = await this.usersService.findOneByIdWithRelation(
+  //   userId1,
+  //   { relations: ['history'] },
+  // );
 
-    // const history: History = new History();
-    // history.user = playerOne;
-    // history.enemy = playerTwo;
-    // history.result = result;
-    // await this.updateStats(userId1, result);
-    // return await this.historyService.addNewResult(history);
+  // const history: History = new History();
+  // history.user = playerOne;
+  // history.enemy = playerTwo;
+  // history.result = result;
+  // await this.updateStats(userId1, result);
+  // return await this.historyService.addNewResult(history);
   // }
 
   // async updateStats(id: number, type: ResultType) {
-    // console.log(type);
-    // switch (type) {
-    //   case ResultType.VICTORY:
-    //     return await this.statsService.updateWins(id);
-    //   case ResultType.DEFEAT:
-    //     return await this.statsService.updateLoses(id);
-    // }
+  // console.log(type);
+  // switch (type) {
+  //   case ResultType.VICTORY:
+  //     return await this.statsService.updateWins(id);
+  //   case ResultType.DEFEAT:
+  //     return await this.statsService.updateLoses(id);
+  // }
   // }
 
   async deleteFriend(userId: number, friendId: number) {
@@ -332,6 +339,50 @@ export class DataService {
     return conversation;
   }
 
+  async findAllChannels(id: number) {
+    const allChannels = await this.channelService.findAllChannels();
+    let arr = [];
+    await Promise.all(
+      allChannels.map(async (newChannel) => {
+        let status: string;
+        const channelUser = await this.findChannelUser(newChannel.id, id);
+        if (channelUser && channelUser.block === false) {
+        } else {
+          if (!channelUser) status = 'join';
+          else if (channelUser.block === true) status = 'blocked';
+          const object = {
+            id: newChannel.id,
+            name: newChannel.name,
+            type: newChannel.type,
+            createdAt: format(newChannel.createdAt, 'MMMM dd,yyyy'),
+            members: newChannel.members,
+            owner: newChannel.owner,
+            status: status,
+          };
+          arr.push(object);
+        }
+      }),
+    );
+    return arr;
+  }
+
+  async findAllMyChannels(id: number) {
+    const channelUser: ChannelUser[] =
+      await this.channelUserService.findAllMyChannels(id);
+    let arr = [];
+    channelUser.map((element) => {
+      const object = {
+        id: element.channel.id,
+        name: element.channel.name,
+        type: element.channel.type,
+        createdAt: format(element.channel.createdAt, 'MMMM dd,yyyy'),
+        members: element.channel.members,
+        role: element.userType,
+      };
+      arr.push(object);
+    });
+    return arr;
+  }
   async addNewChannelConversation(myId: number) {
     const user1 = await this.usersService.findOneById(myId);
     let conversation: Conversation = new Conversation();
@@ -375,17 +426,18 @@ export class DataService {
     myId: number,
   ) {
     const user: User = await this.usersService.findOneById(myId);
+    const owner: boolean = await this.channelService.searchForOwner(user);
+    if (owner) return { message: 'U have already a channel' };
     let channel: Channel = new Channel();
     channel.name = body.name;
     const hash = await bcrypt.hash(body.password, 10);
     channel.type = ChannelType.PRIVATE;
     channel.password = hash;
-    channel.avatar = '';
     channel.owner = user;
     channel.conversation = await this.addNewChannelConversation(myId);
     channel = await this.channelService.save(channel);
     console.log('salam');
-    await this.addNewUserToChannel(channel.id, user.id);
+    await this.addNewUserToChannel(channel.id, user.id, UserType.OWNER);
     return channel;
   }
 
@@ -395,33 +447,42 @@ export class DataService {
     myId: number,
   ) {
     const user: User = await this.usersService.findOneById(myId);
+    const owner: boolean = await this.channelService.searchForOwner(user);
+    if (owner) return { message: 'U have already a channel' };
     let channel: Channel = new Channel();
     channel.type = ChannelType.PUBLIC;
     channel.name = body.name;
-    channel.avatar = '';
     channel.owner = user;
     channel.conversation = await this.addNewChannelConversation(myId);
     channel = await this.channelService.save(channel);
-    console.log('first');
-    await this.addNewUserToChannel(channel.id, user.id);
-    return channel;
+    await this.addNewUserToChannel(channel.id, user.id, UserType.OWNER);
+    return user;
   }
 
-  async addNewUserToChannel(channelId: number, userId: number) {
+  async addNewUserToChannel(
+    channelId: number,
+    userId: number,
+    userType: UserType,
+  ) {
     const newUser: User = await this.usersService.findOneById(userId);
     const newChannel: Channel = await this.channelService.findChannelById(
       channelId,
     );
+    await this.channelService.updateNumberOfMembers(
+      newChannel.id,
+      ++newChannel.members,
+    );
     const channelUser: ChannelUser = new ChannelUser();
     channelUser.channel = newChannel;
     channelUser.user = newUser;
-    channelUser.userType = UserType.OWNER;
+    channelUser.userType = userType;
     console.log(newUser);
     console.log(newChannel);
-    await this.addNewUserToChannelConversation(
-      newUser.id,
-      newChannel.conversation.id,
-    );
+    if (userType != UserType.OWNER)
+      await this.addNewUserToChannelConversation(
+        newUser.id,
+        newChannel.conversation.id,
+      );
     return await this.channelUserService.save(channelUser);
   }
 
@@ -430,10 +491,24 @@ export class DataService {
       channelId,
     );
     const newUser: User = await this.usersService.findOneById(myId);
-    return await this.channelUserService.findAllUsersInChannel(
+    const result = await this.channelUserService.findAllUsersInChannel(
       newChannel,
       newUser,
     );
+    const arr = [];
+    for (let i = 0; i < result.length; i++) {
+      let object = {
+        id: result[i].user.id,
+        username: result[i].user.username,
+        avatar: result[i].user.avatar,
+        is_online: result[i].user.is_online,
+        userType: result[i].userType,
+        block: result[i].block,
+        mute: result[i].mute,
+      };
+      arr.push(object);
+    }
+    return arr;
   }
 
   async leavesTheChannel(channelId: number, myId: number) {
@@ -446,9 +521,102 @@ export class DataService {
       newUser,
     );
     if (newUser.id === newChannel.owner.id)
-      return await this.channelService.remove(newChannel);
+      return await this.removeChannel(channelId); //TODO hna ra khasni nhaydo hta man conv
     return await this.channelUserService.remove(chanelUser.id);
   }
 
-  async addUserToBeAdminInChannel(channelId: number, myId: number) {}
+  // opti
+  async findChannelUser(channelId: number, myId: number) {
+    const newChannel: Channel = await this.channelService.findChannelById(
+      channelId,
+    );
+    const newUser: User = await this.usersService.findOneById(myId);
+    const chanelUser = await this.channelUserService.findbyChannelAndUser(
+      newChannel,
+      newUser,
+    );
+    return chanelUser;
+  }
+
+  async changeUserToBeAdminInChannel(channelId: number, myId: number) {
+    const chanelUser = await this.findChannelUser(channelId, myId);
+    return await this.channelUserService.updateToBeAdmin(chanelUser.id);
+  }
+
+  async changeAdminToBeUserInChannel(channelId: number, myId: number) {
+    const chanelUser = await this.findChannelUser(channelId, myId);
+    return await this.channelUserService.updateToBeUser(chanelUser.id);
+  }
+
+  async muteUserInChannel(channelId: number, myId: number) {
+    const chanelUser = await this.findChannelUser(channelId, myId);
+    chanelUser.mute = !chanelUser.mute;
+    return await this.channelUserService.updateMute(
+      chanelUser.id,
+      chanelUser.mute,
+    );
+  }
+
+  async kickUserFormChannelConversation(channelId: number, myId: number) {
+    const conversation: Conversation =
+      await this.conversationService.findConversationOfChannel(channelId);
+    const conversationUser =
+      await this.conversationUserService.findConversationUser(
+        conversation.id,
+        myId,
+      );
+    return await this.conversationUserService.remove(conversationUser);
+  }
+
+  async blockUserInChannel(channelId: number, myId: number) {
+    const chanelUser = await this.findChannelUser(channelId, myId);
+    chanelUser.block = !chanelUser.block;
+    if (chanelUser.block === false)
+      return await this.leavesTheChannel(channelId, myId);
+    await this.kickUserFormChannelConversation(channelId, myId);
+    return await this.channelUserService.updateBlock(
+      chanelUser.id,
+      chanelUser.block,
+    );
+  }
+
+  async removeChannel(id: number) {
+    const channel = await this.channelService.findChannelById(id);
+    if (!channel) return { status: 500, message: 'channel not found' };
+    const conversation: Conversation =
+      await this.conversationService.findConversationOfChannel(id);
+    await this.conversationService.remove(conversation);
+    return await this.channelService.remove(channel);
+  }
+
+  async UpdateChannelPassword(
+    channelId: number,
+    body: UpdatePasswordChannelDto,
+    myId: number,
+  ) {
+    // TODO khasni ndelte users
+    const me: User = await this.usersService.findOneById(myId);
+    const channel = await this.channelService.findChannelById(channelId);
+    channel.password = await bcrypt.hash(body.password, 10);
+
+    const users = await this.channelUserService.findAllUsersInChannel(
+      channel,
+      me,
+    );
+
+    await Promise.all(
+      users.map(async (user) => {
+        if (user.userType === UserType.USER) {
+          console.log(user.user)
+          await this.kickUserFormChannelConversation(channel.id, user.user.id);
+          await this.leavesTheChannel(channelId, user.id);
+        }
+      }),
+    );
+    return { status: 200, message: 'password is updated' };
+    // return await this.channelService.updatePassowrd(
+    //   channel.id,
+    //   channel.password,
+    // );
+  }
 }
