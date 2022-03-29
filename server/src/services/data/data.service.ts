@@ -141,7 +141,7 @@ export class DataService {
     const user = await this.usersService.findOneByIdWithRelation(userId, {
       relations: ['friend'],
     });
-    if (user.friend.find((friend) => friend.friend.id == friendId)) {
+    if (user.friend.find((friend) => friend.friend?.id == friendId)) {
       console.log('friend is already in the list');
       return { error: 'friend is already in the list' };
     }

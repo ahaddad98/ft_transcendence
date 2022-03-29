@@ -6,6 +6,7 @@ import ModalHeader from "@material-tailwind/react/ModalHeader";
 import ModalBody from "@material-tailwind/react/ModalBody";
 import ModalFooter from "@material-tailwind/react/ModalFooter";
 import Button from "@material-tailwind/react/Button";
+import Link from "next/link";
 
 const ChannlesList = () => {
   const [createchannel, setCreatechannel] = useState(false);
@@ -33,7 +34,6 @@ const ChannlesList = () => {
         </div>
         {
           <Modal
-          // style={{width: "1000px"}}
           size="lg"
             active={createchannel}
             toggler={() => setCreatechannel(false)}
@@ -41,8 +41,6 @@ const ChannlesList = () => {
             <ModalHeader toggler={() => setCreatechannel(false)}>
               Create Channel
             </ModalHeader>
-            <div className="w-80">
-              </div>
             <ModalBody>
               <form>
                 <div className="space-y-4">
@@ -59,6 +57,8 @@ const ChannlesList = () => {
                     />
                   </div>
                 </div>
+            <div className="w-80 mb-4">
+              </div>
                 <Radio
                   color="orange"
                   text="Public"
@@ -74,6 +74,7 @@ const ChannlesList = () => {
                   text="Private"
                   id="option-2"
                   name="option"
+                  className="mb-10"
                   onClick={()=>{
                     setIsprivate(true)
                   }}
@@ -82,9 +83,20 @@ const ChannlesList = () => {
               </form>
                 {
                   isprivate && (
-                    <div>
-                      amine
-                    </div>
+                <div className="space-y-4">
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block mb-1 text-gray-600 font-semibold"
+                    >
+                      Password
+                    </label>
+                    <input
+                      type="text"
+                      className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
+                    />
+                  </div>
+                </div>
                   )
                 }
             </ModalBody>
@@ -146,6 +158,8 @@ const ChannlesList = () => {
                       Members
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -184,7 +198,9 @@ const ChannlesList = () => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
                       >
                         <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                          <Link href="/channel">
                           Join
+                          </Link>
                         </button>
                       </div>
                     </td>
@@ -227,6 +243,9 @@ const ChannlesList = () => {
                           Join
                         </button>
                       </div>
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      9fel
                     </td>
                   </tr>
                   <tr>

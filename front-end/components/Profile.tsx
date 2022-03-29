@@ -9,8 +9,6 @@ const Profile = (props) => {
     avatar: props.mydata.avatar,
   };
   const [click, setClick] = useState(false);
-console.log(props.mydata);
-
   return (
     <div className="profile-page">
       <HomeNavbar data={data} />

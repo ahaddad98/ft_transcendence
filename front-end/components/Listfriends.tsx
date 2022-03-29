@@ -1,8 +1,16 @@
+import axios from "axios";
 import React from "react";
 
 const Listfriends = (props) => {
-    console.log(props);
     
+    const hundelClick = async (e, id) => {
+      e.preventDefault();
+      axios.delete(`http://localhost:3001/friends/users/me/${id}`,{
+          headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+      });
+    };
   return (
     <div className="mb-16">
       <div className="container flex justify-center mx-auto pt-16">
@@ -41,7 +49,7 @@ const Listfriends = (props) => {
                     <h1 className="font-bold text-3xl text-center mb-1">
                       {stat.friend.username}
                     </h1>
-                    <p className="text-gray-800 text-sm text-center"> {stat.friend.username}</p>
+                    <p className="text-gray-800 text-sm text-center"> {stat.friend.level}</p>
                     <div className="w-full flex justify-center pt-5 pb-5"></div>
                     <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
                       <div
@@ -49,7 +57,9 @@ const Listfriends = (props) => {
                         aria-label="MAIN BUTTON"
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
                         >
-                        <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                        <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                        onClick={(e) => hundelClick(e, stat.friend.id)}
+                        >
                         Remove
                         </button>
                       </div>

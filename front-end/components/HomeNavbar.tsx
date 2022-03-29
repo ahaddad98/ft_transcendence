@@ -22,7 +22,7 @@ const HomeNavbar = (props) => {
               </Link>
             </div>
             <div className="w-1/2 flex flex-row justify-arround">
-              <ul className="hidden md:flex px-2 mx-auto font-semibold font-heading space-x-12">
+              <ul className="md:flex px-2 mx-auto font-semibold font-heading space-x-12">
                 <li>
                   <Link href="/watchnow">
                     <a className="hover:text-gray-200">Watch Now</a>
@@ -30,7 +30,7 @@ const HomeNavbar = (props) => {
                 </li>
                 <li>
                   <Link href="/playgame">
-                    <a className="hover:text-gray-200">PlayGame</a>
+                    <p className="hover:text-gray-200 cursor-pointer">PlayGame</p>
                   </Link>
                 </li>
                 <li>
