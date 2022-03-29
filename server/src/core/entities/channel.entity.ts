@@ -34,7 +34,7 @@ export class Channel {
   password?: string;
 
   @OneToOne((type) => Conversation, (conversation) => conversation.channel, {
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
   })
   @JoinColumn()
   conversation: Conversation;

@@ -53,10 +53,9 @@ export class DataService {
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );
-    console.log(req.body);
     if (!req.body.password) throw new UnauthorizedException();
-    const check = req.body.password;
-    //await bcrypt.compare(req.body.password, channel.password);
+    const check = await bcrypt.compare(req.body.password, channel.password);
+    console.log(check);
     if (channel && check) {
       return await this.addNewUserToChannel(
         channelId,
@@ -232,6 +231,11 @@ export class DataService {
     const me: User = await this.usersService.findOneById(myId);
     const friend: User = await this.usersService.findOneById(friendId);
 
+    if (!me || !friend) return { status: 500, message: 'User Not Found' };
+    const checkRequest: Request =
+      await this.requestService.findFriendRequestByUsers(me, friend);
+    if (checkRequest)
+      return { status: 500, message: 'Request is already sent' };
     const newRequest = await this.requestService.sendRequestToNewFriend(
       me,
       friend,
@@ -241,7 +245,6 @@ export class DataService {
     notification.sender = newRequest.requester;
     notification.type = NotificationType.REQUEST;
     await this.notificationsService.sendNotificationForRequest(notification);
-    console.log('salam');
     return newRequest;
   }
 
@@ -250,8 +253,14 @@ export class DataService {
     myId: number,
     friendId: number,
   ) {
-    const result = await this.addFriend(myId, friendId);
+    const me: User = await this.usersService.findOneById(myId);
+    const friend: User = await this.usersService.findOneById(friendId);
+    const checkRequest: Request =
+      await this.requestService.findFriendRequestByUsers(me, friend);
+    console.log('saidsads');
+    if (!checkRequest) return { status: 500, message: 'No Request Found' };
     await this.requestService.removeRequestById(reqId);
+    const result = await this.addFriend(myId, friendId);
     return result;
   }
 
@@ -421,11 +430,7 @@ export class DataService {
     return conversationUser;
   }
 
-  async addNewPrivateChannel(
-    file: Express.Multer.File,
-    body: CreateChannelDto,
-    myId: number,
-  ) {
+  async addNewPrivateChannel(body: CreateChannelDto, myId: number) {
     const user: User = await this.usersService.findOneById(myId);
     const owner: boolean = await this.channelService.searchForOwner(user);
     if (owner) return { message: 'U have already a channel' };
@@ -433,7 +438,7 @@ export class DataService {
     channel.name = body.name;
     const hash = await bcrypt.hash(body.password, 10);
     channel.type = ChannelType.PRIVATE;
-    channel.password = body.password;
+    channel.password = hash;
     channel.owner = user;
     channel.conversation = await this.addNewChannelConversation(myId);
     channel = await this.channelService.save(channel);
@@ -442,11 +447,7 @@ export class DataService {
     return channel;
   }
 
-  async addNewPublicChannel(
-    file: Express.Multer.File,
-    body: CreatePublicChannelDto,
-    myId: number,
-  ) {
+  async addNewPublicChannel(body: CreatePublicChannelDto, myId: number) {
     const user: User = await this.usersService.findOneById(myId);
     const owner: boolean = await this.channelService.searchForOwner(user);
     if (owner) return { message: 'U have already a channel' };
@@ -521,8 +522,22 @@ export class DataService {
       newChannel,
       newUser,
     );
-    if (newUser.id === newChannel.owner.id)
-      return await this.removeChannel(channelId); //TODO hna ra khasni nhaydo hta man conv
+    await this.kickUserFormChannelConversation(newChannel.id, newUser.id);
+    if (newUser.id === newChannel.owner.id) {
+      const users = await this.channelUserService.findAllUsersInChannel(
+        newChannel,
+        newUser,
+      );
+      await Promise.all(
+        users.map(async (user) => {
+          await this.kickUserFormChannelConversation(
+            newChannel.id,
+            user.user.id,
+          );
+        }),
+      );
+      return await this.removeChannel(channelId);
+    }
     return await this.channelUserService.remove(chanelUser.id);
   }
 
@@ -585,7 +600,7 @@ export class DataService {
     const channel = await this.channelService.findChannelById(id);
     if (!channel) return { status: 500, message: 'channel not found' };
     const conversation: Conversation =
-      await this.conversationService.findConversationOfChannel(id);
+      await this.conversationService.findConversationOfChannel(channel.id);
     await this.conversationService.remove(conversation);
     return await this.channelService.remove(channel);
   }
@@ -595,29 +610,22 @@ export class DataService {
     body: UpdatePasswordChannelDto,
     myId: number,
   ) {
-    // TODO khasni ndelte users
     const me: User = await this.usersService.findOneById(myId);
     const channel = await this.channelService.findChannelById(channelId);
     channel.password = await bcrypt.hash(body.password, 10);
-
     const users = await this.channelUserService.findAllUsersInChannel(
       channel,
       me,
     );
-
     await Promise.all(
       users.map(async (user) => {
         if (user.userType === UserType.USER) {
-          console.log(user.user)
+          console.log(user.user);
           await this.kickUserFormChannelConversation(channel.id, user.user.id);
-          await this.leavesTheChannel(channelId, user.id);
+          await this.leavesTheChannel(channelId, user.user.id);
         }
       }),
     );
     return { status: 200, message: 'password is updated' };
-    // return await this.channelService.updatePassowrd(
-    //   channel.id,
-    //   channel.password,
-    // );
   }
 }
