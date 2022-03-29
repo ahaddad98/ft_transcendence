@@ -24,6 +24,23 @@ const Home = () => {
         console.log(err);
       });
   }, []);
+  const [channel, setChannel] = useState([]);
+
+  const fetchChannel = async () => {
+    const response = await axios.get("http://localhost:3001/channels/home", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return response;
+  };
+  useEffect(() => {
+    fetchChannel()
+      .then((res) => {
+        if (res.data) setChannel(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   const [stats, setStats] = useState([]);
   const fetchStats = async () => {
     const response = await axios.get(
@@ -69,7 +86,7 @@ const Home = () => {
         {stats && <LeaderBoard data={stats} />}
         {history && <HistoryGame data={history} />}
       </div>
-      <ChannlesList />
+      {channel && <ChannlesList data={channel} />}
     </div>
   );
 };

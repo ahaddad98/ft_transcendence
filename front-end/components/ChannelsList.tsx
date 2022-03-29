@@ -7,11 +7,60 @@ import ModalBody from "@material-tailwind/react/ModalBody";
 import ModalFooter from "@material-tailwind/react/ModalFooter";
 import Button from "@material-tailwind/react/Button";
 import Link from "next/link";
-
-const ChannlesList = () => {
+import axios from "axios";
+//http://localhost:3001/join/channelId/private/users/me
+const ChannlesList = (props) => {
+  const [isjoin, setIsjoin] = useState(false);
+  const [selectedname, setSelectedname] = useState("");
+  const [selectedpassword, setSelectedPassword] = useState("");
+  const [selectedpasswordjoin, setSelectedPasswordjoin] = useState("");
+  const hundelsubmit = async (e) => {
+    e.preventDefault();
+    var formData = new FormData();
+    formData.append("name", selectedname);
+    formData.append("password", selectedpassword);
+    console.log(formData);
+    
+    axios
+      .post(
+        "http://localhost:3001/channels/create/private/users/me",
+        {
+          name: selectedname,
+          password: selectedpassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      });
+  };
+  const hundelsubmitjoin = async (e, id) => {
+    e.preventDefault();
+    var formData = new FormData();
+    formData.append("password", selectedpasswordjoin);
+    axios
+      .post(
+        `http://localhost:3001/channels/join/${id}/private/users/me`,
+        {
+          password: selectedpasswordjoin
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      });
+  };
   const [createchannel, setCreatechannel] = useState(false);
   const [viewchannels, setViewchannles] = useState(false);
-  const [isprivate , setIsprivate] = useState(false);
+  const [isprivate, setIsprivate] = useState(false);
   return (
     <div className="flex justify-center">
       <div className="w-3/5 mt-14 bg-white p-8 rounded-md">
@@ -34,7 +83,7 @@ const ChannlesList = () => {
         </div>
         {
           <Modal
-          size="lg"
+            size="lg"
             active={createchannel}
             toggler={() => setCreatechannel(false)}
           >
@@ -42,7 +91,7 @@ const ChannlesList = () => {
               Create Channel
             </ModalHeader>
             <ModalBody>
-              <form>
+              <form onSubmit={hundelsubmit}>
                 <div className="space-y-4">
                   <div>
                     <label
@@ -53,90 +102,55 @@ const ChannlesList = () => {
                     </label>
                     <input
                       type="text"
+                      id="name"
                       className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
+                      onChange={(e) => setSelectedname(e.target.value)}
                     />
                   </div>
                 </div>
-            <div className="w-80 mb-4">
-              </div>
+                <div className="w-80 mb-4"></div>
                 <Radio
                   color="orange"
                   text="Public"
                   id="option-1"
                   name="option"
-                  onClick={()=>{
-                    setIsprivate(false)
+                  onClick={() => {
+                    setIsprivate(false);
                   }}
-                >
-                  </Radio>
+                ></Radio>
                 <Radio
                   color="orange"
                   text="Private"
                   id="option-2"
                   name="option"
                   className="mb-10"
-                  onClick={()=>{
-                    setIsprivate(true)
+                  onClick={() => {
+                    setIsprivate(true);
                   }}
-                  >
-                </Radio>
-              </form>
-                {
-                  isprivate && (
-                <div className="space-y-4">
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block mb-1 text-gray-600 font-semibold"
-                    >
-                      Password
-                    </label>
-                    <input
-                      type="text"
-                      className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
-                    />
+                ></Radio>
+                {isprivate && (
+                  <div className="space-y-4">
+                    <div>
+                      <label
+                        htmlFor="email"
+                        className="block mb-1 text-gray-600 font-semibold"
+                      >
+                        Password
+                      </label>
+                      <input
+                        type="text"
+                        id="password"
+                        className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
+                        onChange={(e) => setSelectedPassword(e.target.value)}
+                      />
+                    </div>
                   </div>
-                </div>
-                  )
-                }
+                )}
+                <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide">
+                  <input type="submit" value="Create" />
+                </button>
+              </form>
             </ModalBody>
-            <ModalFooter>
-              <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide">
-                Create
-              </button>
-            </ModalFooter>
-            {/* <div className="w-full md:w-auto dark:bg-gray-800 flex flex-col justify-center items-center bg-white py-4 px-4 md:px-24 xl:py-4 xl:px-18"> */}
-            {/* <button
-                onClick={() => {
-                  setCreatechannel(false);
-                }}
-                className="text-gray-800 dark:text-gray-400 absolute top-8 right-8 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800"
-                aria-label="close"
-              >
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M18 6L6 18"
-                    stroke="currentColor"
-                    strokeWidth="1.66667"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M6 6L18 18"
-                    stroke="currentColor"
-                    strokeWidth="1.66667"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button> */}
-            {/* </div> */}
           </Modal>
         }
         <div>
@@ -158,136 +172,106 @@ const ChannlesList = () => {
                       Members
                     </th>
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
-                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    </th>
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 w-10 h-10">
-                          <img
-                            className="w-full h-full rounded-full"
-                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                            alt=""
-                          />
-                        </div>
-                        <div className="ml-3">
+                  {props.data.map((stat, key) => {
+                    return (
+                      <tr key={key}>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 w-10 h-10">
+                              <img
+                                className="w-full h-full rounded-full"
+                                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
+                                alt=""
+                              />
+                            </div>
+                            <div className="ml-3">
+                              <p className="text-gray-900 whitespace-no-wrap">
+                                {stat.name}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            Vera Carpenter
+                            {stat.owner.username}
                           </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">Admin</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">
-                        Jan 21, 2020
-                      </p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">43</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <div
-                        role="button"
-                        aria-label="MAIN BUTTON"
-                        className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                      >
-                        <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                          <Link href="/channel">
-                          Join
-                          </Link>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 w-10 h-10">
-                          <img
-                            className="w-full h-full rounded-full"
-                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                            alt=""
-                          />
-                        </div>
-                        <div className="ml-3">
+                        </td>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            Vera Carpenter
+                            {stat.createdAt}
                           </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">Admin</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">
-                        Jan 21, 2020
-                      </p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">43</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <div
-                        role="button"
-                        aria-label="MAIN BUTTON"
-                        className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                      >
-                        <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                          Join
-                        </button>
-                      </div>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      9fel
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 w-10 h-10">
-                          <img
-                            className="w-full h-full rounded-full"
-                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                            alt=""
-                          />
-                        </div>
-                        <div className="ml-3">
+                        </td>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            Vera Carpenter
+                            {stat.members}
                           </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">Admin</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">
-                        Jan 21, 2020
-                      </p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">43</p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <div
-                        role="button"
-                        aria-label="MAIN BUTTON"
-                        className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                      >
-                        <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                          Join
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+                        </td>
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                          <div
+                            role="button"
+                            aria-label="MAIN BUTTON"
+                            className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
+                          >
+                            <button
+                              className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                              onClick={() => {
+                                setIsjoin(!isjoin);
+                              }}
+                            >
+                              Join
+                            </button>
+                            {isjoin && (
+                              <Modal
+                                size="lg"
+                                active={isjoin}
+                                toggler={() => setIsjoin(!isjoin)}
+                              >
+                                <ModalBody>
+                                  <form onSubmit={(e) => hundelsubmitjoin(e,stat.id)}>
+                                    <div className="space-y-4">
+                                      <div>
+                                        <label
+                                          htmlFor="email"
+                                          className="block mb-1 text-gray-600 font-semibold"
+                                        >
+                                          Password
+                                        </label>
+                                        <input
+                                          type="text"
+                                          id="password"
+                                          className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
+                                          onChange={(e) =>{
+                                            setSelectedPasswordjoin(e.target.value)
+                                          }
+                                          }
+                                        />
+                                        {/* <Link href="/channel">
+                                        </Link> */}
+                                      </div>
+                                    </div>
+                                    <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide">
+                                      <input type="submit" value="Join" />
+                                    </button>
+                                  </form>
+                                </ModalBody>
+                              </Modal>
+                            )}
+                          </div>
+                        </td>
+                        <td>
+                          {stat.type === "private" && (
+                            <div className="mt-6">
+                              <img src="/private.svg" alt="" />
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
               <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between          ">
