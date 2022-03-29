@@ -607,9 +607,10 @@ export class DataService {
     await Promise.all(
       users.map(async (user) => {
         if (user.userType === UserType.USER) {
-          console.log(user.user)
+          console.log(user.user);
           await this.kickUserFormChannelConversation(channel.id, user.user.id);
-          await this.leavesTheChannel(channelId, user.id);
+          console.log('salam');
+          await this.leavesTheChannel(channelId, user.user.id);
         }
       }),
     );
