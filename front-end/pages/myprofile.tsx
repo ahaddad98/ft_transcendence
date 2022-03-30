@@ -42,10 +42,28 @@ const Myprofile = () => {
       .catch((err) => {
         console.log(err);
       });
+  }, []); const [mychannel, setMychannel] = useState();
+
+  const fetchmychannel = async () => {
+    const response = await axios.get("http://localhost:3001/channels/users/me", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return response;
+  };
+  useEffect(() => {
+    fetchmychannel()
+      .then((res) => {
+        if (res.data) {
+          setMychannel(res.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
   const is_me = {
       check: true,
   }
-  return <div>{hasResult &&  <Profile mydata={myprofile} myhistory={myhistory} />}</div>;
+  return <div>{hasResult &&  <Profile mydata={myprofile} myhistory={myhistory} mychannels={mychannel}/>}</div>;
 };
 export default Myprofile;

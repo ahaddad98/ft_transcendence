@@ -5,10 +5,12 @@ import HomeNavbar from "./HomeNavbar";
 
 const Profile = (props) => {
   const data = {
-    username: props.mydata.username,
-    avatar: props.mydata.avatar,
+      username: props.mydata.user.username,
+      avatar: props.mydata.user.avatar,
   };
   const [click, setClick] = useState(false);
+  console.log(props.mychannels);
+  
   return (
     <div className="profile-page">
       <HomeNavbar data={data} />
@@ -216,142 +218,72 @@ const Profile = (props) => {
                                 Members
                               </th>
                               <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
+                              <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <div className="flex items-center">
-                                  <div className="flex-shrink-0 w-10 h-10">
-                                    <img
-                                      className="w-full h-full rounded-full"
-                                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                                      alt=""
-                                    />
-                                  </div>
-                                  <div className="ml-3">
+                            {
+                              props.mychannels?.map((stat, key) => {
+                                return (
+                                  <tr key={key}>
+                                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                    <div className="flex items-center">
+                                      <div className="flex-shrink-0 w-10 h-10">
+                                        <img
+                                          className="w-full h-full rounded-full"
+                                          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
+                                          alt=""
+                                          />
+                                      </div>
+                                      <div className="ml-3">
+                                        <p className="text-gray-900 whitespace-no-wrap">
+                                          {stat.name}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                     <p className="text-gray-900 whitespace-no-wrap">
-                                      Vera Carpenter
+                                      {stat.role}
                                     </p>
-                                  </div>
-                                </div>
-                              </td>
-                              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p className="text-gray-900 whitespace-no-wrap">
-                                  Admin
-                                </p>
-                              </td>
-                              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p className="text-gray-900 whitespace-no-wrap">
-                                  Jan 21, 2020
-                                </p>
-                              </td>
-                              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p className="text-gray-900 whitespace-no-wrap">
-                                  43
-                                </p>
-                              </td>
-                              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <div
-                                  role="button"
-                                  aria-label="MAIN BUTTON"
-                                  className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                                >
-                                  <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                                    Quit
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <div className="flex items-center">
-                                  <div className="flex-shrink-0 w-10 h-10">
-                                    <img
-                                      className="w-full h-full rounded-full"
-                                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                                      alt=""
-                                    />
-                                  </div>
-                                  <div className="ml-3">
+                                  </td>
+                                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                     <p className="text-gray-900 whitespace-no-wrap">
-                                      Vera Carpenter
+                                      {stat.createdAt}
                                     </p>
-                                  </div>
-                                </div>
-                              </td>
-                              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p className="text-gray-900 whitespace-no-wrap">
-                                  Admin
-                                </p>
-                              </td>
-                              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p className="text-gray-900 whitespace-no-wrap">
-                                  Jan 21, 2020
-                                </p>
-                              </td>
-                              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p className="text-gray-900 whitespace-no-wrap">
-                                  43
-                                </p>
-                              </td>
-                              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <div
-                                  role="button"
-                                  aria-label="MAIN BUTTON"
-                                  className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                                >
-                                  <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                                    Quit
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <div className="flex items-center">
-                                  <div className="flex-shrink-0 w-10 h-10">
-                                    <img
-                                      className="w-full h-full rounded-full"
-                                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                                      alt=""
-                                    />
-                                  </div>
-                                  <div className="ml-3">
+                                  </td>
+                                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                     <p className="text-gray-900 whitespace-no-wrap">
-                                      Vera Carpenter
+                                      {stat.members}
                                     </p>
-                                  </div>
-                                </div>
-                              </td>
-                              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p className="text-gray-900 whitespace-no-wrap">
-                                  Admin
-                                </p>
-                              </td>
-                              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p className="text-gray-900 whitespace-no-wrap">
-                                  Jan 21, 2020
-                                </p>
-                              </td>
-                              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <p className="text-gray-900 whitespace-no-wrap">
-                                  43
-                                </p>
-                              </td>
-                              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <div
-                                  role="button"
-                                  aria-label="MAIN BUTTON"
-                                  className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                                >
-                                  <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                                    Quit
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
+                                  </td>
+                                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                    <div
+                                      role="button"
+                                      aria-label="MAIN BUTTON"
+                                      className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
+                                      >
+                                      <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                                        Participate
+                                      </button>
+                                    </div>
+                                  </td>
+                                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                    <div
+                                      role="button"
+                                      aria-label="MAIN BUTTON"
+                                      className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
+                                      >
+                                      <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                                        LEAVE
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              )
+                              })
+                            }
+                              </tbody>
                         </table>
                       </div>
                     </div>

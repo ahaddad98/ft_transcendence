@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Modal from "@material-tailwind/react/Modal";
 import Checkbox from "@material-tailwind/react/Checkbox";
-import Radio from "@material-tailwind/react/Radio";
 import ModalHeader from "@material-tailwind/react/ModalHeader";
+import Radio from "@material-tailwind/react/radio";
+// import { Radio } from "@mui/material";
 import ModalBody from "@material-tailwind/react/ModalBody";
 import ModalFooter from "@material-tailwind/react/ModalFooter";
 import Button from "@material-tailwind/react/Button";
@@ -12,10 +13,15 @@ import { useRouter } from "next/router";
 const ChannlesList = (props) => {
   const router = useRouter();
   const [isjoin, setIsjoin] = useState(false);
+  const [isjoinpublic, setIsjoinpublic] = useState(false);
+  const [isjoinprivate, setIsjoinprivate] = useState(false);
   const [statuus, setStatus] = useState(0);
   const [selectedname, setSelectedname] = useState("");
   const [selectedpassword, setSelectedPassword] = useState("");
   const [selectedpasswordjoin, setSelectedPasswordjoin] = useState("");
+  const [createchannel, setCreatechannel] = useState(false);
+  const [viewchannels, setViewchannles] = useState(false);
+  const [isprivate, setIsprivate] = useState(false);
   const hundelsubmitprivate = async (e) => {
     e.preventDefault();
     var formData = new FormData();
@@ -102,9 +108,6 @@ const ChannlesList = (props) => {
     if (isprivate) hundelsubmitprivate(e);
     if (!isprivate) hundelsubmitpublic(e);
   };
-  const [createchannel, setCreatechannel] = useState(false);
-  const [viewchannels, setViewchannles] = useState(false);
-  const [isprivate, setIsprivate] = useState(false);
   return (
     <div className="flex justify-center">
       <div className="w-3/5 mt-14 bg-white p-8 rounded-md">
@@ -260,32 +263,36 @@ const ChannlesList = (props) => {
                             aria-label="MAIN BUTTON"
                             className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
                           >
+                            {stat.type === "private" && (
+                              <>
                             <button
                               className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
                               onClick={() => {
-                                setIsjoin(!isjoin);
+                                setIsjoinprivate(!isjoinprivate);
                               }}
                             >
                               Join
                             </button>
-                            {isjoin && (stat.type === "public" && (
-                              <Modal
-                                size="lg"
-                                active={isjoin}
-                                toggler={() => setIsjoin(!isjoin)}
-                              >
+                              {
+                                isjoinprivate && (
+
+                                  <Modal
+                                  size="lg"
+                                  active={isjoinprivate}
+                                  toggler={() => setIsjoinprivate(!isjoinprivate)}
+                                  >
                                 <ModalBody>
                                   <form
                                     onSubmit={(e) =>
                                       hundelsubmitprivatejoin(e, stat.id)
                                     }
-                                  >
+                                    >
                                     <div className="space-y-4">
                                       <div>
                                         <label
                                           htmlFor="email"
                                           className="block mb-1 text-gray-600 font-semibold"
-                                        >
+                                          >
                                           Password
                                         </label>
                                         <input
@@ -295,9 +302,9 @@ const ChannlesList = (props) => {
                                           onChange={(e) => {
                                             setSelectedPasswordjoin(
                                               e.target.value
-                                            );
-                                          }}
-                                        />
+                                              );
+                                            }}
+                                            />
                                       </div>
                                     </div>
                                     {
@@ -310,7 +317,22 @@ const ChannlesList = (props) => {
                                   </form>
                                 </ModalBody>
                               </Modal>
-                            ))}
+                                        )
+                                      }
+                                    </>
+                            )}
+                            {stat.type === "public" && (
+                              <>
+                            <button
+                              className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                              onClick={(e) => {
+                                hundelsubmitpublicjoin(e, stat.id);
+                              }}
+                            >
+                              Join
+                            </button>
+                               </>
+                            )}
                           </div>
                         </td>
                         <td>
