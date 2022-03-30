@@ -1,26 +1,33 @@
 import React, { useState } from "react";
 import Modal from "@material-tailwind/react/Modal";
 import Checkbox from "@material-tailwind/react/Checkbox";
-import Radio from "@material-tailwind/react/Radio";
 import ModalHeader from "@material-tailwind/react/ModalHeader";
+import Radio from "@material-tailwind/react/radio";
 import ModalBody from "@material-tailwind/react/ModalBody";
 import ModalFooter from "@material-tailwind/react/ModalFooter";
 import Button from "@material-tailwind/react/Button";
 import Link from "next/link";
 import axios from "axios";
-//http://localhost:3001/join/channelId/private/users/me
+import { useRouter } from "next/router";
 const ChannlesList = (props) => {
+  const router = useRouter();
   const [isjoin, setIsjoin] = useState(false);
+  const [isjoinpublic, setIsjoinpublic] = useState(false);
+  const [isjoinprivate, setIsjoinprivate] = useState(false);
+  const [statuus, setStatus] = useState(0);
   const [selectedname, setSelectedname] = useState("");
   const [selectedpassword, setSelectedPassword] = useState("");
   const [selectedpasswordjoin, setSelectedPasswordjoin] = useState("");
-  const hundelsubmit = async (e) => {
+  const [createchannel, setCreatechannel] = useState(false);
+  const [viewchannels, setViewchannles] = useState(false);
+  const [isprivate, setIsprivate] = useState(false);
+  const hundelsubmitprivate = async (e) => {
     e.preventDefault();
     var formData = new FormData();
     formData.append("name", selectedname);
     formData.append("password", selectedpassword);
     console.log(formData);
-    
+
     axios
       .post(
         "http://localhost:3001/channels/create/private/users/me",
@@ -36,9 +43,10 @@ const ChannlesList = (props) => {
       )
       .then((res) => {
         console.log(res);
+        setCreatechannel(!createchannel);
       });
   };
-  const hundelsubmitjoin = async (e, id) => {
+  const hundelsubmitprivatejoin = async (e, id) => {
     e.preventDefault();
     var formData = new FormData();
     formData.append("password", selectedpasswordjoin);
@@ -46,7 +54,7 @@ const ChannlesList = (props) => {
       .post(
         `http://localhost:3001/channels/join/${id}/private/users/me`,
         {
-          password: selectedpasswordjoin
+          password: selectedpasswordjoin,
         },
         {
           headers: {
@@ -56,11 +64,49 @@ const ChannlesList = (props) => {
       )
       .then((res) => {
         console.log(res);
+        router.push("/channel");
       });
   };
-  const [createchannel, setCreatechannel] = useState(false);
-  const [viewchannels, setViewchannles] = useState(false);
-  const [isprivate, setIsprivate] = useState(false);
+  const hundelsubmitpublic = async (e) => {
+    e.preventDefault();
+    axios
+      .post(
+        "http://localhost:3001/channels/create/public/users/me",
+        {
+          name: selectedname,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        setCreatechannel(!createchannel);
+      });
+  };
+  const hundelsubmitpublicjoin = async (e, id) => {
+    e.preventDefault();
+    axios
+      .post(
+        `http://localhost:3001/channels/join/${id}/public/users/me`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        router.push("/channel");
+      });
+  };
+  const hundelsubmit = async (e) => {
+    if (isprivate) hundelsubmitprivate(e);
+    if (!isprivate) hundelsubmitpublic(e);
+  };
   return (
     <div className="flex justify-center">
       <div className="w-3/5 mt-14 bg-white p-8 rounded-md">
@@ -216,49 +262,75 @@ const ChannlesList = (props) => {
                             aria-label="MAIN BUTTON"
                             className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
                           >
+                            {stat.type === "private" && (
+                              <>
                             <button
                               className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
                               onClick={() => {
-                                setIsjoin(!isjoin);
+                                setIsjoinprivate(!isjoinprivate);
                               }}
                             >
                               Join
                             </button>
-                            {isjoin && (
-                              <Modal
-                                size="lg"
-                                active={isjoin}
-                                toggler={() => setIsjoin(!isjoin)}
-                              >
+                              {
+                                isjoinprivate && (
+
+                                  <Modal
+                                  size="lg"
+                                  active={isjoinprivate}
+                                  toggler={() => setIsjoinprivate(!isjoinprivate)}
+                                  >
                                 <ModalBody>
-                                  <form onSubmit={(e) => hundelsubmitjoin(e,stat.id)}>
+                                  <form
+                                    onSubmit={(e) =>
+                                      hundelsubmitprivatejoin(e, stat.id)
+                                    }
+                                    >
                                     <div className="space-y-4">
                                       <div>
                                         <label
                                           htmlFor="email"
                                           className="block mb-1 text-gray-600 font-semibold"
-                                        >
+                                          >
                                           Password
                                         </label>
                                         <input
                                           type="text"
                                           id="password"
                                           className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
-                                          onChange={(e) =>{
-                                            setSelectedPasswordjoin(e.target.value)
-                                          }
-                                          }
-                                        />
-                                        {/* <Link href="/channel">
-                                        </Link> */}
+                                          onChange={(e) => {
+                                            setSelectedPasswordjoin(
+                                              e.target.value
+                                              );
+                                            }}
+                                            />
                                       </div>
                                     </div>
-                                    <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide">
-                                      <input type="submit" value="Join" />
-                                    </button>
+                                    {
+                                      <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide">
+                                        <Link href="/channel">
+                                          <input type="submit" value="Join" />
+                                        </Link>
+                                      </button>
+                                    }
                                   </form>
                                 </ModalBody>
                               </Modal>
+                                        )
+                                      }
+                                    </>
+                            )}
+                            {stat.type === "public" && (
+                              <>
+                            <button
+                              className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                              onClick={(e) => {
+                                hundelsubmitpublicjoin(e, stat.id);
+                              }}
+                            >
+                              Join
+                            </button>
+                               </>
                             )}
                           </div>
                         </td>
@@ -274,7 +346,7 @@ const ChannlesList = (props) => {
                   })}
                 </tbody>
               </table>
-              <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between          ">
+              <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
                 <div className="inline-flex mt-2 xs:mt-0">
                   <button
                     className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 bg-orange-500 font-semibold py-2 px-4 rounded-r"
