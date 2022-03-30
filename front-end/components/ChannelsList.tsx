@@ -3,7 +3,6 @@ import Modal from "@material-tailwind/react/Modal";
 import Checkbox from "@material-tailwind/react/Checkbox";
 import ModalHeader from "@material-tailwind/react/ModalHeader";
 import Radio from "@material-tailwind/react/radio";
-// import { Radio } from "@mui/material";
 import ModalBody from "@material-tailwind/react/ModalBody";
 import ModalFooter from "@material-tailwind/react/ModalFooter";
 import Button from "@material-tailwind/react/Button";

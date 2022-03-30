@@ -6,7 +6,7 @@ import HomeNavbar from "./HomeNavbar";
 const Profile = (props) => {
   const handlerclickleave = async (e, id) => {
     e.preventDefault();
-    axios.delete(`http://localhost:3001/leave/${id}/users/me`, {
+    axios.delete(`http://localhost:3001/channels/leave/${id}/users/me`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     }).then ((res)=>{
       console.log(res);
