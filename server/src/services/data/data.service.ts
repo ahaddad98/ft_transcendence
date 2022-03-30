@@ -31,8 +31,8 @@ import * as bcrypt from 'bcrypt';
 import { ChannelService } from '../use-cases/channel/channel.service';
 import { ChannelUser, UserType } from 'src/core/entities/channel-user.entity';
 import { ChannelUserService } from '../use-cases/channel-user/channel-user.service';
-import { compareAsc, format } from 'date-fns';
-import { channel } from 'diagnostics_channel';
+import { format } from 'date-fns';
+import * as speakeasy from 'speakeasy';
 
 @Injectable()
 export class DataService {
@@ -203,7 +203,7 @@ export class DataService {
       );
       return await this.friendsService.removeFriends(list);
     } catch (err) {
-      return 'salam';
+      return err;
     }
   }
 
@@ -629,5 +629,45 @@ export class DataService {
       }),
     );
     return { status: 200, message: 'password is updated' };
+  }
+
+  // TwoFactorAuthenticationRegister
+
+  async TwoFactorAuthenticationRegister(userId: number) {
+    const temp_secret = speakeasy.generateSecret();
+    await this.usersService.update(userId, { secret: temp_secret });
+    return { status: 201, secret: temp_secret.base32 };
+  }
+
+  async TwoFactorAuthenticationVerify(userId: number, token: string) {
+    const user: User = await this.usersService.findOneById(userId);
+    const object = JSON.parse(user.secret);
+    const secret = object.base32;
+    console.log(secret);
+    const verified = speakeasy.totp.verify({
+      secret,
+      encoding: 'base32',
+      token,
+    });
+    if (verified) {
+      await this.usersService.update(userId, { isVerified: true });
+      return { status: 201, verified: true };
+    } else return { status: 201, verified: false };
+  }
+
+  async TwoFactorAuthenticationValidate(userId: number, token: string) {
+    const user: User = await this.usersService.findOneById(userId);
+    const object = JSON.parse(user.secret);
+    const secret = object.base32;
+    console.log(secret);
+    const tokenValidates = speakeasy.totp.verify({
+      secret,
+      encoding: 'base32',
+      token,
+      window: 1,
+    });
+    if (tokenValidates) {
+      return { status: 201, validate: true };
+    } else return { status: 201, validate: false };
   }
 }

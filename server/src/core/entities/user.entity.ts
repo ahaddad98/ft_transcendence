@@ -27,7 +27,12 @@ export class User {
 
   @OneToMany((type) => Friend, (friend) => friend.user)
   friend: Friend[];
-  
+
+  @Column({ nullable: true })
+  secret?: string;
+
+  @Column({ type: 'boolean', default: false })
+  isVerified?: boolean;
   // @ManyToOne((type) => Channel, (channel) => channel.user, {
   //   onDelete: 'SET NULL',
   // })
@@ -45,7 +50,7 @@ export class User {
   @Column({ type: 'timestamptz', default: 'NOW()' })
   createdAt?: Date;
 
-  @Column({ type: 'varchar' ,default: 'Moroco' })
+  @Column({ type: 'varchar', default: 'Moroco' })
   country?: string;
 
   @Column({ default: 1 })

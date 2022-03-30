@@ -38,7 +38,7 @@ export class FriendService {
   async findTwoFriends(userOneId: number, userTwoId: number) {
     return await this.friendRepository.find({
       relations: ['user', 'friend'],
-      where: [
+      where:[ 
         {
           user: {
             id: userOneId,
