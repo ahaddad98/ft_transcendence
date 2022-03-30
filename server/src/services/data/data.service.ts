@@ -33,6 +33,8 @@ import { ChannelUser, UserType } from 'src/core/entities/channel-user.entity';
 import { ChannelUserService } from '../use-cases/channel-user/channel-user.service';
 import { format } from 'date-fns';
 import * as speakeasy from 'speakeasy';
+import { Block } from 'src/core/entities/block.entity';
+import { BlockService } from '../use-cases/block/block.service';
 
 @Injectable()
 export class DataService {
@@ -47,6 +49,7 @@ export class DataService {
     private channelService: ChannelService,
     private channelUserService: ChannelUserService,
     private jwtService: JwtService,
+    private blockService: BlockService,
   ) {}
 
   async validateUser(channelId: number, req): Promise<any> {
@@ -669,5 +672,23 @@ export class DataService {
     if (tokenValidates) {
       return { status: 201, validate: true };
     } else return { status: 201, validate: false };
+  }
+
+  // block
+  async blockUser(myId: number, userId: number) {
+    const block = await this.usersService.findOneById(userId);
+    if (typeof block === undefined) return { error: 'error' };
+    const me = await this.usersService.findOneByIdWithRelation(myId, {
+      relations: ['block'],
+    });
+    if (me.block.find((blockUser) => blockUser.block?.id == userId)) {
+      console.log('this user is already in the list');
+      return { error: 'this users is already in the list' };
+    }
+    const newBlock: Block = new Block();
+    newBlock.user = me;
+    newBlock.block = block;
+    await this.blockService.save(newBlock);
+    return { stats: 200, message: 'user is added in the list of blocking' };
   }
 }

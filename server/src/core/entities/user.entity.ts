@@ -1,13 +1,6 @@
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-  PrimaryColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { Friend } from '../../core/entities/friend.entity';
-import { Channel } from './channel.entity';
+import { Block } from './block.entity';
 import { Notification } from './notification.entity';
 import { Request } from './request.entity';
 
@@ -28,15 +21,14 @@ export class User {
   @OneToMany((type) => Friend, (friend) => friend.user)
   friend: Friend[];
 
+  @OneToMany((type) => Block, (block) => block.user)
+  block: Block[];
+
   @Column({ nullable: true })
   secret?: string;
 
   @Column({ type: 'boolean', default: false })
   isVerified?: boolean;
-  // @ManyToOne((type) => Channel, (channel) => channel.user, {
-  //   onDelete: 'SET NULL',
-  // })
-  // channel?: Channel;
 
   @OneToMany((type) => Request, (request) => request.requester)
   requester?: Request[];

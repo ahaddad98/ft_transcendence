@@ -1,9 +1,9 @@
 import { Controller, Get, Res, Req, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { FortyTwoStrategyAuthGuard } from '../frameworks/auth/o-auth/42-auth.guard';
+import { FortyTwoStrategyAuthGuard } from '../../frameworks/auth/o-auth/42-auth.guard';
 import { DataService } from 'src/services/data/data.service';
 // import { JwtAuthGuard } from '../frameworks/auth/jwt/jwt-auth.guard';
-import { LocalStrategy } from '../frameworks/auth/local/local.strategy';
+import { LocalStrategy } from '../../frameworks/auth/local/local.strategy';
 import { LocalAuthGuard } from 'src/frameworks/auth/local/local-auth.guard';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
 

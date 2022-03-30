@@ -29,6 +29,7 @@ export class FortyTwoStrategyStrategy extends PassportStrategy(Strategy) {
       username: profile._json.login,
       email: profile._json.email,
       friend: [],
+      block: [],
     };
     this.dataService.save(user);
     return user;
