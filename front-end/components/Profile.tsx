@@ -4,13 +4,19 @@ import React, { useEffect, useState } from "react";
 import HomeNavbar from "./HomeNavbar";
 
 const Profile = (props) => {
+  const handlerclickleave = async (e, id) => {
+    e.preventDefault();
+    axios.delete(`http://localhost:3001/leave/${id}/users/me`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    }).then ((res)=>{
+      console.log(res);
+    })
+  }
   const data = {
       username: props.mydata.user.username,
       avatar: props.mydata.user.avatar,
   };
   const [click, setClick] = useState(false);
-  console.log(props.mychannels);
-  
   return (
     <div className="profile-page">
       <HomeNavbar data={data} />
@@ -274,7 +280,9 @@ const Profile = (props) => {
                                       aria-label="MAIN BUTTON"
                                       className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
                                       >
-                                      <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                                      <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                                      onClick={(e)=> handlerclickleave(e, stat.id)}
+                                      >
                                         LEAVE
                                       </button>
                                     </div>
