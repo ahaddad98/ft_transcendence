@@ -16,7 +16,7 @@ import {
   fullImagePath,
   saveImageToStorage,
 } from 'src/services/helpers/image-storage';
-import { JwtAuthGuard } from '../frameworks/auth/jwt/jwt-auth.guard';
+import { JwtAuthGuard } from '../../frameworks/auth/jwt/jwt-auth.guard';
 
 @Controller('profile')
 export class ProfileController {

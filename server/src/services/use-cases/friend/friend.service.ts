@@ -12,7 +12,7 @@ export class FriendService {
   ) {}
 
   findAll(): Promise<Friend[]> {
-    return this.friendRepository.find({relations: ['user', 'friend']});
+    return this.friendRepository.find({ relations: ['user', 'friend'] });
   }
 
   async findAllByUser(userSearch: User) {
@@ -27,7 +27,7 @@ export class FriendService {
       where: { user: userSearch, friend: friend },
     });
   }
-  
+
   // findAllOfUser():  Promise<Friend[]> {
   //     // return this.friendRepository.find({userId :});
   // }
@@ -35,10 +35,37 @@ export class FriendService {
     return this.friendRepository.findOne(id);
   }
 
-  async remove(id: number){
+  async findTwoFriends(userOneId: number, userTwoId: number) {
+    return await this.friendRepository.find({
+      relations: ['user', 'friend'],
+      where:[ 
+        {
+          user: {
+            id: userOneId,
+          },
+          friend: {
+            id: userTwoId,
+          },
+        },
+        {
+          user: {
+            id: userTwoId,
+          },
+          friend: {
+            id: userOneId,
+          },
+        },
+      ],
+    });
+  }
+
+  async delete(id: number) {
     return await this.friendRepository.delete(id);
   }
 
+  async removeFriends(friends: Friend[]) {
+    this.friendRepository.remove(friends);
+  }
   async deleteFriend(conditions: Object): Promise<void> {
     await this.friendRepository.delete(conditions);
   }

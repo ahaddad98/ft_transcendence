@@ -51,11 +51,11 @@ export class FriendsController {
   @Delete('users/me/:friendId')
   @UseGuards(JwtAuthGuard)
   async deleteFriend(@Req() req, @Param('friendId') friend: number) {
-    return this.dataService.deleteFriend(req.user.id, friend);
+    return await this.dataService.deleteFriend(req.user.id, friend);
   }
 
   @Delete(':id')
   async removeFriend(@Param('id') id: number) {
-    return await this.friendsService.remove(id);
+    return await this.friendsService.delete(id);
   }
 }

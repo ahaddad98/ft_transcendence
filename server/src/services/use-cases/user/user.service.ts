@@ -103,4 +103,7 @@ export class UserService {
     }
     return winners;
   }
+  async update(id: number, object: Object) {
+    return await this.userRepository.update(id, object);
+  }
 }

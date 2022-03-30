@@ -20,6 +20,8 @@ import { UserService } from 'src/services/use-cases/user/user.service';
 import { DataService } from 'src/services/data/data.service';
 import { UserType } from 'src/core/entities/channel-user.entity';
 import { Channel } from 'src/core/entities/channel.entity';
+import { OwnerGuard } from '../guards/owner.guard';
+import { AdminGuard } from '../guards/admin.guard';
 
 @Controller('channels')
 export class ChannelsController {
@@ -71,6 +73,7 @@ export class ChannelsController {
   }
 
   @Put('update/:channelId/password/users/me/')
+  @UseGuards(OwnerGuard)
   @UseGuards(JwtAuthGuard)
   async updatePasswordChannel(
     @Param('channelId') channelId: number,
@@ -101,14 +104,14 @@ export class ChannelsController {
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );
-    if (!channel) return { status: 5565456465, message: 'channel Not Found' };
+    if (!channel) return { status: 500, message: 'channel Not Found' };
     if (!channelUser)
       return await this.dataService.addNewUserToChannel(
         channelId,
         req.user.id,
         UserType.USER,
       );
-    return { status: 5565456465, message: 'you are already in this channel' };
+    return { status: 500, message: 'you are already in this channel' };
   }
 
   @Post('join/:channelId/private/users/me')
@@ -124,10 +127,10 @@ export class ChannelsController {
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );
-    if (!channel) return { status: 5565456465, message: 'channel Not Found' };
+    if (!channel) return { status: 500, message: 'channel Not Found' };
     if (!channelUser)
       return await this.dataService.validateUser(channelId, req);
-    return { status: 5565456465, message: 'you are already in this channel' };
+    return { status: 500, message: 'you are already in this channel' };
   }
 
   // @Post('add/:channelId/users/me/:id/user')
@@ -164,6 +167,7 @@ export class ChannelsController {
   }
 
   @Delete('kick/:channelId/users/:userId')
+  @UseGuards(AdminGuard)
   @UseGuards(JwtAuthGuard)
   async kickUserFromTheChannel(
     @Param('channelId') channelId: number,
@@ -174,6 +178,7 @@ export class ChannelsController {
   }
 
   @Put('admin/:channelId/users/:userId')
+  @UseGuards(OwnerGuard)
   @UseGuards(JwtAuthGuard)
   async changeUserToBeAdmin(
     @Param(':channelId') channelId: number,
@@ -186,6 +191,7 @@ export class ChannelsController {
   }
 
   @Put('user/:channelId/users/:userId')
+  @UseGuards(OwnerGuard)
   @UseGuards(JwtAuthGuard)
   async changeAdminToBeUser(
     @Param('channelId') channelId: number,
@@ -198,6 +204,7 @@ export class ChannelsController {
   }
 
   @Put('mute/:channelId/users/:userId')
+  @UseGuards(AdminGuard)
   @UseGuards(JwtAuthGuard)
   async muteUserInTheChannel(
     @Param('channelId') channelId: number,
@@ -207,6 +214,7 @@ export class ChannelsController {
   }
 
   @Put('block/:channelId/users/:userId')
+  @UseGuards(AdminGuard)
   @UseGuards(JwtAuthGuard)
   async blockUserInTheChannel(
     @Param('channelId') channelId: number,

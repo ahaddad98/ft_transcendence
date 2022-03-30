@@ -31,8 +31,10 @@ import * as bcrypt from 'bcrypt';
 import { ChannelService } from '../use-cases/channel/channel.service';
 import { ChannelUser, UserType } from 'src/core/entities/channel-user.entity';
 import { ChannelUserService } from '../use-cases/channel-user/channel-user.service';
-import { compareAsc, format } from 'date-fns';
-import { channel } from 'diagnostics_channel';
+import { format } from 'date-fns';
+import * as speakeasy from 'speakeasy';
+import { Block } from 'src/core/entities/block.entity';
+import { BlockService } from '../use-cases/block/block.service';
 
 @Injectable()
 export class DataService {
@@ -47,6 +49,7 @@ export class DataService {
     private channelService: ChannelService,
     private channelUserService: ChannelUserService,
     private jwtService: JwtService,
+    private blockService: BlockService,
   ) {}
 
   async validateUser(channelId: number, req): Promise<any> {
@@ -192,19 +195,19 @@ export class DataService {
 
   async deleteFriend(userId: number, friendId: number) {
     try {
-      let newUser: User;
-      await this.usersService.findOneById(friendId).then((element) => {
-        if (element === undefined) throw undefined;
-      });
-      newUser = await this.usersService.findOneByIdWithRelation(userId, {
-        relations: ['friend'],
-      });
-      await this.friendsService.deleteFriend({
-        user: newUser,
-        friend: friendId,
-      });
+      const friend: User = await this.usersService.findOneById(friendId);
+      if (!friend) return { status: 500, message: 'this user is not fount' };
+      const user: User = await this.usersService.findOneById(userId);
+      console.log(user);
+      console.log(friend);
+      const list: Friend[] = await this.friendsService.findTwoFriends(
+        userId,
+        friendId,
+      );
+      if (list) return await this.friendsService.removeFriends(list);
+      return { status: 500, message: 'error' };
     } catch (err) {
-      return 'salam';
+      return err;
     }
   }
 
@@ -228,9 +231,12 @@ export class DataService {
   }
 
   async sendRequestToNewFriend(myId: number, friendId: number) {
+    console.log(myId);
+    console.log(friendId);
+    if (myId == friendId)
+      return { status: 500, message: 'U cant send a request to urself' };
     const me: User = await this.usersService.findOneById(myId);
     const friend: User = await this.usersService.findOneById(friendId);
-
     if (!me || !friend) return { status: 500, message: 'User Not Found' };
     const checkRequest: Request =
       await this.requestService.findFriendRequestByUsers(me, friend);
@@ -627,5 +633,83 @@ export class DataService {
       }),
     );
     return { status: 200, message: 'password is updated' };
+  }
+
+  // TwoFactorAuthenticationRegister
+
+  async TwoFactorAuthenticationRegister(userId: number) {
+    const temp_secret = speakeasy.generateSecret();
+    await this.usersService.update(userId, { secret: temp_secret });
+    return { status: 201, secret: temp_secret.base32 };
+  }
+
+  async TwoFactorAuthenticationVerify(userId: number, token: string) {
+    const user: User = await this.usersService.findOneById(userId);
+    const object = JSON.parse(user.secret);
+    const secret = object.base32;
+    console.log(secret);
+    const verified = speakeasy.totp.verify({
+      secret,
+      encoding: 'base32',
+      token,
+    });
+    if (verified) {
+      await this.usersService.update(userId, { isVerified: true });
+      return { status: 201, verified: true };
+    } else return { status: 201, verified: false };
+  }
+
+  async TwoFactorAuthenticationValidate(userId: number, token: string) {
+    const user: User = await this.usersService.findOneById(userId);
+    const object = JSON.parse(user.secret);
+    const secret = object.base32;
+    console.log(secret);
+    const tokenValidates = speakeasy.totp.verify({
+      secret,
+      encoding: 'base32',
+      token,
+      window: 1,
+    });
+    if (tokenValidates) {
+      return { status: 201, validate: true };
+    } else return { status: 201, validate: false };
+  }
+
+  // block
+  async blockUser(myId: number, userId: number) {
+    const block = await this.usersService.findOneById(userId);
+    if (typeof block === undefined) return { error: 'error' };
+    const me = await this.usersService.findOneByIdWithRelation(myId, {
+      relations: ['block'],
+    });
+    const friends: Friend[] = await this.friendsService.findTwoFriends(
+      myId,
+      userId,
+    );
+    if (friends) await this.deleteFriend(myId, userId);
+    if (me.block.find((blockUser) => blockUser.block?.id == userId)) {
+      console.log('this user is already in the list');
+      return { status: 500, message: 'this users is already in the list' };
+    }
+    const newBlock: Block = new Block();
+    newBlock.user = me;
+    newBlock.block = block;
+    await this.blockService.save(newBlock);
+    return { stats: 200, message: 'user is added in the list of blocking' };
+  }
+
+  async deleteBlock(myId: number, blockId: number) {
+    try {
+      const blockUser: User = await this.usersService.findOneById(blockId);
+      if (!blockUser) return { status: 500, message: 'this user is not fount' };
+      const me: User = await this.usersService.findOneById(myId);
+      console.log(me);
+      console.log(blockUser);
+      const block = await this.blockService.findBlockUser(me, blockUser);
+      if (block) return await this.blockService.remove(block);
+      return { status: 500, message: 'error' };
+    } catch (err) {
+      return err;
+    }
   }
 }
