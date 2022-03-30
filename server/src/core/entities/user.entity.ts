@@ -24,6 +24,9 @@ export class User {
   @OneToMany((type) => Block, (block) => block.user)
   block: Block[];
 
+  @Column({ type: 'bool', default: false })
+  twoFactor?: boolean;
+
   @Column({ nullable: true })
   secret?: string;
 

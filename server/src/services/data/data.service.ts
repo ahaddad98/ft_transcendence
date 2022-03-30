@@ -204,7 +204,8 @@ export class DataService {
         userId,
         friendId,
       );
-      return await this.friendsService.removeFriends(list);
+      if (list) return await this.friendsService.removeFriends(list);
+      return { status: 500, message: 'error' };
     } catch (err) {
       return err;
     }
@@ -681,14 +682,34 @@ export class DataService {
     const me = await this.usersService.findOneByIdWithRelation(myId, {
       relations: ['block'],
     });
+    const friends: Friend[] = await this.friendsService.findTwoFriends(
+      myId,
+      userId,
+    );
+    if (friends) await this.deleteFriend(myId, userId);
     if (me.block.find((blockUser) => blockUser.block?.id == userId)) {
       console.log('this user is already in the list');
-      return { error: 'this users is already in the list' };
+      return { status: 500, message: 'this users is already in the list' };
     }
     const newBlock: Block = new Block();
     newBlock.user = me;
     newBlock.block = block;
     await this.blockService.save(newBlock);
     return { stats: 200, message: 'user is added in the list of blocking' };
+  }
+
+  async deleteBlock(myId: number, blockId: number) {
+    try {
+      const blockUser: User = await this.usersService.findOneById(blockId);
+      if (!blockUser) return { status: 500, message: 'this user is not fount' };
+      const me: User = await this.usersService.findOneById(myId);
+      console.log(me);
+      console.log(blockUser);
+      const block = await this.blockService.findBlockUser(me, blockUser);
+      if (block) return await this.blockService.remove(block);
+      return { status: 500, message: 'error' };
+    } catch (err) {
+      return err;
+    }
   }
 }

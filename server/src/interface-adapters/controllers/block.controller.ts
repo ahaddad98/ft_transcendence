@@ -22,9 +22,9 @@ export class BlockController {
     return await this.dataService.blockUser(req.user.id, user);
   }
 
-  // @Post('remove/users/me/:userId')
-  // @UseGuards(JwtAuthGuard)
-  // async addNewUser(@Req() req, @Param('userId') user: number) {
-  //   return await this.dataService.blockUser(req.user.id, user);
-  // }
+  @Post('remove/users/me/:userId')
+  @UseGuards(JwtAuthGuard)
+  async removeUser(@Req() req, @Param('userId') user: number) {
+    return await this.dataService.deleteBlock(req.user.id, user);
+  }
 }
