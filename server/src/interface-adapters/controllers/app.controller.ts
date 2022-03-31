@@ -4,10 +4,10 @@ import { OwnerGuard } from '../guards/owner.guard';
 
 @Controller()
 export class AppController {
-  @Get(':id')
-  @UseGuards(OwnerGuard)
-  @UseGuards(JwtAuthGuard)
-  getHello(): string {
-    return 'Hi';
-  }
+  // @Get(':id')
+  // // @UseGuards(OwnerGuard)
+  // @UseGuards(JwtAuthGuard)
+  // getHello(): string {
+  //   return 'Hi';
+  // }
 }

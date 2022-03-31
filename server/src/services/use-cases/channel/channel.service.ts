@@ -12,7 +12,7 @@ export class ChannelService {
   ) {}
 
   async findAll() {
-    return await this.channelRepository.find();
+    return await this.channelRepository.find({relations: ['conversation']});
   }
   // async findAll() {
   //   return await this.channelRepository.find();

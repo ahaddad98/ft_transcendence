@@ -43,7 +43,7 @@ export class ChannelUserService {
       .orderBy('channel.createdAt', 'DESC')
       .getMany();
   }
-  
+
   async findbyChannelAndUser(newChannel: Channel, newUser: User) {
     return await this.channelUserRepository.findOne({
       where: {
@@ -52,6 +52,15 @@ export class ChannelUserService {
       },
       relations: ['user', 'channel'],
     });
+  }
+
+  async findAllUsersInChannelWithoutMe(newChannel: Channel) {
+    return await this.channelUserRepository
+      .createQueryBuilder('channelUser')
+      .leftJoinAndSelect('channelUser.user', 'user')
+      .where('channelUser.channel.id = :channel', { channel: newChannel.id })
+      .getMany();
+    // console.log(salam);
   }
 
   async findAllUsersInChannel(newChannel: Channel, newUser: User) {

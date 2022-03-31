@@ -27,13 +27,13 @@ export class MessagesController {
     return this.messageService.findAll();
   }
 
-  @Get('users/me/conversations/:ConversationId')
+  @Get('conversations/:ConversationId/users/me')
   @UseGuards(JwtAuthGuard)
   async getallMessageOfoneOfmyConversations(@Param('ConversationId') id: number) {
     return await this.dataService.getallMessageOfoneOfmyConversations(id);
   }
 
-  @Post('users/me/conversations/:ConversationId')
+  @Post('conversations/:ConversationId/users/me')
   @UseGuards(JwtAuthGuard)
   async sendNewMessage(@Req() req, @Param('ConversationId') id: number) {
     try {

@@ -42,6 +42,16 @@ export class ConversationUserService {
       },
     });
   }
+  async findUsersOfConversations(conversationId: number) {
+    return await this.conversationUserRepository.find({
+      relations: ['user'],
+      where: {
+        conversation: {
+          id: conversationId,
+        },
+      },
+    });
+  }
   // async findallMyConversations(newUser: User) {
   //   return await this.conversationUserRepository.find({
   //     where: { user: newUser },

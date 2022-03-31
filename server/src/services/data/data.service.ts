@@ -230,6 +230,7 @@ export class DataService {
     return this.jwtService.sign(payload);
   }
 
+  // addFriend
   async sendRequestToNewFriend(myId: number, friendId: number) {
     console.log(myId);
     console.log(friendId);
@@ -297,6 +298,7 @@ export class DataService {
     return { message: 'avatar is updated' };
   }
 
+  // messages
   async sendNewMessage(req, id: number) {
     // console.log(req.body);
     const conversation: Conversation =
@@ -323,6 +325,7 @@ export class DataService {
   }
 
   async findConversationWithMessages(id: number) {
+    // console.log('achraf kelb');
     const conversation: Conversation =
       await this.conversationService.findConversationByIdWithQuery(id);
     console.log(conversation);
@@ -493,6 +496,17 @@ export class DataService {
       );
     return await this.channelUserService.save(channelUser);
   }
+  async findMyChannel(channelId: number, me: number) {
+    const channel = await this.channelService.findChannelById(channelId);
+    if (!channel) return { status: 500, message: 'channel not found' };
+    const user: User = await this.usersService.findOneById(me);
+    const channelUser: ChannelUser =
+      await this.channelUserService.findbyChannelAndUser(channel, user);
+    if (!channelUser)
+      if (!channel)
+        return { status: 500, message: 'U dont have acces to this channel' };
+    return channel;
+  }
 
   async listUsersOfChannel(channelId: number, myId: number) {
     const newChannel: Channel = await this.channelService.findChannelById(
@@ -517,6 +531,35 @@ export class DataService {
       arr.push(object);
     }
     return arr;
+  }
+
+  async listUsersOfChannelWitouhtMe(channelId: number) {
+    const newChannel: Channel = await this.channelService.findChannelById(
+      channelId,
+    );
+    // const newUser: User = await this.usersService.findOneById(myId);
+    const result = await this.channelUserService.findAllUsersInChannelWithoutMe(
+      newChannel,
+    );
+    const arr = [];
+    const all = { owner: {}, admins: [], users: [] };
+    for (let i = 0; i < result.length; i++) {
+      let object = {
+        id: result[i].user.id,
+        username: result[i].user.username,
+        avatar: result[i].user.avatar,
+        is_online: result[i].user.is_online,
+        userType: result[i].userType,
+        block: result[i].block,
+        mute: result[i].mute,
+      };
+      if (result[i].userType == UserType.OWNER) {
+        all.owner = object;
+      } else if (result[i].userType == UserType.ADMIN) {
+        all.admins.push(object);
+      } else all.users.push(object);
+    }
+    return all;
   }
 
   async leavesTheChannel(channelId: number, myId: number) {

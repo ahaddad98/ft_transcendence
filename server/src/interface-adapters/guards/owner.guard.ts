@@ -6,6 +6,7 @@ import { ChannelService } from 'src/services/use-cases/channel/channel.service';
 export class OwnerGuard implements CanActivate {
   constructor(private channelService: ChannelService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    console.log('fartita');
     const request = context.switchToHttp().getRequest();
     const channel: Channel = await this.channelService.findChannelById(
       request.params.channelId,
