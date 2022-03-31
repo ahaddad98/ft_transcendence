@@ -301,6 +301,7 @@ export class DataService {
   // messages
   async sendNewMessage(req, id: number) {
     // console.log(req.body);
+    console.log(id);
     const conversation: Conversation =
       await this.conversationService.findConversationById(id);
     const message: Message = new Message();
@@ -308,6 +309,7 @@ export class DataService {
     message.sender = req.user.id;
     message.conversation = conversation;
     message.createdAt = new Date();
+    
     this.conversationService.updateTime(conversation.id, {
       updatedAt: new Date(),
     });
@@ -328,29 +330,32 @@ export class DataService {
     // console.log('achraf kelb');
     const arr = [];
     const conversation: Conversation =
-      await this.conversationService.findConversationByIdWithQuery(id);
+    await this.conversationService.findConversationByIdWithQuery(id);
+    if(!conversation)
+    return [];
     const conversationUsers: ConversationUser[] =
-      await this.conversationUserService.findUsersOfConversations(id);
+    await this.conversationUserService.findUsersOfConversations(id);
     conversationUsers.map((user) => {
       arr.push(user.user);
     });
-
-    if (conversation.type == ConversationType.CHANNEL) {
-      const channel: Channel =
-        await this.channelService.findChannelByConversationId(id);
-      const channelUser: ChannelUser[] =
-        await this.channelUserService.findAllUsersInChannelWithoutMe(channel);
-      const arr = [];
-      channelUser.map((user) => {
-        if (user.block == true) arr.push(user.user);
-      });
-      // console.log(channelUser);
-      // conversation.message = conversation.message.filter((message) => {
-      // console.log(message);
-      // return message.sender.id != arr[0].id;
-      // });
-      // console.log(conversation);
-    }
+    
+    // if (conversation.type == ConversationType.CHANNEL) {
+    //   console.log('salam');
+    //   const channel: Channel =
+    //     await this.channelService.findChannelByConversationId(id);
+    //   const channelUser: ChannelUser[] =
+    //     await this.channelUserService.findAllUsersInChannelWithoutMe(channel);
+    //   const arr = [];
+    //   channelUser.map((user) => {
+    //     if (user.block == true) arr.push(user.user);
+    //   });
+    //   // console.log(channelUser);
+    //   // conversation.message = conversation.message.filter((message) => {
+    //   // console.log(message);
+    //   // return message.sender.id != arr[0].id;
+    //   // });
+    //   // console.log(conversation);
+    // }
     return conversation;
   }
 

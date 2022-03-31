@@ -38,6 +38,8 @@ export class MessagesController {
   @UseGuards(JwtAuthGuard)
   async sendNewMessage(@Req() req, @Param('ConversationId') id: number) {
     try {
+      // console.log(req.body);
+      
       return await this.dataService.sendNewMessage(req, id);
     } catch (err) {
       console.log(err);

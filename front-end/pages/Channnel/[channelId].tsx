@@ -7,39 +7,41 @@ import ChannelPage from "../../components/channelpage";
 import axios from "axios";
 import { Router, useRouter } from "next/router";
 
-
-const Channel = (response) => {
-  console.log(response);
-
+const Channel = () => {
   let data = {
     username: "badboy",
     avatar: "",
   };
-  
+
   const [mychannel, setMychannel] = useState({});
-  const [allmychannel, setAllmychannel] = useState({});
-  const [convid, setconvid] = useState(-1);
-  const [chanid, setchanid] = useState(-1);
+  const [allmychannel, setAllmychannel] = useState([]);
+  const [convid, setconvid] = useState();
+  const [chanid, setchanid] = useState();
   const router = useRouter();
   const fetchAllmychannel = async () => {
-    const response = await axios.get(`http://localhost:3001/channels/users/me`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    const response = await axios.get(
+      `http://localhost:3001/channels/users/me`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    )
+    // const res = await response.data;
     return response;
-  };
+  }
+  //   console.log(response);
+    
+  // };
   useEffect(() => {
-      fetchAllmychannel()
+    fetchAllmychannel()
       .then((res) => {
-        if (res.data) 
-        {
+        if (res.data) {
           setAllmychannel(res.data);
-          console.log(res.data);
-          
         }
       })
       .catch((err) => {
         console.log(err);
       });
+
   }, []);
   const fetchmychannel = async (id) => {
     const response = await axios.get(`http://localhost:3001/channels/${id}`, {
@@ -48,53 +50,40 @@ const Channel = (response) => {
     return response;
   };
   useEffect(() => {
-    let chid;
-    if (router.query.channelId)
-      chid = router.query.channelId;
-    else
-    {
-      chid = 1;
-    }
-      fetchmychannel(chid)
+    fetchAllmychannel().then((res)=>{
+
+      if (router?.query?.channelId) 
+      {
+         setchanid(router.query.channelId);
+      }
+      else
+      chid = res[0].id;
+      }
+    // console.log(salam);
+    
+    );
+    fetchmychannel(chid)
       .then((res) => {
-        if (res.data) 
-        {
+        if (res.data) {
           setMychannel(res.data);
-          setconvid(res.data.conversation.id)
+          // setconvid(res.data.conversation.id);
         }
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
-  const [conversation, setConversation] = useState({});
-  const fetchconsversation= async (id) => {
-      const response = await axios.get(`http://localhost:3001/conversations/${id}/messages`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-      return response;
-  };
-  useEffect(() => {
-    if (convid !== -1)
-    {
-      fetchconsversation(convid)
-      .then((res) => {
-        if (res.data) setConversation(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    }
-  }, [convid]);
+  }, [allmychannel]);
+
   // conversation
   // channel data url="/channels/id"
   // post message in Channel components
   // admins
   // members
+
   return (
     <>
       <HomeNavbar data={data} />
-      {  mychannel &&  <ChannelPage mychannels={mychannel}/>}
+      {mychannel && <ChannelPage mychannels={mychannel} />}
     </>
   );
 };

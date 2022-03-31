@@ -23,10 +23,6 @@ const ChannlesList = (props) => {
   const [isprivate, setIsprivate] = useState(false);
   const hundelsubmitprivate = async (e) => {
     e.preventDefault();
-    var formData = new FormData();
-    formData.append("name", selectedname);
-    formData.append("password", selectedpassword);
-
     axios
       .post(
         "http://localhost:3001/channels/create/private/users/me",
