@@ -37,8 +37,8 @@ export class ConversationsController {
 
   @Get(':id/messages')
   @UseGuards(JwtAuthGuard)
-  async findConversationWithMessages(@Param('id') id: number) {
-    return await this.dataService.findConversationWithMessages(id);
+  async findConversationWithMessages(@Param('id') id: number, @Req() req) {
+    return await this.dataService.findConversationWithMessages(id, req.user.id);
     // return await this.conversationService.findConversationWithMessages(id);
   }
 

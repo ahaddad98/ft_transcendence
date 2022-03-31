@@ -12,7 +12,7 @@ export class BlockService {
   ) {}
 
   async findAll() {
-    return await this.blockRepository.find();
+    return await this.blockRepository.find({ relations: ['user', 'block'] });
   }
 
   async findMyBlockList(myId: number) {
@@ -25,6 +25,23 @@ export class BlockService {
       },
     });
   }
+
+  async findAllMyBlockList(myId: number) {
+    return await this.blockRepository.find({
+      relations: ['user', 'block'],
+      where: [
+        {
+          user: {
+            id: myId,
+          },
+        },
+        {
+          block: { id: myId },
+        },
+      ],
+    });
+  }
+  
   async findBlockUser(me: User, user: User) {
     return await this.blockRepository.findOne({
       relations: ['user', 'block'],
@@ -40,6 +57,10 @@ export class BlockService {
   }
   async save(newBlock: Block) {
     return await this.blockRepository.save(newBlock);
+  }
+
+  async delete(id: number) {
+    return await this.blockRepository.delete(id);
   }
 
   async remove(block: Block) {

@@ -28,7 +28,6 @@ export class MessageService {
   }
 
   async updateHiddenToBeTrue(conversationId: number, senderId: number) {
-    // return await this.messageRepository.createQueryBuilder('message').
     return await this.messageRepository.update(
       {
         conversation: {
@@ -38,7 +37,7 @@ export class MessageService {
           id: senderId,
         },
       },
-      { hidden: false },
+      { hidden: true },
     );
   }
   async addNewMessage(message: Message): Promise<Message> {
