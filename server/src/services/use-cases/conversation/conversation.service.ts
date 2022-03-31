@@ -38,6 +38,7 @@ export class ConversationService {
       .innerJoinAndSelect('message.sender', 'sender')
       .orderBy('message.createdAt', 'ASC')
       .where('conversation.id = :conversationId', { conversationId: id })
+      .andWhere('message.hidden = :hidden', { hidden: false })
       .getOne();
   }
 
