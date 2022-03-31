@@ -23,11 +23,6 @@ const ChannlesList = (props) => {
   const [isprivate, setIsprivate] = useState(false);
   const hundelsubmitprivate = async (e) => {
     e.preventDefault();
-    var formData = new FormData();
-    formData.append("name", selectedname);
-    formData.append("password", selectedpassword);
-    console.log(formData);
-
     axios
       .post(
         "http://localhost:3001/channels/create/private/users/me",
@@ -98,11 +93,14 @@ const ChannlesList = (props) => {
           },
         }
       )
-      .then((res) => {
-        console.log(res);
-        router.push("/channel");
+      .then(() => {
+        {
+          router.push(`/Channnel/${id}`);
+        }
       });
   };
+  console.log(props.mychannels);
+
   const hundelsubmit = async (e) => {
     if (isprivate) hundelsubmitprivate(e);
     if (!isprivate) hundelsubmitpublic(e);
@@ -264,73 +262,75 @@ const ChannlesList = (props) => {
                           >
                             {stat.type === "private" && (
                               <>
-                            <button
-                              className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                              onClick={() => {
-                                setIsjoinprivate(!isjoinprivate);
-                              }}
-                            >
-                              Join
-                            </button>
-                              {
-                                isjoinprivate && (
-
+                                <button
+                                  className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                                  onClick={() => {
+                                    setIsjoinprivate(!isjoinprivate);
+                                  }}
+                                >
+                                  Join
+                                </button>
+                                {isjoinprivate && (
                                   <Modal
-                                  size="lg"
-                                  active={isjoinprivate}
-                                  toggler={() => setIsjoinprivate(!isjoinprivate)}
+                                    size="lg"
+                                    active={isjoinprivate}
+                                    toggler={() =>
+                                      setIsjoinprivate(!isjoinprivate)
+                                    }
                                   >
-                                <ModalBody>
-                                  <form
-                                    onSubmit={(e) =>
-                                      hundelsubmitprivatejoin(e, stat.id)
-                                    }
-                                    >
-                                    <div className="space-y-4">
-                                      <div>
-                                        <label
-                                          htmlFor="email"
-                                          className="block mb-1 text-gray-600 font-semibold"
-                                          >
-                                          Password
-                                        </label>
-                                        <input
-                                          type="text"
-                                          id="password"
-                                          className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
-                                          onChange={(e) => {
-                                            setSelectedPasswordjoin(
-                                              e.target.value
-                                              );
-                                            }}
+                                    <ModalBody>
+                                      <form
+                                        onSubmit={(e) =>
+                                          hundelsubmitprivatejoin(e, stat.id)
+                                        }
+                                      >
+                                        <div className="space-y-4">
+                                          <div>
+                                            <label
+                                              htmlFor="email"
+                                              className="block mb-1 text-gray-600 font-semibold"
+                                            >
+                                              Password
+                                            </label>
+                                            <input
+                                              type="text"
+                                              id="password"
+                                              className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
+                                              onChange={(e) => {
+                                                setSelectedPasswordjoin(
+                                                  e.target.value
+                                                );
+                                              }}
                                             />
-                                      </div>
-                                    </div>
-                                    {
-                                      <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide">
-                                        <Link href="/channel">
-                                          <input type="submit" value="Join" />
-                                        </Link>
-                                      </button>
-                                    }
-                                  </form>
-                                </ModalBody>
-                              </Modal>
-                                        )
-                                      }
-                                    </>
+                                          </div>
+                                        </div>
+                                        {
+                                          <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide">
+                                            <Link href="/channel">
+                                              <input
+                                                type="submit"
+                                                value="Join"
+                                              />
+                                            </Link>
+                                          </button>
+                                        }
+                                      </form>
+                                    </ModalBody>
+                                  </Modal>
+                                )}
+                              </>
                             )}
                             {stat.type === "public" && (
                               <>
-                            <button
-                              className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                              onClick={(e) => {
-                                hundelsubmitpublicjoin(e, stat.id);
-                              }}
-                            >
-                              Join
-                            </button>
-                               </>
+                                <button
+                                  className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                                  onClick={(e) => {
+                                    hundelsubmitpublicjoin(e, stat.id);
+                                  }}
+                                >
+                                  Join
+                                </button>
+                              </>
                             )}
                           </div>
                         </td>
