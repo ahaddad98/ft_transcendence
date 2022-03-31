@@ -331,6 +331,7 @@ export class DataService {
       await this.conversationService.findConversationByIdWithQuery(
         conversationId,
       );
+    if (!conversation) return [];
     const conversationUsers: ConversationUser[] =
       await this.conversationUserService.findUsersOfConversations(
         conversationId,
