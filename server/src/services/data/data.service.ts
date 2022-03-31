@@ -326,9 +326,31 @@ export class DataService {
 
   async findConversationWithMessages(id: number) {
     // console.log('achraf kelb');
+    const arr = [];
     const conversation: Conversation =
       await this.conversationService.findConversationByIdWithQuery(id);
-    console.log(conversation);
+    const conversationUsers: ConversationUser[] =
+      await this.conversationUserService.findUsersOfConversations(id);
+    conversationUsers.map((user) => {
+      arr.push(user.user);
+    });
+
+    if (conversation.type == ConversationType.CHANNEL) {
+      const channel: Channel =
+        await this.channelService.findChannelByConversationId(id);
+      const channelUser: ChannelUser[] =
+        await this.channelUserService.findAllUsersInChannelWithoutMe(channel);
+      const arr = [];
+      channelUser.map((user) => {
+        if (user.block == true) arr.push(user.user);
+      });
+      // console.log(channelUser);
+      // conversation.message = conversation.message.filter((message) => {
+      // console.log(message);
+      // return message.sender.id != arr[0].id;
+      // });
+      // console.log(conversation);
+    }
     return conversation;
   }
 
@@ -451,7 +473,6 @@ export class DataService {
     channel.owner = user;
     channel.conversation = await this.addNewChannelConversation(myId);
     channel = await this.channelService.save(channel);
-    console.log('salam');
     await this.addNewUserToChannel(channel.id, user.id, UserType.OWNER);
     return channel;
   }
@@ -487,8 +508,6 @@ export class DataService {
     channelUser.channel = newChannel;
     channelUser.user = newUser;
     channelUser.userType = userType;
-    console.log(newUser);
-    console.log(newChannel);
     if (userType != UserType.OWNER)
       await this.addNewUserToChannelConversation(
         newUser.id,
@@ -625,6 +644,7 @@ export class DataService {
   async kickUserFormChannelConversation(channelId: number, myId: number) {
     const conversation: Conversation =
       await this.conversationService.findConversationOfChannel(channelId);
+    console.log(conversation);
     const conversationUser =
       await this.conversationUserService.findConversationUser(
         conversation.id,
@@ -634,10 +654,19 @@ export class DataService {
   }
 
   async blockUserInChannel(channelId: number, myId: number) {
+    const channel: Channel = await this.channelService.findChannelById(
+      channelId,
+    );
     const chanelUser = await this.findChannelUser(channelId, myId);
     chanelUser.block = !chanelUser.block;
-    if (chanelUser.block === false)
+    if (chanelUser.block === false) {
+      // console.log(channel);
       return await this.leavesTheChannel(channelId, myId);
+    }
+    await this.messageService.updateHiddenToBeTrue(
+      channel.conversation.id,
+      myId,
+    );
     await this.kickUserFormChannelConversation(channelId, myId);
     return await this.channelUserService.updateBlock(
       chanelUser.id,
@@ -754,5 +783,13 @@ export class DataService {
     } catch (err) {
       return err;
     }
+  }
+
+  //messages
+  async updateMessagesToBeHidden(conversationId: number, senderId: number) {
+    return await this.messageService.updateHiddenToBeTrue(
+      conversationId,
+      senderId,
+    );
   }
 }

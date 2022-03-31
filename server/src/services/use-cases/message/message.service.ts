@@ -26,7 +26,21 @@ export class MessageService {
       },
     });
   }
-  
+
+  async updateHiddenToBeTrue(conversationId: number, senderId: number) {
+    // return await this.messageRepository.createQueryBuilder('message').
+    return await this.messageRepository.update(
+      {
+        conversation: {
+          id: conversationId,
+        },
+        sender: {
+          id: senderId,
+        },
+      },
+      { hidden: false },
+    );
+  }
   async addNewMessage(message: Message): Promise<Message> {
     return await this.messageRepository.save(message);
   }

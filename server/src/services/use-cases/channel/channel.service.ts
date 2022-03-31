@@ -27,6 +27,18 @@ export class ChannelService {
     });
   }
 
+  async findChannelByConversationId(conversationId: number)
+  {
+    return await this.channelRepository.findOne({
+      relations: ['conversation'],
+      where: {
+        conversation: {
+          id: conversationId
+        }
+      }
+    })
+  }
+
   async updatePassowrd(id: number, newPassword: string) {
     return await this.channelRepository.update(id, { password: newPassword });
   }

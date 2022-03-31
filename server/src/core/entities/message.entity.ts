@@ -18,6 +18,9 @@ export class Message {
   @JoinColumn()
   sender: User;
 
+  @Column({ type: 'boolean', default: false })
+  hidden?: boolean;
+  
   @ManyToOne((type) => Conversation, (conversation) => conversation.message, {
     onDelete: 'CASCADE',
   })

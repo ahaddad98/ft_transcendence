@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -41,6 +42,12 @@ export class MessagesController {
     } catch (err) {
       console.log(err);
     }
+  }
+  @Put('update/hidden')
+  @UseGuards(JwtAuthGuard)
+  async updateHiddenToBeTrue()
+  {
+    // return await this.messageService.updateHiddenToBeTrue();
   }
 
   @Delete('id')
