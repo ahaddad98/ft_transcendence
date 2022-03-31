@@ -25,8 +25,8 @@ export class ConversationService {
   async findUsersOfConversationById(id: number) {
     return await this.conversationRepository
       .createQueryBuilder('conversation')
-      .innerJoinAndSelect('conversation.userOne', 'userOne')
-      .innerJoinAndSelect('conversation.userTwo', 'userTwo')
+      // .innerJoinAndSelect('conversation.userOne', 'userOne')
+      // .innerJoinAndSelect('conversation.userTwo', 'userTwo')
       .where('conversation.id = :conversationId', { conversationId: id })
       .getOne();
   }
@@ -35,7 +35,8 @@ export class ConversationService {
     return await this.conversationRepository
       .createQueryBuilder('conversation')
       .leftJoinAndSelect('conversation.message', 'message')
-      .innerJoinAndSelect('message.senderId', 'senderId')
+      .innerJoinAndSelect('message.sender', 'sender')
+      .orderBy('message.createdAt', 'ASC')
       .where('conversation.id = :conversationId', { conversationId: id })
       .getOne();
   }

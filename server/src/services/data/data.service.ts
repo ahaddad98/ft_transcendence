@@ -230,6 +230,7 @@ export class DataService {
     return this.jwtService.sign(payload);
   }
 
+  // addFriend
   async sendRequestToNewFriend(myId: number, friendId: number) {
     console.log(myId);
     console.log(friendId);
@@ -297,6 +298,7 @@ export class DataService {
     return { message: 'avatar is updated' };
   }
 
+  // messages
   async sendNewMessage(req, id: number) {
     // console.log(req.body);
     const conversation: Conversation =
@@ -323,9 +325,32 @@ export class DataService {
   }
 
   async findConversationWithMessages(id: number) {
+    // console.log('achraf kelb');
+    const arr = [];
     const conversation: Conversation =
       await this.conversationService.findConversationByIdWithQuery(id);
-    console.log(conversation);
+    const conversationUsers: ConversationUser[] =
+      await this.conversationUserService.findUsersOfConversations(id);
+    conversationUsers.map((user) => {
+      arr.push(user.user);
+    });
+
+    if (conversation.type == ConversationType.CHANNEL) {
+      const channel: Channel =
+        await this.channelService.findChannelByConversationId(id);
+      const channelUser: ChannelUser[] =
+        await this.channelUserService.findAllUsersInChannelWithoutMe(channel);
+      const arr = [];
+      channelUser.map((user) => {
+        if (user.block == true) arr.push(user.user);
+      });
+      // console.log(channelUser);
+      // conversation.message = conversation.message.filter((message) => {
+      // console.log(message);
+      // return message.sender.id != arr[0].id;
+      // });
+      // console.log(conversation);
+    }
     return conversation;
   }
 
@@ -448,7 +473,6 @@ export class DataService {
     channel.owner = user;
     channel.conversation = await this.addNewChannelConversation(myId);
     channel = await this.channelService.save(channel);
-    console.log('salam');
     await this.addNewUserToChannel(channel.id, user.id, UserType.OWNER);
     return channel;
   }
@@ -484,14 +508,23 @@ export class DataService {
     channelUser.channel = newChannel;
     channelUser.user = newUser;
     channelUser.userType = userType;
-    console.log(newUser);
-    console.log(newChannel);
     if (userType != UserType.OWNER)
       await this.addNewUserToChannelConversation(
         newUser.id,
         newChannel.conversation.id,
       );
     return await this.channelUserService.save(channelUser);
+  }
+  async findMyChannel(channelId: number, me: number) {
+    const channel = await this.channelService.findChannelById(channelId);
+    if (!channel) return { status: 500, message: 'channel not found' };
+    const user: User = await this.usersService.findOneById(me);
+    const channelUser: ChannelUser =
+      await this.channelUserService.findbyChannelAndUser(channel, user);
+    if (!channelUser)
+      if (!channel)
+        return { status: 500, message: 'U dont have acces to this channel' };
+    return channel;
   }
 
   async listUsersOfChannel(channelId: number, myId: number) {
@@ -517,6 +550,35 @@ export class DataService {
       arr.push(object);
     }
     return arr;
+  }
+
+  async listUsersOfChannelWitouhtMe(channelId: number) {
+    const newChannel: Channel = await this.channelService.findChannelById(
+      channelId,
+    );
+    // const newUser: User = await this.usersService.findOneById(myId);
+    const result = await this.channelUserService.findAllUsersInChannelWithoutMe(
+      newChannel,
+    );
+    const arr = [];
+    const all = { owner: {}, admins: [], users: [] };
+    for (let i = 0; i < result.length; i++) {
+      let object = {
+        id: result[i].user.id,
+        username: result[i].user.username,
+        avatar: result[i].user.avatar,
+        is_online: result[i].user.is_online,
+        userType: result[i].userType,
+        block: result[i].block,
+        mute: result[i].mute,
+      };
+      if (result[i].userType == UserType.OWNER) {
+        all.owner = object;
+      } else if (result[i].userType == UserType.ADMIN) {
+        all.admins.push(object);
+      } else all.users.push(object);
+    }
+    return all;
   }
 
   async leavesTheChannel(channelId: number, myId: number) {
@@ -582,6 +644,7 @@ export class DataService {
   async kickUserFormChannelConversation(channelId: number, myId: number) {
     const conversation: Conversation =
       await this.conversationService.findConversationOfChannel(channelId);
+    console.log(conversation);
     const conversationUser =
       await this.conversationUserService.findConversationUser(
         conversation.id,
@@ -591,10 +654,19 @@ export class DataService {
   }
 
   async blockUserInChannel(channelId: number, myId: number) {
+    const channel: Channel = await this.channelService.findChannelById(
+      channelId,
+    );
     const chanelUser = await this.findChannelUser(channelId, myId);
     chanelUser.block = !chanelUser.block;
-    if (chanelUser.block === false)
+    if (chanelUser.block === false) {
+      // console.log(channel);
       return await this.leavesTheChannel(channelId, myId);
+    }
+    await this.messageService.updateHiddenToBeTrue(
+      channel.conversation.id,
+      myId,
+    );
     await this.kickUserFormChannelConversation(channelId, myId);
     return await this.channelUserService.updateBlock(
       chanelUser.id,
@@ -711,5 +783,13 @@ export class DataService {
     } catch (err) {
       return err;
     }
+  }
+
+  //messages
+  async updateMessagesToBeHidden(conversationId: number, senderId: number) {
+    return await this.messageService.updateHiddenToBeTrue(
+      conversationId,
+      senderId,
+    );
   }
 }

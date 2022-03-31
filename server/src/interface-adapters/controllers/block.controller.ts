@@ -16,6 +16,11 @@ export class BlockController {
     return await this.blockService.findAll();
   }
 
+  @Get('users/me')
+  @UseGuards(JwtAuthGuard)
+  async getMyBlockList(@Req() req) {
+    return await this.blockService.findMyBlockList(req.user.id);
+  }
   @Post('add/users/me/:userId')
   @UseGuards(JwtAuthGuard)
   async addNewUser(@Req() req, @Param('userId') user: number) {

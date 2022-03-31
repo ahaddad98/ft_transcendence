@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -27,13 +28,13 @@ export class MessagesController {
     return this.messageService.findAll();
   }
 
-  @Get('users/me/conversations/:ConversationId')
+  @Get('conversations/:ConversationId/users/me')
   @UseGuards(JwtAuthGuard)
   async getallMessageOfoneOfmyConversations(@Param('ConversationId') id: number) {
     return await this.dataService.getallMessageOfoneOfmyConversations(id);
   }
 
-  @Post('users/me/conversations/:ConversationId')
+  @Post('conversations/:ConversationId/users/me')
   @UseGuards(JwtAuthGuard)
   async sendNewMessage(@Req() req, @Param('ConversationId') id: number) {
     try {
@@ -41,6 +42,12 @@ export class MessagesController {
     } catch (err) {
       console.log(err);
     }
+  }
+  @Put('update/hidden')
+  @UseGuards(JwtAuthGuard)
+  async updateHiddenToBeTrue()
+  {
+    // return await this.messageService.updateHiddenToBeTrue();
   }
 
   @Delete('id')

@@ -12,7 +12,7 @@ export class ChannelService {
   ) {}
 
   async findAll() {
-    return await this.channelRepository.find();
+    return await this.channelRepository.find({relations: ['conversation']});
   }
   // async findAll() {
   //   return await this.channelRepository.find();
@@ -25,6 +25,18 @@ export class ChannelService {
         createdAt: 'DESC',
       },
     });
+  }
+
+  async findChannelByConversationId(conversationId: number)
+  {
+    return await this.channelRepository.findOne({
+      relations: ['conversation'],
+      where: {
+        conversation: {
+          id: conversationId
+        }
+      }
+    })
   }
 
   async updatePassowrd(id: number, newPassword: string) {

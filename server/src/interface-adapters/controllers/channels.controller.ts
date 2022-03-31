@@ -49,8 +49,15 @@ export class ChannelsController {
   }
 
   @Get(':id')
-  async findChannelById(@Param('id') id: number) {
-    return await this.channelService.findChannelById(id);
+  @UseGuards(JwtAuthGuard)
+  async findChannelById(@Param('id') id: number, @Req() req) {
+    return await this.dataService.findMyChannel(id, req.user.id);
+  }
+
+  @Get(':id/users/all')
+  @UseGuards(JwtAuthGuard)
+  async listAllUsersOfChannelWithoutMe(@Param('id') id: number, @Req() req) {
+    return await this.dataService.listUsersOfChannelWitouhtMe(id);
   }
 
   @Get(':id/users/me/all')

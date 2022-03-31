@@ -15,6 +15,16 @@ export class BlockService {
     return await this.blockRepository.find();
   }
 
+  async findMyBlockList(myId: number) {
+    return await this.blockRepository.find({
+      relations: ['user', 'block'],
+      where: {
+        user: {
+          id: myId,
+        },
+      },
+    });
+  }
   async findBlockUser(me: User, user: User) {
     return await this.blockRepository.findOne({
       relations: ['user', 'block'],
