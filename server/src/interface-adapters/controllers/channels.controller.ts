@@ -12,22 +12,21 @@ import {
 import {
   CreateChannelDto,
   CreatePublicChannelDto,
-  UpdatePasswordChannelDto,
 } from 'src/core/dtos/channel.dto';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
 import { ChannelService } from 'src/services/use-cases/channel/channel.service';
-import { UserService } from 'src/services/use-cases/user/user.service';
 import { DataService } from 'src/services/data/data.service';
-import { UserType } from 'src/core/entities/channel-user.entity';
-import { Channel } from 'src/core/entities/channel.entity';
 import { OwnerGuard } from '../guards/owner.guard';
 import { AdminGuard } from '../guards/admin.guard';
+import {
+  ChannelParams,
+  UpdatePasswordChannel,
+} from 'src/services/helpers/validators';
 
 @Controller('channels')
 export class ChannelsController {
   constructor(
     private channelService: ChannelService,
-    private userService: UserService,
     private dataService: DataService,
   ) {}
 
@@ -39,194 +38,200 @@ export class ChannelsController {
   @Get('home') //
   @UseGuards(JwtAuthGuard)
   async findAllChannels(@Req() req) {
-    return await this.dataService.findAllChannels(req.user.id);
+    try {
+      return await this.dataService.findAllChannels(req.user.id);
+    } catch (err) {
+      return err;
+    }
   }
 
   @Get('users/me') //
   @UseGuards(JwtAuthGuard)
   async findAllMyChannels(@Req() req) {
-    return await this.dataService.findAllMyChannels(req.user.id);
+    try {
+      return await this.dataService.findAllMyChannels(req.user.id);
+    } catch (err) {
+      return err;
+    }
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  async findChannelById(@Param('id') id: number, @Req() req) {
-    return await this.dataService.findMyChannel(id, req.user.id);
+  async findChannelById(@Param() params: ChannelParams, @Req() req) {
+    try {
+      return await this.dataService.findMyChannel(params.id, req.user.id);
+    } catch (err) {
+      return err;
+    }
   }
 
   @Get(':id/users/all')
   @UseGuards(JwtAuthGuard)
-  async listAllUsersOfChannelWithoutMe(@Param('id') id: number, @Req() req) {
-    return await this.dataService.listUsersOfChannelWitouhtMe(id);
+  async listAllUsersOfChannelWithoutMe(@Param() params: ChannelParams) {
+    try {
+      return await this.dataService.listUsersOfChannelWitouhtMe(params.id);
+    } catch (err) {
+      return err;
+    }
   }
 
   @Get(':id/users/me/all')
   @UseGuards(JwtAuthGuard)
-  async listAllUsersOfChannel(@Param('id') id: number, @Req() req) {
-    return await this.dataService.listUsersOfChannel(id, req.user.id);
+  async listAllUsersOfChannel(@Param() params: ChannelParams, @Req() req) {
+    try {
+      return await this.dataService.listUsersOfChannel(params.id, req.user.id);
+    } catch (err) {
+      return err;
+    }
   }
 
   @Delete(':id')
-  async deleteChannel(@Param('id') id: number) {
-    return await this.dataService.removeChannel(id);
-    // await this.channelService.delete(id);
-    // return { status: 200, message: 'channel is removed' };
+  async deleteChannel(@Param() params: ChannelParams) {
+    try {
+      return await this.dataService.removeChannel(params.id);
+    } catch (err) {
+      return err;
+    }
   }
 
   @Post('create/private/users/me/')
   @UseGuards(JwtAuthGuard)
   async addNewPrivateChannel(@Body() body: CreateChannelDto, @Req() req) {
-    return await this.dataService.addNewPrivateChannel(body, req.user.id);
+    try {
+      return await this.dataService.addNewPrivateChannel(body, req.user.id);
+    } catch (err) {
+      return err;
+    }
   }
 
-  @Put('update/:channelId/password/users/me/')
+  @Put('update/:id/password/users/me/')
   @UseGuards(OwnerGuard)
   @UseGuards(JwtAuthGuard)
   async updatePasswordChannel(
-    @Param('channelId') channelId: number,
-    @Body() body: UpdatePasswordChannelDto,
+    @Param() params: ChannelParams,
+    @Body() body: UpdatePasswordChannel,
     @Req() req,
   ) {
-    return await this.dataService.UpdateChannelPassword(
-      channelId,
-      body,
-      req.user.id,
-    );
+    try {
+      return await this.dataService.UpdateChannelPassword(
+        params.id,
+        body,
+        req.user.id,
+      );
+    } catch (err) {
+      return err;
+    }
   }
 
   @Post('create/public/users/me/')
   @UseGuards(JwtAuthGuard)
   async addNewPublicChannel(@Body() body: CreatePublicChannelDto, @Req() req) {
-    // console.log('salam')
-    return await this.dataService.addNewPublicChannel(body, req.user.id);
+    try {
+      return await this.dataService.addNewPublicChannel(body, req.user.id);
+    } catch (err) {
+      return err;
+    }
   }
 
-  @Post('join/:channelId/public/users/me')
+  @Post('join/:id/public/users/me')
   @UseGuards(JwtAuthGuard)
-  async JoinToPublicChannel(@Param('channelId') channelId: number, @Req() req) {
-    const channelUser = await this.dataService.findChannelUser(
-      channelId,
-      req.user.id,
-    );
-    const channel: Channel = await this.channelService.findChannelById(
-      channelId,
-    );
-    if (!channel) return { status: 500, message: 'channel Not Found' };
-    if (!channelUser)
-      return await this.dataService.addNewUserToChannel(
-        channelId,
-        req.user.id,
-        UserType.USER,
-      );
-    return { status: 500, message: 'you are already in this channel' };
+  async JoinToPublicChannel(@Param() params: ChannelParams, @Req() req) {
+    try {
+      return await this.dataService.joinPublicChannel(params.id, req.user.id);
+    } catch (err) {
+      return err;
+    }
   }
 
-  @Post('join/:channelId/private/users/me')
+  @Post('join/:id/private/users/me')
   @UseGuards(JwtAuthGuard)
   async JoinToPrivateChannel(
-    @Param('channelId') channelId: number,
+    @Param() params: ChannelParams,
+    @Body() body: UpdatePasswordChannel,
     @Req() req,
   ) {
-    const channelUser = await this.dataService.findChannelUser(
-      channelId,
-      req.user.id,
-    );
-    const channel: Channel = await this.channelService.findChannelById(
-      channelId,
-    );
-    if (!channel) return { status: 500, message: 'channel Not Found' };
-    if (!channelUser)
-      return await this.dataService.validateUser(channelId, req);
-    return { status: 500, message: 'you are already in this channel' };
+    try {
+      return await this.dataService.joinPrivateChannel(
+        params.id,
+        body,
+        req.user.id,
+      );
+    } catch (err) {
+      return err;
+    }
   }
 
-  // @Post('add/:channelId/users/me/:id/user')
-  // @UseGuards(JwtAuthGuard)
-  // async addNewUserToChannel(
-  //   @Param('channelId') channelId: number,
-  //   @Param(':id') userId: number,
-  // ) {
-  //   return await this.dataService.addNewUserToChannel(
-  //     channelId,
-  //     userId,
-  //     UserType.USER,
-  //   );
-  // }
-
-  // @Post('add/:channelId/users/me/:id/admin')
-  // @UseGuards(JwtAuthGuard)
-  // async addNewAdminToChannel(
-  //   @Param('channelId') channelId: number,
-  //   @Param(':id') userId: number,
-  // ) {
-  //   return await this.dataService.addNewUserToChannel(
-  //     channelId,
-  //     userId,
-  //     UserType.ADMIN,
-  //   );
-  // }
-
-  @Delete('leave/:channelId/users/me')
+  @Delete('leave/:id/users/me')
   @UseGuards(JwtAuthGuard)
-  async leavesTheChannel(@Param(':channelId') channelId: number, @Req() req) {
-    console.log('salam');
-    return await this.dataService.leavesTheChannel(channelId, req.user.id);
+  async leavesTheChannel(@Param() params: ChannelParams, @Req() req) {
+    try {
+      return await this.dataService.leavesTheChannel(params.id, req.user.id);
+    } catch (err) {
+      return err;
+    }
   }
 
-  @Delete('kick/:channelId/users/:userId')
+  @Delete('kick/:id/users/:userId')
   @UseGuards(AdminGuard)
   @UseGuards(JwtAuthGuard)
-  async kickUserFromTheChannel(
-    @Param('channelId') channelId: number,
-    @Param('userId') userId: number,
-  ) {
-    console.log('salam');
-    return await this.dataService.leavesTheChannel(channelId, userId);
+  async kickUserFromTheChannel(@Param() params: ChannelParams) {
+    try {
+      return await this.dataService.leavesTheChannel(params.id, params.userId);
+    } catch (err) {
+      return err;
+    }
   }
 
-  @Put('admin/:channelId/users/:userId')
+  @Put('admin/:id/users/:userId')
   @UseGuards(OwnerGuard)
   @UseGuards(JwtAuthGuard)
-  async changeUserToBeAdmin(
-    @Param(':channelId') channelId: number,
-    @Param('userId') userId: number,
-  ) {
-    return await this.dataService.changeUserToBeAdminInChannel(
-      channelId,
-      userId,
-    );
+  async changeUserToBeAdmin(@Param() params: ChannelParams) {
+    try {
+      return await this.dataService.changeUserToBeAdminInChannel(
+        params.id,
+        params.userId,
+      );
+    } catch (err) {
+      return err;
+    }
   }
 
-  @Put('user/:channelId/users/:userId')
+  @Put('user/:id/users/:userId')
   @UseGuards(OwnerGuard)
   @UseGuards(JwtAuthGuard)
-  async changeAdminToBeUser(
-    @Param('channelId') channelId: number,
-    @Param('userId') userId: number,
-  ) {
-    return await this.dataService.changeAdminToBeUserInChannel(
-      channelId,
-      userId,
-    );
+  async changeAdminToBeUser(@Param() params: ChannelParams) {
+    try {
+      return await this.dataService.changeAdminToBeUserInChannel(
+        params.id,
+        params.userId,
+      );
+    } catch (err) {
+      return err;
+    }
   }
 
-  @Put('mute/:channelId/users/:userId')
+  @Put('mute/:id/users/:userId')
   @UseGuards(AdminGuard)
   @UseGuards(JwtAuthGuard)
-  async muteUserInTheChannel(
-    @Param('channelId') channelId: number,
-    @Param('userId') userId: number,
-  ) {
-    return await this.dataService.muteUserInChannel(channelId, userId);
+  async muteUserInTheChannel(@Param() params: ChannelParams) {
+    try {
+      return await this.dataService.muteUserInChannel(params.id, params.userId);
+    } catch (err) {
+      return err;
+    }
   }
 
-  @Put('block/:channelId/users/:userId')
+  @Put('block/:id/users/:userId')
   @UseGuards(AdminGuard)
   @UseGuards(JwtAuthGuard)
-  async blockUserInTheChannel(
-    @Param('channelId') channelId: number,
-    @Param('userId') userId: number,
-  ) {
-    return await this.dataService.blockUserInChannel(channelId, userId);
+  async blockUserInTheChannel(@Param() params: ChannelParams) {
+    try {
+      return await this.dataService.blockUserInChannel(
+        params.id,
+        params.userId,
+      );
+    } catch (err) {
+      return err;
+    }
   }
 }

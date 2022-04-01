@@ -10,6 +10,7 @@ import {
 import { User } from 'src/core/entities/user.entity';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
 import { DataService } from 'src/services/data/data.service';
+import { FriendParams } from 'src/services/helpers/validators';
 import { FriendService } from 'src/services/use-cases/friend/friend.service';
 import { UserService } from 'src/services/use-cases/user/user.service';
 
@@ -23,39 +24,62 @@ export class FriendsController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  async getAllMyFriends(@Param('id') id: number) {
-    const user: User = await this.usersService.findOneById(id);
-    return await this.friendsService.findAllByUser(user);
+  async getAllMyFriends(@Param() params: FriendParams) {
+    try {
+      const user: User = await this.usersService.findOneById(params.id);
+      return await this.friendsService.findAllByUser(user);
+    } catch (err) {
+      return err;
+    }
   }
 
   @Get()
   @UseGuards(JwtAuthGuard)
   async getAllFriends() {
-    return await this.friendsService.findAll();
+    try {
+      return await this.friendsService.findAll();
+    } catch (err) {
+      return err;
+    }
   }
 
   @Get('users/me')
   @UseGuards(JwtAuthGuard)
   async findMyFriends(@Req() req) {
-    const user: User = await this.usersService.findOneById(req.user.id);
-    // console.log(user);
-    return await this.dataService.findAllFriendOfUser(user);
+    try {
+      const user: User = await this.usersService.findOneById(req.user.id);
+      return await this.dataService.findAllFriendOfUser(user);
+    } catch (err) {
+      return err;
+    }
   }
 
-  @Post('users/me/:friendId')
+  @Post('users/me/:id')
   @UseGuards(JwtAuthGuard)
-  async addNewFriend(@Req() req, @Param('friendId') friend: number) {
-    return await this.dataService.addFriend(req.user.id, friend);
+  async addNewFriend(@Req() req, @Param() params: FriendParams) {
+    try {
+      return await this.dataService.addFriend(req.user.id, params.id);
+    } catch (err) {
+      return err;
+    }
   }
 
-  @Delete('users/me/:friendId')
+  @Delete('users/me/:id')
   @UseGuards(JwtAuthGuard)
-  async deleteFriend(@Req() req, @Param('friendId') friend: number) {
-    return await this.dataService.deleteFriend(req.user.id, friend);
+  async deleteFriend(@Req() req, @Param() params: FriendParams) {
+    try {
+      return await this.dataService.deleteFriend(req.user.id, params.id);
+    } catch (err) {
+      return err;
+    }
   }
 
   @Delete(':id')
-  async removeFriend(@Param('id') id: number) {
-    return await this.friendsService.delete(id);
+  async removeFriend(@Param() params: FriendParams) {
+    try {
+      return await this.friendsService.delete(params.id);
+    } catch (err) {
+      return err;
+    }
   }
 }

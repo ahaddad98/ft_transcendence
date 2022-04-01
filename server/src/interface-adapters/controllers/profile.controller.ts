@@ -1,6 +1,6 @@
 import {
+  Body,
   Controller,
-  Delete,
   Get,
   Param,
   Post,
@@ -12,47 +12,67 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DataService } from 'src/services/data/data.service';
-import {
-  fullImagePath,
-  saveImageToStorage,
-} from 'src/services/helpers/image-storage';
+import { saveImageToStorage } from 'src/services/helpers/image-storage';
+import { UpdateUsername, UserParams } from 'src/services/helpers/validators';
 import { JwtAuthGuard } from '../../frameworks/auth/jwt/jwt-auth.guard';
 
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly dataService: DataService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get('')
+  @UseGuards(JwtAuthGuard)
   getProfile(@Req() req) {
-    return req.user;
+    try {
+      return req.user;
+    } catch (err) {
+      return err;
+    }
   }
 
   @Get('users/me')
   @UseGuards(JwtAuthGuard)
   async getMyProfile(@Req() req) {
-    return await this.dataService.getProfileOfUser(req.user.id);
+    try {
+      return await this.dataService.getProfileOfUser(req.user.id);
+    } catch (err) {
+      return err;
+    }
   }
 
   @Get('users/:id')
   @UseGuards(JwtAuthGuard)
-  async getAProfile(@Param('id') id: number) {
-    return await this.dataService.getProfileOfUser(id);
+  async getAProfile(@Param() params: UserParams) {
+    try {
+      return await this.dataService.getProfileOfUser(params.id);
+    } catch (err) {
+      return err;
+    }
   }
 
   @Post('update/users/me')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file', saveImageToStorage))
-  uploadProfile(@UploadedFile() file: Express.Multer.File, @Req() req): Object {
-    return this.dataService.updateProfile(file, req);
+  uploadProfile(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: UpdateUsername,
+    @Req() req,
+  ): Object {
+    try {
+      return this.dataService.updateProfile(file, body, req.user.id);
+    } catch (err) {
+      return err;
+    }
   }
 
   @Put('update/avatar/users/me')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file', saveImageToStorage))
   uploadAvatar(@UploadedFile() file: Express.Multer.File, @Req() req): Object {
-    return this.dataService.updateAvatar(file, req);
+    try {
+      return this.dataService.updateAvatar(file, req);
+    } catch (err) {
+      return err;
+    }
   }
-
-
 }
