@@ -614,7 +614,7 @@ export class DataService {
       newChannel.id,
       --newChannel.members,
     );
-    return await this.channelUserService.remove(chanelUser.id);
+    return await this.channelUserService.remove(chanelUser?.id);
   }
 
   // opti
