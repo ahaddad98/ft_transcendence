@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Notification } from 'src/core/entities/notification.entity';
+import {
+  Notification,
+  NotificationType,
+} from 'src/core/entities/notification.entity';
 import { User } from 'src/core/entities/user.entity';
 import { Repository } from 'typeorm';
 
@@ -40,6 +43,19 @@ export class NotificationService {
         user: {
           id: myId,
         },
+        type: NotificationType.REQUEST,
+      },
+    });
+  }
+
+  async findMyConversationsNotifications(myId: number) {
+    return await this.notificationRepository.find({
+      relations: ['sender', 'user'],
+      where: {
+        user: {
+          id: myId,
+        },
+        type: NotificationType.MESSAGE,
       },
     });
   }
@@ -50,6 +66,20 @@ export class NotificationService {
         user: {
           id: myId,
         },
+        type: NotificationType.REQUEST,
+        verified: false,
+      },
+      { verified: true },
+    );
+  }
+
+  async updateMyConversationsNotificationsToBeVerified(myId: number) {
+    return await this.notificationRepository.update(
+      {
+        user: {
+          id: myId,
+        },
+        type: NotificationType.MESSAGE,
         verified: false,
       },
       { verified: true },

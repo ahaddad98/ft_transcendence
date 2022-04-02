@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ConversationUser } from 'src/core/entities/conversation-user.entity';
+import { Conversation } from 'src/core/entities/conversation.entity';
 import { User } from 'src/core/entities/user.entity';
 import { Repository } from 'typeorm';
 
@@ -52,15 +53,21 @@ export class ConversationUserService {
       },
     });
   }
-  // async findallMyConversations(newUser: User) {
-  //   return await this.conversationUserRepository.find({
-  //     where: { user: newUser },
-  //     relations: ['conversation'],
-  //     order: {
-  //       conversation: 'ASC',
-  //     },
-  //   });
-  // }
+
+  async findAllUsersInConversationWithoutMe(
+    newConversation: Conversation,
+    myId: number,
+  ) {
+    return await this.conversationUserRepository
+      .createQueryBuilder('conversationUser')
+      .leftJoinAndSelect('conversationUser.user', 'user')
+      .where('conversationUser.conversation.id = :conversation', {
+        conversation: newConversation.id,
+      })
+      .andWhere('conversationUser.user.id != :id', { id: myId })
+      .getMany();
+    // console.log(salam);
+  }
 
   async delete(id: number) {
     return await this.conversationUserRepository.delete(id);

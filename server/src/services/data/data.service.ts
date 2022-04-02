@@ -274,24 +274,31 @@ export class DataService {
     // console.log(req.body);
     const conversation: Conversation =
       await this.conversationService.findConversationById(id);
+    const newUser: User = await this.usersService.findOneById(req.user.id);
     const message: Message = new Message();
     message.content = req.body.message;
-    message.sender = req.user.id;
+    message.sender = newUser;
     message.conversation = conversation;
     message.createdAt = new Date();
     this.conversationService.updateTime(conversation.id, {
       updatedAt: new Date(),
     });
-    // TODO  hadi anriglha ghada insh'allah
-    const usersConversation: Conversation =
-      await this.conversationService.findUsersOfConversationById(id);
-    // console.log(usersConversation);
-    // const notification: Notification = new Notification();
-    // notification.user = newRequest.recipient;
-    // notification.sender = message.sender;
-    // notification.type = NotificationType.MESSAGE;
-    // await this.notificationsService.sendNotificationForRequest(notification);
-    // khasni nfakar f blan dyal channel ki andir lih
+    const usersConversation: ConversationUser[] =
+      await this.conversationUserService.findAllUsersInConversationWithoutMe(
+        conversation,
+        req.user.id,
+      );
+    await Promise.all(
+      usersConversation.map(async (user) => {
+        const notification: Notification = new Notification();
+        notification.user = user.user;
+        notification.sender = newUser;
+        notification.type = NotificationType.MESSAGE;
+        await this.notificationsService.sendNotificationForRequest(
+          notification,
+        );
+      }),
+    );
     return await this.messageService.addNewMessage(message);
   }
 
@@ -459,10 +466,8 @@ export class DataService {
 
   async getAllMyConversations(id: number) {
     const user = await this.usersService.findOneById(id);
-    console.log(user);
     const conversationUser =
-      this.conversationUserService.findallMyConversations(user);
-
+      await this.conversationUserService.findallMyConversations(user);
     return conversationUser;
   }
 
@@ -817,8 +822,23 @@ export class DataService {
       await this.notificationsService.updateMyRequestNotificationsToBeVerified(
         myId,
       );
-    let object = {};
-    object = { verified, notifications };
-    return object;
+    return { verified, notifications };
+  }
+
+  async findMyConversationsNotifications(userId: number) {
+    const notifications: Notification[] =
+      await this.notificationsService.findMyConversationsNotifications(userId);
+    if (!notifications) return notifications;
+    const check = notifications.find((notification) => {
+      return notification.verified == false;
+    });
+    let verified: Boolean = false;
+    if (!check) {
+      verified = true;
+    } else
+      await this.notificationsService.updateMyConversationsNotificationsToBeVerified(
+        userId,
+      );
+    return { verified, notifications };
   }
 }
