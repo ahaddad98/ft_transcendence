@@ -1,6 +1,7 @@
 import { Controller, Delete, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
 import { DataService } from 'src/services/data/data.service';
+import { NotificationParams } from 'src/services/helpers/validators';
 import { NotificationService } from 'src/services/use-cases/notification/notification.service';
 
 @Controller('notifications')
@@ -12,26 +13,40 @@ export class NotificationsController {
 
   @Get()
   async findAllNotifications() {
-    return await this.notificationService.findAll();
+    try {
+      return await this.notificationService.findAll();
+    } catch (err) {
+      return err;
+    }
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('me')
+  @UseGuards(JwtAuthGuard)
   async findAllMyNotifications(@Req() req) {
-    console.log(req.user);
-    return await this.dataService.findMyNotifications(req.user.id);
+    try {
+      return await this.dataService.findMyNotifications(req.user.id);
+    } catch (err) {
+      return err;
+    }
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async findNotificationsOfUser(@Param('id') id: number) {
-    // console.log(req.user);
-    return await this.dataService.findMyNotifications(id);
-  }
-  
   @UseGuards(JwtAuthGuard)
+  async findNotificationsOfUser(@Param() params: NotificationParams) {
+    try {
+      return await this.dataService.findMyNotifications(params.id);
+    } catch (err) {
+      return err;
+    }
+  }
+
   @Delete(':id')
-  async removeNotification(@Param('id') id: number) {
-    return await this.notificationService.remove(id);
+  @UseGuards(JwtAuthGuard)
+  async removeNotification(@Param() params: NotificationParams) {
+    try {
+      return await this.notificationService.remove(params.id);
+    } catch (err) {
+      return err;
+    }
   }
 }

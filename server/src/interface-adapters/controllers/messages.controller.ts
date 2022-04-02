@@ -4,55 +4,65 @@ import {
   Get,
   Param,
   Post,
-  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { Conversation } from 'src/core/entities/conversation.entity';
-import { Message } from 'src/core/entities/message.entity';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
 import { DataService } from 'src/services/data/data.service';
-import { ConversationService } from 'src/services/use-cases/conversation/conversation.service';
+import { MessageParams } from 'src/services/helpers/validators';
 import { MessageService } from 'src/services/use-cases/message/message.service';
 
 @Controller('messages')
 export class MessagesController {
   constructor(
     private messageService: MessageService,
-    private conversationService: ConversationService,
     private dataService: DataService,
   ) {}
 
   @Get()
   findAllMessages() {
-    return this.messageService.findAll();
-  }
-
-  @Get('conversations/:ConversationId/users/me')
-  @UseGuards(JwtAuthGuard)
-  async getallMessageOfoneOfmyConversations(@Param('ConversationId') id: number) {
-    return await this.dataService.getallMessageOfoneOfmyConversations(id);
-  }
-
-  @Post('conversations/:ConversationId/users/me')
-  @UseGuards(JwtAuthGuard)
-  async sendNewMessage(@Req() req, @Param('ConversationId') id: number) {
     try {
-      return await this.dataService.sendNewMessage(req, id);
+      return this.messageService.findAll();
     } catch (err) {
-      console.log(err);
+      return err;
     }
   }
-  @Put('update/hidden')
+
+  @Get('conversations/:conversationId/users/me')
   @UseGuards(JwtAuthGuard)
-  async updateHiddenToBeTrue()
-  {
-    // return await this.messageService.updateHiddenToBeTrue();
+  async getallMessageOfoneOfmyConversations(@Param() params: MessageParams) {
+    try {
+      return await this.dataService.getallMessageOfoneOfmyConversations(
+        params.conversationId,
+      );
+    } catch (err) {
+      return err;
+    }
   }
 
-  @Delete('id')
+  @Post('conversations/:conversationId/users/me')
   @UseGuards(JwtAuthGuard)
-  async deleteMessage(@Param('id') id: number) {
-    return await this.messageService.removeMessage(id);
+  async sendNewMessage(@Req() req, @Param() params: MessageParams) {
+    try {
+      return await this.dataService.sendNewMessage(req, params.conversationId);
+    } catch (err) {
+      return err;
+    }
+  }
+
+  // @Put('update/hidden')
+  // @UseGuards(JwtAuthGuard)
+  // async updateHiddenToBeTrue() {
+  //   // return await this.messageService.updateHiddenToBeTrue();
+  // }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  async deleteMessage(@Param() params: MessageParams) {
+    try {
+      return await this.messageService.removeMessage(params.id);
+    } catch (err) {
+      return err;
+    }
   }
 }
