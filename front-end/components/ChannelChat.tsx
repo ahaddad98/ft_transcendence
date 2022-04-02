@@ -43,11 +43,12 @@ const ChannelChat = (props) => {
         console.log(res);
       });
   };
+  
   return (
-    <div className="flex flex-col flex-auto h-full p-6">
-      <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
-        <div className="flex flex-col h-full overflow-x-auto mb-4">
-          <div className="flex flex-col h-full">
+    <div className="flex flex-col flex-auto  p-6  max-h-lg" style={{height: "100%"}}>
+      <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl  bg-gray-100 p-4 h-inherit" style={{height: "100%"}}>
+        <div className="flex flex-col  overflow-x-auto mb-4  " style={{height: "100%"}}>
+          <div className="flex flex-col">
             <div className="grid grid-cols-12 gap-y-2">
               {conversation && <Messagemap conv={conversation} />}
             </div>

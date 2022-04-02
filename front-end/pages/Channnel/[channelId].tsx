@@ -14,7 +14,7 @@ const Channel = () => {
   };
 
   const [mychannel, setMychannel] = useState({});
-  const [allmychannel, setAllmychannel] = useState([]);
+  const [allmychannel, setAllmychannel] = useState();
   const [convid, setconvid] = useState();
   const [chanid, setchanid] = useState();
   const router = useRouter();
@@ -58,10 +58,10 @@ const Channel = () => {
   //   }, []);
 
   return (
-    <>
+    <div className="h-screen">
       <HomeNavbar data={data} />
-      {allmychannel && router.query.channelId && <ChannelPage allmychannels={allmychannel} id={router.query.channelId}/>}
-    </>
+      {allmychannel && router.query.channelId && <ChannelPage allmychannels={allmychannel} id={router.query.channelId} data={data}/>}
+    </div>
   );
 };
 export default Channel;
