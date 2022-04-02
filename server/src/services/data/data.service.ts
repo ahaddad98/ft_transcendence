@@ -182,7 +182,6 @@ export class DataService {
     }
   }
 
-
   async save(newUser: User) {
     let result: any = await this.usersService.findOneById(newUser.id);
     if (!result) {
@@ -318,13 +317,17 @@ export class DataService {
         blockUser.user.id == myId ? blockUser.block : blockUser.user,
       );
     });
-
     const messages = [];
     conversation.message.map((message) => {
+      let object = {};
       const check = newblockList.find((newUser) => {
         return newUser.id == message.sender.id;
       });
-      if (!check) messages.push(message);
+      if (!check) {
+        object = message;
+        object = { ...object, me };
+        messages.push(object);
+      }
     });
     return messages;
   }

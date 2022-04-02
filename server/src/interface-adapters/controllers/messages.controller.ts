@@ -44,6 +44,7 @@ export class MessagesController {
   @UseGuards(JwtAuthGuard)
   async sendNewMessage(@Req() req, @Param() params: MessageParams) {
     try {
+      console.log(req.body.message);
       return await this.dataService.sendNewMessage(req, params.conversationId);
     } catch (err) {
       return err;
