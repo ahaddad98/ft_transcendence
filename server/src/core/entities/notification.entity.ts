@@ -32,4 +32,7 @@ export class Notification {
 
   @Column({ type: 'timestamptz', default: 'NOW()' })
   createdAt?: Date;
+
+  @Column({ type: 'boolean', default: false })
+  verified: boolean;
 }

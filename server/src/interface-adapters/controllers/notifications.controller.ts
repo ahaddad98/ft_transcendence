@@ -40,6 +40,16 @@ export class NotificationsController {
     }
   }
 
+  @Get('requests/users/me')
+  @UseGuards(JwtAuthGuard)
+  async findMyRequestsNotifications(@Req() req) {
+    try {
+      return await this.dataService.findMyRequestsNotifications(req.user.id);
+    } catch (err) {
+      return err;
+    }
+  }
+
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   async removeNotification(@Param() params: NotificationParams) {

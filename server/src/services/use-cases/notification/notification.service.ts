@@ -33,6 +33,29 @@ export class NotificationService {
     return await this.notificationRepository.save(notification);
   }
 
+  async findMyRequestsNotifications(myId: number) {
+    return await this.notificationRepository.find({
+      relations: ['sender', 'user'],
+      where: {
+        user: {
+          id: myId,
+        },
+      },
+    });
+  }
+
+  async updateMyRequestNotificationsToBeVerified(myId: number) {
+    return await this.notificationRepository.update(
+      {
+        user: {
+          id: myId,
+        },
+        verified: false,
+      },
+      { verified: true },
+    );
+  }
+
   async remove(id: number) {
     return await this.notificationRepository.delete(id);
   }

@@ -283,8 +283,8 @@ export class DataService {
       updatedAt: new Date(),
     });
     // TODO  hadi anriglha ghada insh'allah
-    // const usersConversation: Conversation =
-    //   await this.conversationService.findUsersOfConversationById(id);
+    const usersConversation: Conversation =
+      await this.conversationService.findUsersOfConversationById(id);
     // console.log(usersConversation);
     // const notification: Notification = new Notification();
     // notification.user = newRequest.recipient;
@@ -799,5 +799,26 @@ export class DataService {
       conversationId,
       senderId,
     );
+  }
+
+  // notifications
+
+  async findMyRequestsNotifications(myId: number) {
+    const notifications: Notification[] =
+      await this.notificationsService.findMyRequestsNotifications(myId);
+    if (!notifications) return notifications;
+    const check = notifications.find((notification) => {
+      return notification.verified == false;
+    });
+    let verified: Boolean = false;
+    if (!check) {
+      verified = true;
+    } else
+      await this.notificationsService.updateMyRequestNotificationsToBeVerified(
+        myId,
+      );
+    let object = {};
+    object = { verified, notifications };
+    return object;
   }
 }
