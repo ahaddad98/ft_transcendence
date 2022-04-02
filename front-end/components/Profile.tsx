@@ -1,22 +1,33 @@
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import HomeNavbar from "./HomeNavbar";
 
 const Profile = (props) => {
+  const router = useRouter()
   const handlerclickleave = async (e, id) => {
     e.preventDefault();
-    axios.delete(`http://localhost:3001/channels/leave/${id}/users/me`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    }).then ((res)=>{
-      console.log(res);
-    })
-  }
+    axios
+      .delete(`http://localhost:3001/channels/leave/${id}/users/me`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((res) => {
+        console.log(res);
+      });
+  };
+  const handlerclickparticipate = async (e, id) => {
+    e.preventDefault()
+      {
+        router.push(`/Channnel/${id}`);
+      }
+  };
   const data = {
-      username: props.mydata.user.username,
-      avatar: props.mydata.user.avatar,
+    username: props.mydata.user.username,
+    avatar: props.mydata.user.avatar,
   };
   const [click, setClick] = useState(false);
+  const [participatechannel, setParticipatechannel] = useState("");
   return (
     <div className="profile-page">
       <HomeNavbar data={data} />
@@ -228,10 +239,9 @@ const Profile = (props) => {
                             </tr>
                           </thead>
                           <tbody>
-                            {
-                              props.mychannels?.map((stat, key) => {
-                                return (
-                                  <tr key={key}>
+                            {props.mychannels?.map((stat, key) => {
+                              return (
+                                <tr key={key}>
                                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                     <div className="flex items-center">
                                       <div className="flex-shrink-0 w-10 h-10">
@@ -239,7 +249,7 @@ const Profile = (props) => {
                                           className="w-full h-full rounded-full"
                                           src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
                                           alt=""
-                                          />
+                                        />
                                       </div>
                                       <div className="ml-3">
                                         <p className="text-gray-900 whitespace-no-wrap">
@@ -268,8 +278,12 @@ const Profile = (props) => {
                                       role="button"
                                       aria-label="MAIN BUTTON"
                                       className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
+                                    >
+                                      <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                                      onClick={(e)=>{
+                                        handlerclickparticipate(e, stat.id)
+                                      }}
                                       >
-                                      <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
                                         Participate
                                       </button>
                                     </div>
@@ -279,19 +293,21 @@ const Profile = (props) => {
                                       role="button"
                                       aria-label="MAIN BUTTON"
                                       className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                                      >
-                                      <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                                      onClick={(e)=> handlerclickleave(e, stat.id)}
+                                    >
+                                      <button
+                                        className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                                        onClick={(e) =>
+                                          handlerclickleave(e, stat.id)
+                                        }
                                       >
                                         LEAVEEE
                                       </button>
                                     </div>
                                   </td>
                                 </tr>
-                              )
-                              })
-                            }
-                              </tbody>
+                              );
+                            })}
+                          </tbody>
                         </table>
                       </div>
                     </div>
