@@ -283,7 +283,7 @@ const Profile = (props) => {
                                       <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
                                       onClick={(e)=> handlerclickleave(e, stat.id)}
                                       >
-                                        LEAVE
+                                        LEAVEEE
                                       </button>
                                     </div>
                                   </td>

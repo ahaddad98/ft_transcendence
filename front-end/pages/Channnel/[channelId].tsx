@@ -25,12 +25,8 @@ const Channel = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
     )
-    // const res = await response.data;
     return response;
   }
-  //   console.log(response);
-    
-  // };
   useEffect(() => {
     fetchAllmychannel()
       .then((res) => {
@@ -43,47 +39,28 @@ const Channel = () => {
       });
 
   }, []);
-  const fetchmychannel = async (id) => {
-    const response = await axios.get(`http://localhost:3001/channels/${id}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    return response;
-  };
-  useEffect(() => {
-    fetchAllmychannel().then((res)=>{
-
-      if (router?.query?.channelId) 
-      {
-         setchanid(router.query.channelId);
-      }
-      else
-      chid = res[0].id;
-      }
-    // console.log(salam);
-    
-    );
-    fetchmychannel(chid)
-      .then((res) => {
-        if (res.data) {
-          setMychannel(res.data);
-          // setconvid(res.data.conversation.id);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [allmychannel]);
-
-  // conversation
-  // channel data url="/channels/id"
-  // post message in Channel components
-  // admins
-  // members
+  // const fetchmychannel = async (id) => {
+  //   const response = await axios.get(`http://localhost:3001/channels/2`, {
+  //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  //   });
+  //   return response;
+  // };
+  //   useEffect(() => {
+  //       fetchmychannel(router.query)
+  //       .then((res) => {
+  //         if (res.data) {
+  //           setMychannel(res.data);
+  //         }
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   }, []);
 
   return (
     <>
       <HomeNavbar data={data} />
-      {mychannel && <ChannelPage mychannels={mychannel} />}
+      {allmychannel && router.query.channelId && <ChannelPage allmychannels={allmychannel} id={router.query.channelId}/>}
     </>
   );
 };
