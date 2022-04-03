@@ -645,15 +645,6 @@ export class DataService {
     return await this.channelUserService.updateToBeUser(chanelUser.id);
   }
 
-  async muteUserInChannel(channelId: number, myId: number) {
-    const chanelUser = await this.findChannelUser(channelId, myId);
-    chanelUser.mute = !chanelUser.mute;
-    return await this.channelUserService.updateMute(
-      chanelUser.id,
-      chanelUser.mute,
-    );
-  }
-
   async kickUserFormChannelConversation(channelId: number, myId: number) {
     const conversation: Conversation =
       await this.conversationService.findConversationOfChannel(channelId);
@@ -667,15 +658,32 @@ export class DataService {
       return await this.conversationUserService.remove(conversationUser);
   }
 
-  async blockUserInChannel(channelId: number, myId: number) {
+  async muteUserInChannel(channelId: number, myId: number, body) {
+    const channelUser = await this.findChannelUser(channelId, myId);
+    if (channelUser.block == true)
+      return { message: 'This user is already blocked' };
+    channelUser.mute = true;
+    channelUser.TimeOfOperation = new Date();
+    if (body.time != 0) channelUser.time = body.time;
+    return await this.channelUserService.updateMute(
+      channelUser.id,
+      channelUser.mute,
+    );
+  }
+
+  async blockUserInChannel(channelId: number, myId: number, body) {
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );
     const chanelUser = await this.findChannelUser(channelId, myId);
-    chanelUser.block = !chanelUser.block;
-    if (chanelUser.block === false) {
-      return await this.leavesTheChannel(channelId, myId);
-    }
+    chanelUser.block = true;
+    console.log('samir');
+    chanelUser.TimeOfOperation = new Date();
+    if (body.time != 0) chanelUser.time = body.time;
+    // chanelUser.block = !chanelUser.block;
+    // if (chanelUser.block === false) {
+    // return await this.leavesTheChannel(channelId, myId);
+    // }
     await this.messageService.updateHiddenToBeTrue(
       channel.conversation.id,
       myId,
@@ -685,6 +693,18 @@ export class DataService {
       chanelUser.id,
       chanelUser.block,
     );
+  }
+
+  async removeBlockUserInChannel(channelId: number, myId: number) {
+    const channel: Channel = await this.channelService.findChannelById(
+      channelId,
+    );
+    const chanelUser = await this.findChannelUser(channelId, myId);
+    await this.messageService.updateHiddenToBeFalse(
+      channel.conversation.id,
+      myId,
+    );
+    return await this.leavesTheChannel(channelId, myId);
   }
 
   async removeChannel(id: number) {

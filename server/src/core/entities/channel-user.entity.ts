@@ -32,6 +32,12 @@ export class ChannelUser {
   @Column({ type: 'enum', enum: UserType, default: UserType.USER })
   userType: UserType;
 
+  @Column({ type: 'timestamptz' })
+  TimeOfOperation?: Date;
+
+  @Column({ default: 0 })
+  time?: number;
+
   @Column({ type: 'boolean', default: false })
   block?: boolean;
 
