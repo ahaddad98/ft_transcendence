@@ -1,9 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Modal from "@material-tailwind/react/Modal";
 import { useRouter } from "next/router";
+import Popover from "@material-tailwind/react/Popover";
+import PopoverContainer from "@material-tailwind/react/PopoverContainer";
+import PopoverHeader from "@material-tailwind/react/PopoverHeader";
+import PopoverBody from "@material-tailwind/react/PopoverBody";
+import Button from "@material-tailwind/react/Button";
 
 const ChannelBar = (props) => {
   console.log(props);
+  const buttonRef = useRef();
   const router = useRouter();
   const [viewchannels, setViewchannles] = useState(false);
   const [imowner, setImowner] = useState(false);
@@ -16,8 +22,7 @@ const ChannelBar = (props) => {
     }
   };
   useEffect(() => {
-    if (props.mychannelusers.owner?.username === props.mydata.username)
-    {
+    if (props.mychannelusers.owner?.username === props.mydata.username) {
       setImowner(!imowner);
     }
   }, []);
@@ -72,115 +77,51 @@ const ChannelBar = (props) => {
                 toggler={() => setClickmember(false)}
               >
                 <div className="w-full md:w-auto dark:bg-gray-800 flex flex-col justify-center items-center bg-white  md:px-24 xl:py-4 xl:px-18">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-                      Channels List
-                    </h3>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setClickmember(false);
-                    }}
-                    className="text-gray-800 dark:text-gray-400 absolute top-8 right-8 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800"
-                    aria-label="close"
+                  <div
+                    role="button"
+                    aria-label="MAIN BUTTON"
+                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                   >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M18 6L6 18"
-                        stroke="currentColor"
-                        strokeWidth="1.66667"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M6 6L18 18"
-                        stroke="currentColor"
-                        strokeWidth="1.66667"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </button>
-                  <table className="min-w-full leading-normal">
-                    <thead>
-                      <tr>
-                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          Name
-                        </th>
-                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          Admin
-                        </th>
-                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          Created at
-                        </th>
-                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          Members
-                        </th>
-                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {props.allmychannel.map((stat, key) => {
-                        return (
-                          <tr key={key}>
-                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                              <div className="flex items-center">
-                                <div className="flex-shrink-0 w-10 h-10">
-                                  <img
-                                    className="w-full h-full rounded-full"
-                                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                                    alt=""
-                                  />
-                                </div>
-                                <div className="ml-3">
-                                  <p className="text-gray-900 whitespace-no-wrap">
-                                    {stat.name}
-                                  </p>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">
-                                {stat.role}
-                              </p>
-                            </td>
-                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">
-                                {stat.createdAt}
-                              </p>
-                            </td>
-                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                              <p className="text-gray-900 whitespace-no-wrap">
-                                43
-                              </p>
-                            </td>
-                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                              <div
-                                role="button"
-                                aria-label="MAIN BUTTON"
-                                className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                              >
-                                <button
-                                  className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                                  onClick={(e) => {
-                                    handlerclickparticipate(e, stat.id);
-                                  }}
-                                >
-                                  Join
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                      Kick
+                    </button>
+                  </div>
+                  <div
+                    role="button"
+                    aria-label="MAIN BUTTON"
+                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                  >
+                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                      Block
+                    </button>
+                  </div>
+                  <div
+                    role="button"
+                    aria-label="MAIN BUTTON"
+                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                  >
+                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                      Mute
+                    </button>
+                  </div>
+                  <div
+                    role="button"
+                    aria-label="MAIN BUTTON"
+                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                  >
+                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                      Set as admin
+                    </button>
+                  </div>
+                  <div
+                    role="button"
+                    aria-label="MAIN BUTTON"
+                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                  >
+                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                      remove
+                    </button>
+                  </div>
                 </div>
               </Modal>
             )}
