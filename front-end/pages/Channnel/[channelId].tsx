@@ -8,27 +8,10 @@ import axios from "axios";
 import { Router, useRouter } from "next/router";
 
 const Channel = () => {
-  let data = {
-    username: "ahaddad",
-    avatar: "",
-  };
-  // const [data1, setData1] = useState();
-
-  // const fetchData = async () => {
-  //   const response = await axios.get("http://localhost:3001/users/me", {
-  //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-  //   });
-  //   return response;
+  // let data = {
+  //   username: "ahaddad",
+  //   avatar: "",
   // };
-  // useEffect(() => {
-  //   fetchData()
-  //     .then((res) => {
-  //       if (res.data) setData1(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
   const [mychannel, setMychannel] = useState({});
   const [allmychannel, setAllmychannel] = useState();
   const [convid, setconvid] = useState();
@@ -55,23 +38,23 @@ const Channel = () => {
       });
 
   }, []);
-  // const fetchmychannel = async (id) => {
-  //   const response = await axios.get(`http://localhost:3001/channels/2`, {
-  //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-  //   });
-  //   return response;
-  // };
-  //   useEffect(() => {
-  //       fetchmychannel(router.query)
-  //       .then((res) => {
-  //         if (res.data) {
-  //           setMychannel(res.data);
-  //         }
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }, []);
+  const [data, setData] = useState({});
+
+  const fetchData = async () => {
+    const response = await axios.get("http://localhost:3001/users/me", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return response;
+  };
+  useEffect(() => {
+    fetchData()
+      .then((res) => {
+        if (res.data) setData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <div className="h-screen">
