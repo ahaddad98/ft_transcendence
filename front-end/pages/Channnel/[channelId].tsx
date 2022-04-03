@@ -9,10 +9,26 @@ import { Router, useRouter } from "next/router";
 
 const Channel = () => {
   let data = {
-    username: "badboy",
+    username: "ahaddad",
     avatar: "",
   };
+  // const [data1, setData1] = useState();
 
+  // const fetchData = async () => {
+  //   const response = await axios.get("http://localhost:3001/users/me", {
+  //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  //   });
+  //   return response;
+  // };
+  // useEffect(() => {
+  //   fetchData()
+  //     .then((res) => {
+  //       if (res.data) setData1(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
   const [mychannel, setMychannel] = useState({});
   const [allmychannel, setAllmychannel] = useState();
   const [convid, setconvid] = useState();
@@ -59,8 +75,10 @@ const Channel = () => {
 
   return (
     <div className="h-screen">
-      <HomeNavbar data={data} />
-      {allmychannel && router.query.channelId && <ChannelPage allmychannels={allmychannel} id={router.query.channelId} data={data}/>}
+      { 
+        <HomeNavbar data={data} />
+      }
+      {allmychannel && router.query.channelId  && <ChannelPage allmychannels={allmychannel} id={router.query.channelId} mydata={data} />}
     </div>
   );
 };
