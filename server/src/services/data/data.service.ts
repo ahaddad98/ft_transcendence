@@ -35,6 +35,7 @@ import * as speakeasy from 'speakeasy';
 import { Block } from 'src/core/entities/block.entity';
 import { BlockService } from '../use-cases/block/block.service';
 import { UpdatePasswordChannel, UpdateUsername } from '../helpers/validators';
+import * as moment from 'moment';
 
 @Injectable()
 export class DataService {
@@ -420,21 +421,40 @@ export class DataService {
     return arr;
   }
 
+  //  TODO fix remove ban
   async findAllMyChannels(id: number) {
+    // console.log('---- ' + id);
     const channelUser: ChannelUser[] =
       await this.channelUserService.findAllMyChannels(id);
     let arr = [];
-    channelUser.map((element) => {
-      const object = {
-        id: element.channel.id,
-        name: element.channel.name,
-        type: element.channel.type,
-        createdAt: format(element.channel.createdAt, 'MMMM dd,yyyy'),
-        members: element.channel.members,
-        role: element.userType,
-      };
-      arr.push(object);
-    });
+    await Promise.all(
+      channelUser.map(async (element) => {
+        let check = true;
+        if (element.ban == true && element.time > 0) {
+          const firstDate = moment(element.TimeOfOperation);
+          const nowDate = moment(new Date());
+          const interval = Math.abs(firstDate.diff(nowDate, 'minutes'));
+          if (interval > element.time) {
+            await this.removeBanUserInChannel(element.channel.id, id);
+            check = false;
+          }
+        }
+        // console.log(element);
+        if (check == true) {
+          const object = {
+            id: element.channel.id,
+            name: element.channel.name,
+            type: element.channel.type,
+            createdAt: format(element.channel.createdAt, 'MMMM dd,yyyy'),
+            members: element.channel.members,
+            role: element.userType,
+            ban: element.ban,
+          };
+          arr.push(object);
+        }
+      }),
+    );
+    console.log(arr);
     return arr;
   }
   async addNewChannelConversation(myId: number) {
@@ -699,7 +719,7 @@ export class DataService {
       myId,
     );
     await this.kickUserFormChannelConversation(channelId, myId);
-    return await this.channelUserService.updateBlock(
+    return await this.channelUserService.updateBan(
       chanelUser.id,
       chanelUser.ban,
     );

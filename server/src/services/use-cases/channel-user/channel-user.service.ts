@@ -39,7 +39,7 @@ export class ChannelUserService {
       .leftJoinAndSelect('channelUser.channel', 'channel')
       .innerJoinAndSelect('channel.owner', 'owner')
       .where('channelUser.user.id = :user', { user: newUser })
-      .andWhere('channelUser.block = :bool', { bool: false })
+      .andWhere('channelUser.ban = :bool', { bool: false })
       .orderBy('channel.createdAt', 'DESC')
       .getMany();
   }
@@ -60,7 +60,7 @@ export class ChannelUserService {
       .leftJoinAndSelect('channelUser.channel', 'channel')
       .innerJoinAndSelect('channelUser.user', 'user')
       .where('channelUser.user.id = :user', { user: newUserId })
-      .andWhere('channelUser.block = :bool', { bool: false })
+      .andWhere('channelUser.ban = :bool', { bool: true })
       .getMany();
   }
 
@@ -91,7 +91,7 @@ export class ChannelUserService {
     return await this.channelUserRepository.update(id, { mute: newMute });
   }
 
-  async updateBlock(id: number, newBan: boolean) {
+  async updateBan(id: number, newBan: boolean) {
     return await this.channelUserRepository.update(id, { ban: newBan });
   }
 
