@@ -39,7 +39,7 @@ export class ChannelsController {
   @UseGuards(JwtAuthGuard)
   async findAllChannels(@Req() req) {
     try {
-      return await this.dataService.findAllChannels(req.user.id);
+      return await this.dataService.findAllChannels(req.user.id, req.user.id);
     } catch (err) {
       return err;
     }
@@ -246,6 +246,20 @@ export class ChannelsController {
   async removeBanUserInTheChannel(@Param() params: ChannelParams) {
     try {
       return await this.dataService.removeBanUserInChannel(
+        params.id,
+        params.userId,
+      );
+    } catch (err) {
+      return err;
+    }
+  }
+
+  @Delete('remove/mute/:id/users/:userId')
+  @UseGuards(AdminGuard)
+  @UseGuards(JwtAuthGuard)
+  async removeMuteUserInTheChannel(@Param() params: ChannelParams) {
+    try {
+      return await this.dataService.removeMuteUserInChannel(
         params.id,
         params.userId,
       );
