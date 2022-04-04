@@ -1,18 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Modal from "@material-tailwind/react/Modal";
 import { useRouter } from "next/router";
+import Popover from "@material-tailwind/react/Popover";
+import PopoverContainer from "@material-tailwind/react/PopoverContainer";
+import PopoverHeader from "@material-tailwind/react/PopoverHeader";
+import PopoverBody from "@material-tailwind/react/PopoverBody";
+import Button from "@material-tailwind/react/Button";
 
 const ChannelBar = (props) => {
-    console.log(props);
-    const router = useRouter()
+  console.log(props);
+  const buttonRef = useRef();
+  const router = useRouter();
   const [viewchannels, setViewchannles] = useState(false);
+  const [imowner, setImowner] = useState(false);
+  const [Clickmember, setClickmember] = useState(false);
   const handlerclickparticipate = async (e, id) => {
-    e.preventDefault()
-    setViewchannles(!viewchannels)  
+    e.preventDefault();
+    setViewchannles(!viewchannels);
     {
-        router.push(`/Channnel/${id}`);
-      }
+      router.push(`/Channnel/${id}`);
+    }
   };
+  useEffect(() => {
+    if (props.mychannelusers.owner?.username === props.mydata.username) {
+      setImowner(!imowner);
+    }
+  }, []);
   return (
     <div>
       <div className="flex flex-col py-8 pl-6 pr-2 w-72 bg-white flex-shrink-0">
@@ -44,9 +57,12 @@ const ChannelBar = (props) => {
                 <button
                   className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
                   key={key}
+                  onClick={() => {
+                    setClickmember(!Clickmember);
+                  }}
                 >
                   <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
-                    <img src={stat.avatar} />{" "}
+                    <img src={stat.avatar} />
                   </div>
                   <div className="ml-2 text-sm font-semibold">
                     {stat.username}
@@ -54,6 +70,61 @@ const ChannelBar = (props) => {
                 </button>
               );
             })}
+            {Clickmember && imowner && (
+              <Modal
+                size="lg"
+                active={Clickmember}
+                toggler={() => setClickmember(false)}
+              >
+                <div className="w-full md:w-auto dark:bg-gray-800 flex flex-col justify-center items-center bg-white  md:px-24 xl:py-4 xl:px-18">
+                  <div
+                    role="button"
+                    aria-label="MAIN BUTTON"
+                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                  >
+                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                      Kick
+                    </button>
+                  </div>
+                  <div
+                    role="button"
+                    aria-label="MAIN BUTTON"
+                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                  >
+                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                      Block
+                    </button>
+                  </div>
+                  <div
+                    role="button"
+                    aria-label="MAIN BUTTON"
+                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                  >
+                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                      Mute
+                    </button>
+                  </div>
+                  <div
+                    role="button"
+                    aria-label="MAIN BUTTON"
+                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                  >
+                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                      Set as admin
+                    </button>
+                  </div>
+                  <div
+                    role="button"
+                    aria-label="MAIN BUTTON"
+                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                  >
+                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                      remove
+                    </button>
+                  </div>
+                </div>
+              </Modal>
+            )}
           </div>
         </div>
         <div className="flex flex-col mt-8">
@@ -190,17 +261,19 @@ const ChannelBar = (props) => {
                             aria-label="MAIN BUTTON"
                             className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
                           >
-                            <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                            onClick={(e)=>{
-                                handlerclickparticipate(e, stat.id)
-                              }}>
+                            <button
+                              className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                              onClick={(e) => {
+                                handlerclickparticipate(e, stat.id);
+                              }}
+                            >
                               Join
                             </button>
                           </div>
                         </td>
                       </tr>
-                     );
-                  })} 
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

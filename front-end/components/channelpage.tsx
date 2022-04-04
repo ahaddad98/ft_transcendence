@@ -56,7 +56,7 @@ const ChannelPage = (props) => {
     <div className="flex antialiased text-gray-800" style={{ height: "90%" }}>
       <div className="flex flex-row w-full overflow-x-hidden">
         {
-          mychannel && mychannelusers && props.allmychannels  && <ChannelBar mychannel={mychannel} mychannelusers={mychannelusers} allmychannel={props.allmychannels}></ChannelBar>
+          mychannel && mychannelusers && props.allmychannels  && props.mydata  && <ChannelBar mydata={props.mydata} mychannel={mychannel} mychannelusers={mychannelusers} allmychannel={props.allmychannels}></ChannelBar>
         }
         {mychannel.conversation && <ChannelChat mychannel={mychannel} />}
       </div>

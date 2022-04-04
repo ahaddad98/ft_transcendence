@@ -225,12 +225,12 @@ export class ChannelsController {
     }
   }
 
-  @Put('block/:id/users/:userId')
+  @Put('ban/:id/users/:userId')
   @UseGuards(AdminGuard)
   @UseGuards(JwtAuthGuard)
-  async blockUserInTheChannel(@Req() req, @Param() params: ChannelParams) {
+  async banUserInTheChannel(@Req() req, @Param() params: ChannelParams) {
     try {
-      return await this.dataService.blockUserInChannel(
+      return await this.dataService.banUserInChannel(
         params.id,
         params.userId,
         req.body,
@@ -240,12 +240,12 @@ export class ChannelsController {
     }
   }
 
-  @Delete('remove/block/:id/users/:userId')
+  @Delete('remove/ban/:id/users/:userId')
   @UseGuards(AdminGuard)
   @UseGuards(JwtAuthGuard)
-  async deblockblockUserInTheChannel(@Param() params: ChannelParams) {
+  async removeBanUserInTheChannel(@Param() params: ChannelParams) {
     try {
-      return await this.dataService.removeBlockUserInChannel(
+      return await this.dataService.removeBanUserInChannel(
         params.id,
         params.userId,
       );
