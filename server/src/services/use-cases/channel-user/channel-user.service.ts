@@ -53,6 +53,16 @@ export class ChannelUserService {
       relations: ['user', 'channel'],
     });
   }
+  //TODO  hadi khasni nreglha 3la 9bal time dyal ban
+  async findAllChannelBlocked(newUserId: number) {
+    return await this.channelUserRepository
+      .createQueryBuilder('channelUser')
+      .leftJoinAndSelect('channelUser.channel', 'channel')
+      .innerJoinAndSelect('channelUser.user', 'user')
+      .where('channelUser.user.id = :user', { user: newUserId })
+      .andWhere('channelUser.block = :bool', { bool: false })
+      .getMany();
+  }
 
   async findAllUsersInChannelWithoutMe(newChannel: Channel) {
     return await this.channelUserRepository
@@ -81,8 +91,8 @@ export class ChannelUserService {
     return await this.channelUserRepository.update(id, { mute: newMute });
   }
 
-  async updateBlock(id: number, newBlock: boolean) {
-    return await this.channelUserRepository.update(id, { block: newBlock });
+  async updateBlock(id: number, newBan: boolean) {
+    return await this.channelUserRepository.update(id, { ban: newBan });
   }
 
   async updateToBeAdmin(id: number) {

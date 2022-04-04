@@ -40,6 +40,20 @@ export class MessageService {
       { hidden: true },
     );
   }
+
+  async updateHiddenToBeFalse(conversationId: number, senderId: number) {
+    return await this.messageRepository.update(
+      {
+        conversation: {
+          id: conversationId,
+        },
+        sender: {
+          id: senderId,
+        },
+      },
+      { hidden: false },
+    );
+  }
   async addNewMessage(message: Message): Promise<Message> {
     return await this.messageRepository.save(message);
   }

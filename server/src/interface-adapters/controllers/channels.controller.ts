@@ -213,20 +213,39 @@ export class ChannelsController {
   @Put('mute/:id/users/:userId')
   @UseGuards(AdminGuard)
   @UseGuards(JwtAuthGuard)
-  async muteUserInTheChannel(@Param() params: ChannelParams) {
+  async muteUserInTheChannel(@Req() req, @Param() params: ChannelParams) {
     try {
-      return await this.dataService.muteUserInChannel(params.id, params.userId);
+      return await this.dataService.muteUserInChannel(
+        params.id,
+        params.userId,
+        req.body,
+      );
     } catch (err) {
       return err;
     }
   }
 
-  @Put('block/:id/users/:userId')
+  @Put('ban/:id/users/:userId')
   @UseGuards(AdminGuard)
   @UseGuards(JwtAuthGuard)
-  async blockUserInTheChannel(@Param() params: ChannelParams) {
+  async banUserInTheChannel(@Req() req, @Param() params: ChannelParams) {
     try {
-      return await this.dataService.blockUserInChannel(
+      return await this.dataService.banUserInChannel(
+        params.id,
+        params.userId,
+        req.body,
+      );
+    } catch (err) {
+      return err;
+    }
+  }
+
+  @Delete('remove/ban/:id/users/:userId')
+  @UseGuards(AdminGuard)
+  @UseGuards(JwtAuthGuard)
+  async removeBanUserInTheChannel(@Param() params: ChannelParams) {
+    try {
+      return await this.dataService.removeBanUserInChannel(
         params.id,
         params.userId,
       );
