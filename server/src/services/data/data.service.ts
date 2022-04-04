@@ -474,7 +474,6 @@ export class DataService {
   async addNewPrivateChannel(body: CreateChannelDto, myId: number) {
     const user: User = await this.usersService.findOneById(myId);
     const owner: boolean = await this.channelService.searchForOwner(user);
-    if (owner) return { message: 'U have already a channel' };
     let channel: Channel = new Channel();
     channel.name = body.name;
     const hash = await bcrypt.hash(body.password, 10);
