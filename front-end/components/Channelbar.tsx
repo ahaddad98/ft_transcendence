@@ -25,28 +25,21 @@ const ChannelBar = (props) => {
       router.push(`/Channnel/${id}`);
     }
   };
-  console.log(props.mychannel.myRole);
   useEffect(() => {
     if (props.mychannelusers.owner?.username === props.mydata.username) {
       setImowner(true);
-      console.log('rani owner');
     }
     else if (props.mychannel.myRole === "admin")
     {
-      console.log('rani admin');
-      
       setImadmin(true)
     }
   }, [props]);
   useEffect(() => {
     if (props.mychannelusers.owner?.username === props.mydata.username) {
       setImowner(true);
-      console.log('rani owner');
     }
     else if (props.mychannel.myRole === "admin")
     {
-      console.log('rani admin');
-      
       setImadmin(true)
     }
   }, []);
@@ -218,18 +211,6 @@ const ChannelBar = (props) => {
                   >
                     <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
                       Mute
-                    </button>
-                  </div>
-                  <div
-                    role="button"
-                    aria-label="MAIN BUTTON"
-                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
-                  >
-                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                    onClick={(e)=>{
-                      hundelsetasadmin(e)
-                    }}>
-                      Set as admin
                     </button>
                   </div>
                 </div>

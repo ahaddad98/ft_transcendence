@@ -8,10 +8,6 @@ import axios from "axios";
 import { Router, useRouter } from "next/router";
 
 const Channel = () => {
-  // let data = {
-  //   username: "ahaddad",
-  //   avatar: "",
-  // };
   const [mychannel, setMychannel] = useState({});
   const [allmychannel, setAllmychannel] = useState();
   const [convid, setconvid] = useState();
