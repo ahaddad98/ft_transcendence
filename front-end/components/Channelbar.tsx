@@ -28,14 +28,26 @@ const ChannelBar = (props) => {
   console.log(props.mychannel.myRole);
   useEffect(() => {
     if (props.mychannelusers.owner?.username === props.mydata.username) {
-      setImowner(!imowner);
+      setImowner(true);
       console.log('rani owner');
     }
     else if (props.mychannel.myRole === "admin")
     {
       console.log('rani admin');
       
-      setImadmin(!imadmin)
+      setImadmin(true)
+    }
+  }, [props]);
+  useEffect(() => {
+    if (props.mychannelusers.owner?.username === props.mydata.username) {
+      setImowner(true);
+      console.log('rani owner');
+    }
+    else if (props.mychannel.myRole === "admin")
+    {
+      console.log('rani admin');
+      
+      setImadmin(true)
     }
   }, []);
   const hundelkickuser = async (e) => {
