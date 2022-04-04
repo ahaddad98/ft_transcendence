@@ -15,7 +15,7 @@ const ChannelBar = (props) => {
   const router = useRouter();
   const [viewchannels, setViewchannles] = useState(false);
   const [imowner, setImowner] = useState(false);
-  const [imadmin, setAdmin] = useState(false);
+  const [imadmin, setImadmin] = useState(false);
   const [Clickmember, setClickmember] = useState(false);
   const [Clickadmin, setClickadmin] = useState(false);
   const handlerclickparticipate = async (e, id) => {
@@ -25,9 +25,17 @@ const ChannelBar = (props) => {
       router.push(`/Channnel/${id}`);
     }
   };
+  console.log(props.mychannel.myRole);
   useEffect(() => {
     if (props.mychannelusers.owner?.username === props.mydata.username) {
       setImowner(!imowner);
+      console.log('rani owner');
+    }
+    else if (props.mychannel.myRole === "admin")
+    {
+      console.log('rani admin');
+      
+      setImadmin(!imadmin)
     }
   }, []);
   const hundelkickuser = async (e) => {
@@ -112,6 +120,58 @@ const ChannelBar = (props) => {
               );
             })}
             {Clickmember && imowner && (
+              <Modal
+                size="lg"
+                active={Clickmember}
+                toggler={() => setClickmember(false)}
+              >
+                <div className="w-full md:w-auto dark:bg-gray-800 flex flex-col justify-center items-center bg-white  md:px-24 xl:py-4 xl:px-18">
+                  <div
+                    role="button"
+                    aria-label="MAIN BUTTON"
+                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                  >
+                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                    onClick={(e)=>{
+                      hundelkickuser(e)
+                    }}>
+                      Kick
+                    </button>
+                  </div>
+                  <div
+                    role="button"
+                    aria-label="MAIN BUTTON"
+                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                  >
+                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                      Block
+                    </button>
+                  </div>
+                  <div
+                    role="button"
+                    aria-label="MAIN BUTTON"
+                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                  >
+                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                      Mute
+                    </button>
+                  </div>
+                  <div
+                    role="button"
+                    aria-label="MAIN BUTTON"
+                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                  >
+                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                    onClick={(e)=>{
+                      hundelsetasadmin(e)
+                    }}>
+                      Set as admin
+                    </button>
+                  </div>
+                </div>
+              </Modal>
+            )}
+            {Clickmember && imadmin && (
               <Modal
                 size="lg"
                 active={Clickmember}

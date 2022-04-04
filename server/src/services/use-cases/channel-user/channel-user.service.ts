@@ -39,7 +39,7 @@ export class ChannelUserService {
       .leftJoinAndSelect('channelUser.channel', 'channel')
       .innerJoinAndSelect('channel.owner', 'owner')
       .where('channelUser.user.id = :user', { user: newUser })
-      .andWhere('channelUser.block = :bool', { bool: false })
+      .andWhere('channelUser.ban = :bool', { bool: false })
       .orderBy('channel.createdAt', 'DESC')
       .getMany();
   }
