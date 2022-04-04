@@ -1,9 +1,6 @@
 import {
   Column,
   Entity,
-  JoinColumn,
-  ManyToMany,
-  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -11,7 +8,6 @@ import {
 import { Channel } from './channel.entity';
 import { ConversationUser } from './conversation-user.entity';
 import { Message } from './message.entity';
-import { User } from './user.entity';
 
 export enum ConversationType {
   PRIVATE = 'private',

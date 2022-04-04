@@ -499,6 +499,18 @@ export class DataService {
       await this.conversationUserService.findallMyConversations(user);
     return conversationUser;
   }
+  
+  async getAllMyPrivateConversations(id: number) {
+    const user = await this.usersService.findOneById(id);
+    const conversationUser =
+      await this.conversationUserService.findAllMyPrivatesConversations(user);
+    await Promise.all(
+      conversationUser.map(async (element) => {
+        console.log(element);
+      }),
+    );
+    return conversationUser;
+  }
 
   async addNewPrivateChannel(body: CreateChannelDto, myId: number) {
     const user: User = await this.usersService.findOneById(myId);
@@ -556,9 +568,6 @@ export class DataService {
         newUser.id,
         newChannel.conversation.id,
       );
-    console.log('-----------------------------');
-    console.log(channelUser);
-    console.log('-----------------------------');
     return await this.channelUserService.save(channelUser);
   }
 
