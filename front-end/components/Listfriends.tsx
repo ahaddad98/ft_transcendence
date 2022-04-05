@@ -1,16 +1,16 @@
 import axios from "axios";
+import Link from "next/link";
 import React from "react";
 
 const Listfriends = (props) => {
-    
-    const hundelClick = async (e, id) => {
-      e.preventDefault();
-      axios.delete(`http://localhost:3001/friends/users/me/${id}`,{
-          headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-      });
-    };
+  const hundelClick = async (e, id) => {
+    e.preventDefault();
+    axios.delete(`http://localhost:3001/friends/users/me/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+  };
   return (
     <div className="mb-16">
       <div className="container flex justify-center mx-auto pt-16">
@@ -28,47 +28,54 @@ const Listfriends = (props) => {
             className="space-x-px lg:flex md:flex sm:flex items-center xl:justify-between flex-wrap md:justify-around sm:justify-around lg:justify-around"
           >
             {props.data.map((stat, key) => {
-                return (
-
-                    <div
-                    key={key}
-                    role="listitem"
-                    className="xl:w-1/3 sm:w-3/4 md:w-2/5 relative mt-16 mb-32 sm:mb-24 xl:max-w-sm lg:w-2/5"
-                    >
-                <div className="rounded overflow-hidden shadow-md bg-white">
-                  <div className="absolute -mt-20 w-full flex justify-center">
-                    <div className="h-32 w-32">
-                      <img
-                        src= {stat.friend.avatar}
-                        alt="Display Picture of Andres Berlin"
-                        role="img"
-                        className="rounded-full object-cover h-full w-full shadow-md"
+              return (
+                <div
+                  key={key}
+                  role="listitem"
+                  className="xl:w-1/3 sm:w-3/4 md:w-2/5 relative mt-16 mb-32 sm:mb-24 xl:max-w-sm lg:w-2/5"
+                >
+                  <div className="rounded overflow-hidden shadow-md bg-white">
+                    <div className="absolute -mt-20 w-full flex justify-center">
+                      <div className="h-32 w-32">
+                        <img
+                          src={stat.friend.avatar}
+                          alt="Display Picture of Andres Berlin"
+                          role="img"
+                          className="rounded-full object-cover h-full w-full shadow-md"
                         />
+                      </div>
                     </div>
-                  </div>
-                  <div className="px-6 mt-16">
-                    <h1 className="font-bold text-3xl text-center mb-1">
-                      {stat.friend.username}
-                    </h1>
-                    <p className="text-gray-800 text-sm text-center"> {stat.friend.level}</p>
-                    <div className="w-full flex justify-center pt-5 pb-5"></div>
-                    <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
-                      <div
-                        role="button"
-                        aria-label="MAIN BUTTON"
-                        className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
-                        >
-                        <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                        onClick={(e) => hundelClick(e, stat.friend.id)}
-                        >
-                        Remove
+                    <div className="px-6 mt-16">
+                      <h1 className="font-bold text-3xl text-center mb-1">
+                        <Link href="/friendprofile">
+                        <button className="rounded-none">
+                          {stat.friend.username}
                         </button>
+                        </Link>
+                      </h1>
+                      <p className="text-gray-800 text-sm text-center">
+                        {" "}
+                        {stat.friend.level}
+                      </p>
+                      <div className="w-full flex justify-center pt-5 pb-5"></div>
+                      <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
+                        <div
+                          role="button"
+                          aria-label="MAIN BUTTON"
+                          className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
+                        >
+                          <button
+                            className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                            onClick={(e) => hundelClick(e, stat.friend.id)}
+                          >
+                            Remove
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-                          )
+              );
             })}
           </div>
         </div>
