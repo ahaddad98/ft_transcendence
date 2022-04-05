@@ -18,14 +18,14 @@ const HomeNavbar = (props) => {
           <div className="px-20  py-2 flex w-full items-center">
             <div className="w-1/4">
               <Link href="/home">
-                <a className="text-3xl font-bold font-heading">HOME</a>
+                <p className="text-3xl font-bold font-heading cursor-pointer">HOME</p>
               </Link>
             </div>
             <div className="w-1/2 flex flex-row justify-arround">
               <ul className="md:flex px-2 mx-auto font-semibold font-heading space-x-12">
                 <li>
                   <Link href="/Chats/1">
-                    <a className="hover:text-gray-200">Going Chats</a>
+                    <p className="hover:text-gray-200 cursor-pointer">Going Chats</p>
                   </Link>
                 </li>
                 <li>
@@ -35,12 +35,12 @@ const HomeNavbar = (props) => {
                 </li>
                 <li>
                   <Link href="/friend">
-                    <a className="hover:text-gray-200">Friends</a>
+                    <p className="hover:text-gray-200 cursor-pointer">Friends</p>
                   </Link>
                 </li>
                 <li>
                   <Link href="/userslist">
-                    <a className="hover:text-gray-200">Users List</a>
+                    <p className="hover:text-gray-200 cursor-pointer">Users List</p>
                   </Link>
                 </li>
               </ul>
