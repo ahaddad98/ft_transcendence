@@ -499,17 +499,43 @@ export class DataService {
       await this.conversationUserService.findallMyConversations(user);
     return conversationUser;
   }
-  
+
   async getAllMyPrivateConversations(id: number) {
-    const user = await this.usersService.findOneById(id);
+    const me = await this.usersService.findOneById(id);
     const conversationUser =
-      await this.conversationUserService.findAllMyPrivatesConversations(user);
+      await this.conversationUserService.findAllMyPrivatesConversations(me);
+    if (!conversationUser) return [];
+    let arr = [];
     await Promise.all(
       conversationUser.map(async (element) => {
-        console.log(element);
+        let user = {};
+        let object = {};
+        const conversation =
+          await this.conversationService.findConversationByIdWithQuery(
+            element.conversation.id,
+          );
+        const userChat =
+          await this.conversationUserService.findUserInConversationWithoutMe(
+            conversation,
+            id,
+          );
+        user = {
+          id: userChat.user.id,
+          username: userChat.user.username,
+          email: userChat.user.email,
+          avatar: userChat.user.avatar,
+        };
+        object = {
+          id: conversation.id,
+          time: conversation.updatedAt,
+          message:
+            conversation.message[conversation.message.length - 1].content,
+          user: user,
+        };
+        arr.push(object);
       }),
     );
-    return conversationUser;
+    return arr;
   }
 
   async addNewPrivateChannel(body: CreateChannelDto, myId: number) {
