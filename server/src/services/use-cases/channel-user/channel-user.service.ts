@@ -39,7 +39,7 @@ export class ChannelUserService {
       .leftJoinAndSelect('channelUser.channel', 'channel')
       .innerJoinAndSelect('channel.owner', 'owner')
       .where('channelUser.user.id = :user', { user: newUser })
-      .andWhere('channelUser.ban = :bool', { bool: false })
+      // .andWhere('channelUser.ban = :bool', { bool: false })
       .orderBy('channel.createdAt', 'DESC')
       .getMany();
   }
@@ -60,7 +60,7 @@ export class ChannelUserService {
       .leftJoinAndSelect('channelUser.channel', 'channel')
       .innerJoinAndSelect('channelUser.user', 'user')
       .where('channelUser.user.id = :user', { user: newUserId })
-      .andWhere('channelUser.block = :bool', { bool: false })
+      .andWhere('channelUser.ban = :bool', { bool: true })
       .getMany();
   }
 
@@ -87,12 +87,20 @@ export class ChannelUserService {
     return await this.channelUserRepository.save(channelUser);
   }
 
-  async updateMute(id: number, newMute: boolean) {
-    return await this.channelUserRepository.update(id, { mute: newMute });
+  async updateMute(id: number, channelUser: ChannelUser) {
+    return await this.channelUserRepository.update(id, {
+      mute: channelUser.mute,
+      timeOfOperation: channelUser.timeOfOperation,
+      period: channelUser.period,
+    });
   }
 
-  async updateBlock(id: number, newBan: boolean) {
-    return await this.channelUserRepository.update(id, { ban: newBan });
+  async updateBan(id: number, channelUser: ChannelUser) {
+    return await this.channelUserRepository.update(id, {
+      ban: channelUser.ban,
+      timeOfOperation: channelUser.timeOfOperation,
+      period: channelUser.period,
+    });
   }
 
   async updateToBeAdmin(id: number) {
@@ -104,6 +112,14 @@ export class ChannelUserService {
   async updateToBeUser(id: number) {
     return await this.channelUserRepository.update(id, {
       userType: UserType.USER,
+    });
+  }
+
+  async removeMute(id: number) {
+    return await this.channelUserRepository.update(id, {
+      timeOfOperation: null,
+      period: 0,
+      mute: false,
     });
   }
 

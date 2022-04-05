@@ -33,10 +33,10 @@ export class ChannelUser {
   userType: UserType;
 
   @Column({ type: 'timestamptz', nullable: true })
-  TimeOfOperation?: Date;
+  timeOfOperation?: Date;
 
   @Column({ default: 0 })
-  time?: number;
+  period?: number;
 
   @Column({ type: 'boolean', default: false })
   ban?: boolean;

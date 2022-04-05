@@ -55,11 +55,11 @@ export class ConversationsController {
     }
   }
 
-  @Get('users/me')
+  @Get('private/users/me')
   @UseGuards(JwtAuthGuard)
   async getAllMyConversations(@Req() req) {
     try {
-      return await this.dataService.getAllMyConversations(req.user.id);
+      return await this.dataService.getAllMyPrivateConversations(req.user.id);
     } catch (err) {
       return err;
     }

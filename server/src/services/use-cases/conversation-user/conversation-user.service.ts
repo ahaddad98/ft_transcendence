@@ -33,6 +33,20 @@ export class ConversationUserService {
       .getMany();
   }
 
+  async findAllMyPrivatesConversations(newUser: User) {
+    return await this.conversationUserRepository
+      .createQueryBuilder('conversationUser')
+      .leftJoinAndSelect('conversationUser.conversation', 'conversation')
+      .where('conversationUser.user.id = :user', { user: newUser.id })
+      .andWhere('conversation.type = :type', {
+        type: 'private',
+      })
+      .orderBy({
+        'conversation.updatedAt': 'DESC',
+      })
+      .getMany();
+  }
+
   async findConversationUser(conversationId: number, userId: number) {
     return await this.conversationUserRepository.findOne({
       relations: ['conversation', 'user'],
@@ -66,6 +80,21 @@ export class ConversationUserService {
       })
       .andWhere('conversationUser.user.id != :id', { id: myId })
       .getMany();
+    // console.log(salam);
+  }
+
+  async findUserInConversationWithoutMe(
+    newConversation: Conversation,
+    myId: number,
+  ) {
+    return await this.conversationUserRepository
+      .createQueryBuilder('conversationUser')
+      .leftJoinAndSelect('conversationUser.user', 'user')
+      .where('conversationUser.conversation.id = :conversation', {
+        conversation: newConversation.id,
+      })
+      .andWhere('conversationUser.user.id != :id', { id: myId })
+      .getOne();
     // console.log(salam);
   }
 

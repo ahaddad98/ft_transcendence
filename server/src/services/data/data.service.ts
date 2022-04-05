@@ -30,11 +30,12 @@ import * as bcrypt from 'bcrypt';
 import { ChannelService } from '../use-cases/channel/channel.service';
 import { ChannelUser, UserType } from 'src/core/entities/channel-user.entity';
 import { ChannelUserService } from '../use-cases/channel-user/channel-user.service';
-import { format } from 'date-fns';
+import { format, isThursday } from 'date-fns';
 import * as speakeasy from 'speakeasy';
 import { Block } from 'src/core/entities/block.entity';
 import { BlockService } from '../use-cases/block/block.service';
 import { UpdatePasswordChannel, UpdateUsername } from '../helpers/validators';
+import * as moment from 'moment';
 
 @Injectable()
 export class DataService {
@@ -392,7 +393,8 @@ export class DataService {
     return { status: 500, message: 'you are already in this channel' };
   }
 
-  async findAllChannels(id: number) {
+  async findAllChannels(id: number, userId: number) {
+    await this.checkUserBanMute(userId);
     const allChannels = await this.channelService.findAllChannels();
     let arr = [];
     await Promise.all(
@@ -420,21 +422,47 @@ export class DataService {
     return arr;
   }
 
+  async checkUserBanMute(id: number) {
+    const channelUser: ChannelUser[] =
+      await this.channelUserService.findAllMyChannels(id);
+    await Promise.all(
+      channelUser.map(async (element) => {
+        if (
+          (element.ban == true || element.mute == true) &&
+          element.period > 0
+        ) {
+          const firstDate = moment(element.timeOfOperation);
+          const nowDate = moment(new Date());
+          const interval = Math.abs(firstDate.diff(nowDate, 'minutes'));
+          if (interval >= element.period) {
+            if (element.ban == true)
+              await this.removeBanUserInChannel(element.channel.id, id);
+            else await this.channelUserService.removeMute(element.id);
+          }
+        }
+      }),
+    );
+  }
+
   async findAllMyChannels(id: number) {
+    await this.checkUserBanMute(id);
     const channelUser: ChannelUser[] =
       await this.channelUserService.findAllMyChannels(id);
     let arr = [];
-    channelUser.map((element) => {
-      const object = {
-        id: element.channel.id,
-        name: element.channel.name,
-        type: element.channel.type,
-        createdAt: format(element.channel.createdAt, 'MMMM dd,yyyy'),
-        members: element.channel.members,
-        role: element.userType,
-      };
-      arr.push(object);
-    });
+    await Promise.all(
+      channelUser.map(async (element) => {
+        const object = {
+          id: element.channel.id,
+          name: element.channel.name,
+          type: element.channel.type,
+          createdAt: format(element.channel.createdAt, 'MMMM dd,yyyy'),
+          members: element.channel.members,
+          role: element.userType,
+          ban: element.ban,
+        };
+        arr.push(object);
+      }),
+    );
     return arr;
   }
   async addNewChannelConversation(myId: number) {
@@ -472,6 +500,44 @@ export class DataService {
     return conversationUser;
   }
 
+  async getAllMyPrivateConversations(id: number) {
+    const me = await this.usersService.findOneById(id);
+    const conversationUser =
+      await this.conversationUserService.findAllMyPrivatesConversations(me);
+    if (!conversationUser) return [];
+    let arr = [];
+    await Promise.all(
+      conversationUser.map(async (element) => {
+        let user = {};
+        let object = {};
+        const conversation =
+          await this.conversationService.findConversationByIdWithQuery(
+            element.conversation.id,
+          );
+        const userChat =
+          await this.conversationUserService.findUserInConversationWithoutMe(
+            conversation,
+            id,
+          );
+        user = {
+          id: userChat.user.id,
+          username: userChat.user.username,
+          email: userChat.user.email,
+          avatar: userChat.user.avatar,
+        };
+        object = {
+          id: conversation.id,
+          time: conversation.updatedAt,
+          message:
+            conversation.message[conversation.message.length - 1].content,
+          user: user,
+        };
+        arr.push(object);
+      }),
+    );
+    return arr;
+  }
+
   async addNewPrivateChannel(body: CreateChannelDto, myId: number) {
     const user: User = await this.usersService.findOneById(myId);
     const owner: boolean = await this.channelService.searchForOwner(user);
@@ -491,8 +557,6 @@ export class DataService {
   async addNewPublicChannel(body: CreatePublicChannelDto, myId: number) {
     const user: User = await this.usersService.findOneById(myId);
     const owner: boolean = await this.channelService.searchForOwner(user);
-    // console.log('------------------');
-    // console.log(user);
     if (owner) return { message: 'U have already a channel' };
     let channel: Channel = new Channel();
     channel.type = ChannelType.PUBLIC;
@@ -530,9 +594,6 @@ export class DataService {
         newUser.id,
         newChannel.conversation.id,
       );
-    console.log('-----------------------------');
-    console.log(channelUser);
-    console.log('-----------------------------');
     return await this.channelUserService.save(channelUser);
   }
 
@@ -646,7 +707,7 @@ export class DataService {
       newChannel,
       newUser,
     );
-    console.log(chanelUser);
+    // console.log(chanelUser);
     return chanelUser;
   }
 
@@ -674,16 +735,11 @@ export class DataService {
   }
 
   async muteUserInChannel(channelId: number, myId: number, body) {
-    const channelUser = await this.findChannelUser(channelId, myId);
-    if (channelUser.ban == true)
-      return { message: 'This user is already blocked' };
-    channelUser.mute = true;
-    channelUser.TimeOfOperation = new Date();
-    if (body.time != 0) channelUser.time = body.time;
-    return await this.channelUserService.updateMute(
-      channelUser.id,
-      channelUser.mute,
-    );
+    const chanelUser = await this.findChannelUser(channelId, myId);
+    chanelUser.mute = true;
+    chanelUser.timeOfOperation = new Date();
+    if (body.time > 0) chanelUser.period = body.time;
+    return await this.channelUserService.updateMute(chanelUser.id, chanelUser);
   }
 
   async banUserInChannel(channelId: number, myId: number, body) {
@@ -692,17 +748,14 @@ export class DataService {
     );
     const chanelUser = await this.findChannelUser(channelId, myId);
     chanelUser.ban = true;
-    chanelUser.TimeOfOperation = new Date();
-    if (body.time != 0) chanelUser.time = body.time;
+    chanelUser.timeOfOperation = new Date();
+    if (body.time > 0) chanelUser.period = body.time;
     await this.messageService.updateHiddenToBeTrue(
       channel.conversation.id,
       myId,
     );
     await this.kickUserFormChannelConversation(channelId, myId);
-    return await this.channelUserService.updateBlock(
-      chanelUser.id,
-      chanelUser.ban,
-    );
+    return await this.channelUserService.updateBan(chanelUser.id, chanelUser);
   }
 
   async removeBanUserInChannel(channelId: number, myId: number) {
@@ -715,6 +768,11 @@ export class DataService {
       myId,
     );
     return await this.leavesTheChannel(channelId, myId);
+  }
+
+  async removeMuteUserInChannel(channelId: number, myId: number) {
+    const chanelUser = await this.findChannelUser(channelId, myId);
+    return await this.channelUserService.removeMute(chanelUser.id);
   }
 
   async removeChannel(id: number) {
