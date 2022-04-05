@@ -328,7 +328,7 @@ const Conversation = () => {
             </div>
           </div>
           <div
-            className="w-full px-5 flex flex-col justify-between"
+            className="w-full py-2 flex flex-col justify-between"
             style={{ height: "95%" }}
           >
             <div
