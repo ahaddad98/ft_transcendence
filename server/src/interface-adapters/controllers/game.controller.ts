@@ -110,4 +110,10 @@ export class GameController implements CrudController<Game> {
   async myHistory(@Req() req) {
     return await this.service.history(req.user.id);
   }
+
+  @Get('/history/users/:id')
+  @UseGuards(JwtAuthGuard)
+  async userHistory(@Param('id') id: number) {
+    return await this.service.history(id);
+  }
 }
