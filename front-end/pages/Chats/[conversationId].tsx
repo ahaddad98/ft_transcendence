@@ -23,7 +23,7 @@ const Conversation = () => {
         console.log(err);
       });
   }, []);
-  const [Conversations, setConversations] = useState({});
+  const [Conversations, setConversations] = useState();
 
   const fetchConversations = async () => {
     const response = await axios.get("http://localhost:3001/conversations/private/users/me", {
@@ -39,11 +39,13 @@ const Conversation = () => {
       .catch((err) => {
         console.log(err);
       });
+      console.log('amine');
+      
   }, []);
   return (
     <>
     {
-      data&& Conversations && <ChatConversation data={data} conversations={Conversations}/>
+      data && Conversations && <ChatConversation data={data} conversations={Conversations}/>
     }
     </>
   );

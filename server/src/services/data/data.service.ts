@@ -514,6 +514,8 @@ export class DataService {
           await this.conversationService.findConversationByIdWithQuery(
             element.conversation.id,
           );
+          console.log(conversation);
+          
         const userChat =
           await this.conversationUserService.findUserInConversationWithoutMe(
             conversation,
