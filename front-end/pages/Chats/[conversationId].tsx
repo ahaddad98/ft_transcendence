@@ -39,8 +39,6 @@ const Conversation = () => {
       .catch((err) => {
         console.log(err);
       });
-      console.log('amine');
-      
   }, []);
   return (
     <>

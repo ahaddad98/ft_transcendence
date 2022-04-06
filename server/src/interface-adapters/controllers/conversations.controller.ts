@@ -25,10 +25,10 @@ export class ConversationsController {
   @UseGuards(JwtAuthGuard)
   async findAllConversations() {
     try {
-      // return await this.conversationUserService.findPrivateConversationWithTwoUsers(
-      //   62196,
-      //   62296,
-      // );
+      return await this.conversationService.findPrivateConversationOfTwoUsers(
+        62196,
+        62296,
+      );
       // return await this.conversationService.findAll();
     } catch (err) {
       return err;
@@ -71,21 +71,21 @@ export class ConversationsController {
     }
   }
 
-  @Get('users/me/:userId')
-  @UseGuards(JwtAuthGuard)
-  async findConversationByUsersId(
-    @Req() req,
-    @Param() params: ConversationParams,
-  ) {
-    try {
-      return await this.conversationService.getConversationByUsers(
-        req.user.id,
-        params.id,
-      );
-    } catch (err) {
-      return err;
-    }
-  }
+  // @Get('users/me/:userId')
+  // @UseGuards(JwtAuthGuard)
+  // async findConversationByUsersId(
+  //   @Req() req,
+  //   @Param() params: ConversationParams,
+  // ) {
+  //   try {
+  //     return await this.conversationService.getConversationByUsers(
+  //       req.user.id,
+  //       params.id,
+  //     );
+  //   } catch (err) {
+  //     return err;
+  //   }
+  // }
 
   @Post('channel/create/users/me')
   @UseGuards(JwtAuthGuard)
