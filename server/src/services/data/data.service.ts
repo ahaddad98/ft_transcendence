@@ -510,12 +510,15 @@ export class DataService {
       conversationUser.map(async (element) => {
         let user = {};
         let object = {};
-        const conversation =
+        let lastMessage = '';
+        const conversationWithMessage =
           await this.conversationService.findConversationByIdWithQuery(
             element.conversation.id,
           );
-          console.log(conversation);
-          
+        const conversation =
+          await this.conversationService.findConversationById(
+            element.conversation.id,
+          );
         const userChat =
           await this.conversationUserService.findUserInConversationWithoutMe(
             conversation,
@@ -527,11 +530,13 @@ export class DataService {
           email: userChat.user.email,
           avatar: userChat.user.avatar,
         };
+        if (conversationWithMessage)
+          lastMessage =
+            conversation.message[conversation.message.length - 1].content;
         object = {
           id: conversation.id,
           time: conversation.updatedAt,
-          message:
-            conversation.message[conversation.message.length - 1].content,
+          message: lastMessage,
           user: user,
         };
         arr.push(object);

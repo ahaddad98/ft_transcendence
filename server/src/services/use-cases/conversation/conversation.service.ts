@@ -39,8 +39,10 @@ export class ConversationService {
       .andWhere('message.hidden = :hidden', { hidden: false })
       .getOne();
   }
-  
-  async findLastMessageofConversationByIdWithQuery(id: number): Promise<Conversation> {
+
+  async findLastMessageofConversationByIdWithQuery(
+    id: number,
+  ): Promise<Conversation> {
     return await this.conversationRepository
       .createQueryBuilder('conversation')
       .leftJoinAndSelect('conversation.message', 'message')

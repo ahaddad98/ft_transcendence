@@ -12,7 +12,7 @@ import { OwnerGuard } from '../guards/owner.guard';
 
 @Controller()
 export class AppController {
-  @Get(':id')
+  @Get('')
   @UseGuards(JwtAuthGuard)
   getHello(@Param() id: number) {
     // console.log(typeof id.id);

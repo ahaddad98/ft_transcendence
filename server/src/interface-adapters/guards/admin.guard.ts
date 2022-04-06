@@ -31,6 +31,5 @@ export class AdminGuard implements CanActivate {
       if (userType.userType == UserType.USER) return true;
     }
     return false;
-    // else if(channel && )
   }
 }
