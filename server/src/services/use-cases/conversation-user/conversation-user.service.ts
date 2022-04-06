@@ -83,6 +83,15 @@ export class ConversationUserService {
     // console.log(salam);
   }
 
+  async findPrivateConversationWithTwoUsers(myId: number, userId: number) {
+    return await this.conversationUserRepository
+      .createQueryBuilder('conversationUser')
+      .leftJoinAndSelect('conversationUser.conversation', 'conversation')
+      // where()
+      // where()
+      .getMany();
+  }
+
   async findUserInConversationWithoutMe(
     newConversation: Conversation,
     myId: number,

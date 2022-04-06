@@ -10,6 +10,7 @@ import {
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
 import { DataService } from 'src/services/data/data.service';
 import { ConversationParams } from 'src/services/helpers/validators';
+import { ConversationUserService } from 'src/services/use-cases/conversation-user/conversation-user.service';
 import { ConversationService } from 'src/services/use-cases/conversation/conversation.service';
 
 @Controller('conversations')
@@ -17,13 +18,18 @@ export class ConversationsController {
   constructor(
     private conversationService: ConversationService,
     private dataService: DataService,
+    private conversationUserService: ConversationUserService,
   ) {}
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  findAllConversations() {
+  async findAllConversations() {
     try {
-      return this.conversationService.findAll();
+      // return await this.conversationUserService.findPrivateConversationWithTwoUsers(
+      //   62196,
+      //   62296,
+      // );
+      // return await this.conversationService.findAll();
     } catch (err) {
       return err;
     }
