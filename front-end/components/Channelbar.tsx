@@ -105,7 +105,7 @@ const ChannelBar = (props) => {
             </span>
           </div>
           <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
-            {props.mychannelusers.users.map((stat, key) => {
+            {props.mychannelusers?.users.map((stat, key) => {
               return (
                 <button
                   className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"

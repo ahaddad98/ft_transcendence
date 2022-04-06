@@ -1,8 +1,10 @@
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 
 const Listfriends = (props) => {
+  const router = useRouter();
   const hundelClick = async (e, id) => {
     e.preventDefault();
     axios.delete(`http://localhost:3001/friends/users/me/${id}`, {
@@ -10,6 +12,10 @@ const Listfriends = (props) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
+  };
+  const hundelfriendprofile = async (e, id) => {
+    e.preventDefault();
+    router.push(`FriendPage/${id}`)
   };
   return (
     <div className="mb-16">
@@ -47,11 +53,15 @@ const Listfriends = (props) => {
                     </div>
                     <div className="px-6 mt-16">
                       <h1 className="font-bold text-3xl text-center mb-1">
-                        <Link href="/friendprofile">
-                        <button className="rounded-none">
+                        
+                        <button className="rounded-none"
+                        onClick={(e)=> 
+                        hundelfriendprofile(e, stat.friend.id)
+                        }
+                        >
                           {stat.friend.username}
                         </button>
-                        </Link>
+                        
                       </h1>
                       <p className="text-gray-800 text-sm text-center">
                         {" "}
