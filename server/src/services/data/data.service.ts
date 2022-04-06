@@ -351,6 +351,11 @@ export class DataService {
   async addNewPrivateConversation(myId: number, userId: number) {
     const user1 = await this.usersService.findOneById(myId);
     const user2 = await this.usersService.findOneById(userId);
+    const privateConversations = await this.getAllMyPrivateConversations(myId);
+    const check = privateConversations.find((element) => {
+      return element.user.id == userId;
+    });
+    if (check) return check; // hta nt2akad manha
     let conversation: Conversation = new Conversation();
     conversation = await this.conversationService.saveNewConversation(
       conversation,

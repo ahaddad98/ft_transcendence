@@ -40,6 +40,18 @@ export class ConversationService {
       .getOne();
   }
 
+  // TODO khasni nfexiha
+  async findPrivateConversationOfTwoUsers(myId: number, userId: number) {
+    return await this.conversationRepository
+      .createQueryBuilder('conversation')
+      .leftJoinAndSelect('conversation.conversationUser', 'conversationUser')
+      // .orderBy('message.createdAt', 'ASC')
+      .where('conversation.type = :type', { type: 'private' })
+      .andWhere('conversationUser.user.id = :id', { id: myId })
+      // .andWhere('message.hidden = :hidden', { hidden: false })
+      .getMany();
+  }
+
   async findLastMessageofConversationByIdWithQuery(
     id: number,
   ): Promise<Conversation> {
@@ -64,17 +76,6 @@ export class ConversationService {
 
   async saveNewConversation(conversation: Conversation) {
     return await this.conversationRepository.save(conversation);
-  }
-
-  async getConversationByUsers(user1id: number, user2id: number) {
-    console.log('la a sahbi ma blansh');
-    return await this.conversationRepository.find({
-      where: [
-        { userOneId: user1id, userTwoId: user2id },
-        { userOneId: user2id, userTwoId: user1id },
-      ],
-      relations: ['message'],
-    });
   }
 
   async findConversationOfChannel(newId: number) {
