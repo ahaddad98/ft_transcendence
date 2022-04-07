@@ -200,8 +200,8 @@ export class DataService {
 
   // addFriend
   async sendRequestToNewFriend(myId: number, friendId: number) {
-    console.log(myId);
-    console.log(friendId);
+    // console.log(myId);
+    // console.log(friendId);
     if (myId == friendId)
       return { status: 500, message: 'U cant send a request to urself' };
     const me: User = await this.usersService.findOneById(myId);
@@ -232,7 +232,7 @@ export class DataService {
     const friend: User = await this.usersService.findOneById(friendId);
     const checkRequest: Request =
       await this.requestService.findFriendRequestByUsers(me, friend);
-    console.log('saidsads');
+    // console.log('saidsads');
     if (!checkRequest) return { status: 500, message: 'No Request Found' };
     await this.requestService.removeRequestById(reqId);
     const result = await this.addFriend(myId, friendId);
@@ -406,8 +406,10 @@ export class DataService {
       allChannels.map(async (newChannel) => {
         let status: string;
         const channelUser = await this.findChannelUser(newChannel.id, id);
-        // console.log(newChannel);
-        if (channelUser && channelUser.ban === false) {
+        // console.log('-----------------------------------');
+        // console.log(channelUser);
+        // console.log('-----------------------------------');
+        if (channelUser && channelUser.ban == true) {
         } else {
           if (!channelUser) status = 'join';
           else if (channelUser.ban === true) status = 'blocked';
@@ -435,8 +437,7 @@ export class DataService {
         if (
           (element.ban == true || element.mute == true) &&
           element.period > 0
-          ) {
-          console.log("periode: " + element.period)
+        ) {
           const firstDate = moment(element.timeOfOperation);
           const nowDate = moment(new Date());
           const interval = Math.abs(firstDate.diff(nowDate, 'minutes'));
@@ -452,23 +453,23 @@ export class DataService {
 
   async findAllMyChannels(id: number) {
     await this.checkUserBanMute(id);
-    // console.log()
-    // console.log('---------------------------------');
     const channelUser: ChannelUser[] =
       await this.channelUserService.findAllMyChannels(id);
     let arr = [];
     await Promise.all(
       channelUser.map(async (element) => {
-        const object = {
-          id: element.channel.id,
-          name: element.channel.name,
-          type: element.channel.type,
-          createdAt: format(element.channel.createdAt, 'MMMM dd,yyyy'),
-          members: element.channel.members,
-          role: element.userType,
-          ban: element.ban,
-        };
-        arr.push(object);
+        if (element.ban == false) {
+          const object = {
+            id: element.channel.id,
+            name: element.channel.name,
+            type: element.channel.type,
+            createdAt: format(element.channel.createdAt, 'MMMM dd,yyyy'),
+            members: element.channel.members,
+            role: element.userType,
+            ban: element.ban,
+          };
+          arr.push(object);
+        }
       }),
     );
     return arr;
@@ -685,7 +686,7 @@ export class DataService {
     }
     all.adminsNumber = all.admins.length;
     all.usersNumber = all.users.length;
-    console.log(all);
+    // console.log(all);
     return all;
   }
 
@@ -750,7 +751,7 @@ export class DataService {
   async kickUserFormChannelConversation(channelId: number, myId: number) {
     const conversation: Conversation =
       await this.conversationService.findConversationOfChannel(channelId);
-    console.log(conversation);
+    // console.log(conversation);
     const conversationUser =
       await this.conversationUserService.findConversationUser(
         conversation.id,
@@ -825,7 +826,7 @@ export class DataService {
     await Promise.all(
       users.map(async (user) => {
         if (user.userType === UserType.USER) {
-          console.log(user.user);
+          // console.log(user.user);
           await this.kickUserFormChannelConversation(channel.id, user.user.id);
           await this.leavesTheChannel(channelId, user.user.id);
         }
@@ -846,7 +847,7 @@ export class DataService {
     const user: User = await this.usersService.findOneById(userId);
     const object = JSON.parse(user.secret);
     const secret = object.base32;
-    console.log(secret);
+    // console.log(secret);
     const verified = speakeasy.totp.verify({
       secret,
       encoding: 'base32',
@@ -862,7 +863,7 @@ export class DataService {
     const user: User = await this.usersService.findOneById(userId);
     const object = JSON.parse(user.secret);
     const secret = object.base32;
-    console.log(secret);
+    // console.log(secret);
     const tokenValidates = speakeasy.totp.verify({
       secret,
       encoding: 'base32',
@@ -902,8 +903,8 @@ export class DataService {
       const blockUser: User = await this.usersService.findOneById(blockId);
       if (!blockUser) return { status: 500, message: 'this user is not fount' };
       const me: User = await this.usersService.findOneById(myId);
-      console.log(me);
-      console.log(blockUser);
+      // console.log(me);
+      // console.log(blockUser);
       const block = await this.blockService.findBlockUser(me, blockUser);
       if (block) return await this.blockService.remove(block);
       return { status: 500, message: 'error' };

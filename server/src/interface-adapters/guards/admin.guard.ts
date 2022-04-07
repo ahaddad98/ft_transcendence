@@ -16,7 +16,7 @@ export class AdminGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const channel: Channel = await this.channelService.findChannelById(
-      request.params.channelId,
+      request.params.id,
     );
     if (channel && channel.owner.id == request.user.id) return true;
     const me: User = await this.userService.findOneById(request.user.id);
@@ -28,7 +28,9 @@ export class AdminGuard implements CanActivate {
       );
       const userType: ChannelUser =
         await this.channelUserService.findbyChannelAndUser(channel, user);
-      if (userType.userType == UserType.USER) return true;
+      if (userType && userType.userType == UserType.USER) {
+        return true;
+      }
     }
     return false;
   }

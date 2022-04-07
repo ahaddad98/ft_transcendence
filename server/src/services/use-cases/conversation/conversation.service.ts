@@ -70,7 +70,7 @@ export class ConversationService {
       await this.conversationRepository.findOne(id, {
         relations: ['message'],
       });
-    console.log(conversation);
+    // console.log(conversation);
     return conversation;
   }
 
