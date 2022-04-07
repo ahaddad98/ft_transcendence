@@ -20,6 +20,7 @@ const ChannelBar = (props) => {
   const [Clickadmin, setClickadmin] = useState(false);
   const [Clickban, setClickban] = useState(false);
   const [Click, setClickmute] = useState(false);
+  const [selectedtime, setSelectedtime] = useState("");
   const handlerclickparticipate = async (e, id) => {
     e.preventDefault();
     setViewchannles(!viewchannels);
@@ -75,6 +76,25 @@ const ChannelBar = (props) => {
         },
       }
     );
+  };
+  const hundelsubmittime = async (e) => {
+    e.preventDefault();
+    var formData = new FormData();
+    formData.append("time", selectedtime);
+    axios
+      .post(
+        `http://localhost:3001/channels/ban/${props.mychannel.id}/users/${userid}`,
+        {
+          time: selectedtime,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+      });
   };
   return (
     <div>
@@ -142,49 +162,52 @@ const ChannelBar = (props) => {
                       Kick
                     </button>
                   </div>
-                  {!Clickban && (
-                    <div
-                      role="button"
-                      aria-label="MAIN BUTTON"
-                      className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+
+                  <div
+                    role="button"
+                    aria-label="MAIN BUTTON"
+                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                  >
+                    <button
+                      className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                      onClick={() => {
+                        setClickban(!Clickban);
+                      }}
                     >
-                      <button
-                        className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                        onClick={() => {
-                          setClickban(!Clickban);
-                        }}
-                      >
-                        Ban
-                      </button>
-                    </div>
-                  )}
+                      Ban
+                    </button>
+                  </div>
+
                   {Clickban && (
-                    <div
-                      role="button"
-                      aria-label="MAIN BUTTON"
-                      className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
-                    >
-                      <button
-                        className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                        onClick={() => {
-                          setClickban(!Clickban);
-                        }}
-                      >
-                        Ban2
-                      </button>
-                    </div>
+                    <form onSubmit={(e) => hundelsubmittime(e)}>
+                      <div className="space-y-4">
+                        <div>
+                          <label
+                            htmlFor="email"
+                            className="block mb-1 text-gray-600 font-semibold"
+                          >
+                            time
+                          </label>
+                          <input
+                            type="text"
+                            id="time"
+                            className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
+                            onChange={(e) => setSelectedtime(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </form>
                   )}
-                  {!Clickban && (
-                    <div
-                      role="button"
-                      aria-label="MAIN BUTTON"
-                      className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
-                    >
-                      <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                        Mute
-                      </button>
-                    </div>
-                  )}
+                  <div
+                    role="button"
+                    aria-label="MAIN BUTTON"
+                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                  >
+                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                      Mute
+                    </button>
+                  </div>
+
                   <div
                     role="button"
                     aria-label="MAIN BUTTON"
