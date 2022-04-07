@@ -135,8 +135,11 @@ export class AppGateway
     console.log(payload);
     this.server.emit('GameOverClient', payload);
   }
-  @SubscribeMessage('receivemsg')
-  receiveMessage(client: Socket, payload: any): void {
+
+  // Send and Get message
+
+  @SubscribeMessage('sendMessage')
+  sendMessage(client: Socket, payload: any): void {
     console.log(payload);
     // this.server.emit('GameOverClient', payload);
   }

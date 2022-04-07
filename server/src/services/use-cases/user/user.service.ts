@@ -26,7 +26,7 @@ export class UserService {
     return this.userRepository.find(details);
   }
   findOne(userId: number): Promise<User> {
-    console.log('salam');
+    // console.log('salam');
     return this.userRepository.findOne(
       { id: userId },
       { relations: ['friend'] },
