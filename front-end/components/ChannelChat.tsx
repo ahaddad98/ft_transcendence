@@ -43,7 +43,7 @@ const ChannelChat = (props) => {
         console.log(res);
       });
   };
-  
+
   return (
     <div className="flex flex-col flex-auto  p-6  max-h-lg" style={{height: "100%"}}>
       <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl  bg-gray-100 p-4 h-inherit" style={{height: "100%"}}>
