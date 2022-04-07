@@ -662,7 +662,7 @@ export class DataService {
       adminsNumber: 0,
     };
     for (let i = 0; i < result.length; i++) {
-      let newStat = undefined;
+      let newStat = null;
       if (result[i].ban == true) newStat = 'ban';
       else if (result[i].mute == true) newStat = 'mute';
 

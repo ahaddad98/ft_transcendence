@@ -18,6 +18,9 @@ const ChannelBar = (props) => {
   const [imadmin, setImadmin] = useState(false);
   const [Clickmember, setClickmember] = useState(false);
   const [Clickadmin, setClickadmin] = useState(false);
+  const [Clickban, setClickban] = useState(false);
+  const [Click, setClickmute] = useState(false);
+  const [selectedtime, setSelectedtime] = useState("");
   const handlerclickparticipate = async (e, id) => {
     e.preventDefault();
     setViewchannles(!viewchannels);
@@ -28,56 +31,70 @@ const ChannelBar = (props) => {
   useEffect(() => {
     if (props.mychannelusers.owner?.username === props.mydata.username) {
       setImowner(true);
-    }
-    else if (props.mychannel.myRole === "admin")
-    {
-      setImadmin(true)
+    } else if (props.mychannel.myRole === "admin") {
+      setImadmin(true);
     }
   }, [props]);
   useEffect(() => {
     if (props.mychannelusers.owner?.username === props.mydata.username) {
       setImowner(true);
-    }
-    else if (props.mychannel.myRole === "admin")
-    {
-      setImadmin(true)
+    } else if (props.mychannel.myRole === "admin") {
+      setImadmin(true);
     }
   }, []);
   const hundelkickuser = async (e) => {
     e.preventDefault();
-    axios
-      .delete(
-        `http://localhost:3001/channels/kick/${props.mychannel.id}/users/${userid}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      )
+    axios.delete(
+      `http://localhost:3001/channels/kick/${props.mychannel.id}/users/${userid}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
   };
-  const hundelsetasadmin= async (e) => {
+  const hundelsetasadmin = async (e) => {
     e.preventDefault();
-    axios
-      .put(
-        `http://localhost:3001/channels/admin/${props.mychannel.id}/users/${userid}`,{},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      )
+    axios.put(
+      `http://localhost:3001/channels/admin/${props.mychannel.id}/users/${userid}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
   };
-  const hundelfireadmin= async (e) => {
+  const hundelfireadmin = async (e) => {
     e.preventDefault();
+    axios.put(
+      ` http://localhost:3001/channels/user/${props.mychannel.id}/users/${userid}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+  };
+  const hundelsubmittime = async (e) => {
+    e.preventDefault();
+    var formData = new FormData();
+    formData.append("time", selectedtime);
     axios
-      .put(
-        ` http://localhost:3001/channels/user/${props.mychannel.id}/users/${userid}`,{},
+      .post(
+        `http://localhost:3001/channels/ban/${props.mychannel.id}/users/${userid}`,
+        {
+          time: selectedtime,
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       )
+      .then((res) => {
+      });
   };
   return (
     <div>
@@ -112,7 +129,7 @@ const ChannelBar = (props) => {
                   key={key}
                   onClick={() => {
                     setClickmember(!Clickmember);
-                    setUserid(stat.id)
+                    setUserid(stat.id);
                   }}
                 >
                   <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
@@ -136,22 +153,51 @@ const ChannelBar = (props) => {
                     aria-label="MAIN BUTTON"
                     className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                   >
-                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                    onClick={(e)=>{
-                      hundelkickuser(e)
-                    }}>
+                    <button
+                      className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                      onClick={(e) => {
+                        hundelkickuser(e);
+                      }}
+                    >
                       Kick
                     </button>
                   </div>
+
                   <div
                     role="button"
                     aria-label="MAIN BUTTON"
                     className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                   >
-                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                      Block
+                    <button
+                      className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                      onClick={() => {
+                        setClickban(!Clickban);
+                      }}
+                    >
+                      Ban
                     </button>
                   </div>
+
+                  {Clickban && (
+                    <form onSubmit={(e) => hundelsubmittime(e)}>
+                      <div className="space-y-4">
+                        <div>
+                          <label
+                            htmlFor="email"
+                            className="block mb-1 text-gray-600 font-semibold"
+                          >
+                            time
+                          </label>
+                          <input
+                            type="text"
+                            id="time"
+                            className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
+                            onChange={(e) => setSelectedtime(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </form>
+                  )}
                   <div
                     role="button"
                     aria-label="MAIN BUTTON"
@@ -161,15 +207,18 @@ const ChannelBar = (props) => {
                       Mute
                     </button>
                   </div>
+
                   <div
                     role="button"
                     aria-label="MAIN BUTTON"
                     className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                   >
-                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                    onClick={(e)=>{
-                      hundelsetasadmin(e)
-                    }}>
+                    <button
+                      className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                      onClick={(e) => {
+                        hundelsetasadmin(e);
+                      }}
+                    >
                       Set as admin
                     </button>
                   </div>
@@ -188,10 +237,12 @@ const ChannelBar = (props) => {
                     aria-label="MAIN BUTTON"
                     className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                   >
-                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                    onClick={(e)=>{
-                      hundelkickuser(e)
-                    }}>
+                    <button
+                      className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                      onClick={(e) => {
+                        hundelkickuser(e);
+                      }}
+                    >
                       Kick
                     </button>
                   </div>
@@ -201,7 +252,7 @@ const ChannelBar = (props) => {
                     className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                   >
                     <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                      Block
+                      Ban
                     </button>
                   </div>
                   <div
@@ -231,71 +282,77 @@ const ChannelBar = (props) => {
                 <button
                   className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
                   key={key}
-                  onClick={()=>{
-                    setClickadmin(!Clickadmin)
-                    setUserid(stat.id)
+                  onClick={() => {
+                    setClickadmin(!Clickadmin);
+                    setUserid(stat.id);
                   }}
                 >
                   <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
                     <img src={stat.avatar} />
                   </div>
-                  <div className="ml-2 text-sm font-semibold">{stat.username}</div>
+                  <div className="ml-2 text-sm font-semibold">
+                    {stat.username}
+                  </div>
                 </button>
               );
             })}
           </div>
           {Clickadmin && imowner && (
-              <Modal
-                size="lg"
-                active={Clickadmin}
-                toggler={() => setClickadmin(false)}
-              >
-                <div className="w-full md:w-auto dark:bg-gray-800 flex flex-col justify-center items-center bg-white  md:px-24 xl:py-4 xl:px-18">
-                  <div
-                    role="button"
-                    aria-label="MAIN BUTTON"
-                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+            <Modal
+              size="lg"
+              active={Clickadmin}
+              toggler={() => setClickadmin(false)}
+            >
+              <div className="w-full md:w-auto dark:bg-gray-800 flex flex-col justify-center items-center bg-white  md:px-24 xl:py-4 xl:px-18">
+                <div
+                  role="button"
+                  aria-label="MAIN BUTTON"
+                  className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                >
+                  <button
+                    className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                    onClick={(e) => {
+                      hundelkickuser(e);
+                    }}
                   >
-                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                    onClick={(e)=>{
-                      hundelkickuser(e)
-                    }}>
-                      Kick
-                    </button>
-                  </div>
-                  <div
-                    role="button"
-                    aria-label="MAIN BUTTON"
-                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
-                  >
-                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                      Block
-                    </button>
-                  </div>
-                  <div
-                    role="button"
-                    aria-label="MAIN BUTTON"
-                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
-                  >
-                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
-                      Mute
-                    </button>
-                  </div>
-                  <div
-                    role="button"
-                    aria-label="MAIN BUTTON"
-                    className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
-                  >
-                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                    onClick={(e)=>{
-                      hundelfireadmin(e)
-                    }}>
-                      Fire the admin
-                    </button>
-                  </div>
+                    Kick
+                  </button>
                 </div>
-              </Modal>
-            )}
+                <div
+                  role="button"
+                  aria-label="MAIN BUTTON"
+                  className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                >
+                  <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                    Ban
+                  </button>
+                </div>
+                <div
+                  role="button"
+                  aria-label="MAIN BUTTON"
+                  className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                >
+                  <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                    Mute
+                  </button>
+                </div>
+                <div
+                  role="button"
+                  aria-label="MAIN BUTTON"
+                  className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
+                >
+                  <button
+                    className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                    onClick={(e) => {
+                      hundelfireadmin(e);
+                    }}
+                  >
+                    Fire the admin
+                  </button>
+                </div>
+              </div>
+            </Modal>
+          )}
         </div>
         <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
           <div className="inline-flex mt-2 xs:mt-0">

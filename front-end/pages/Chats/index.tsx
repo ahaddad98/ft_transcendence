@@ -43,7 +43,7 @@ const Conversation = () => {
   return (
     <>
     {
-      data && Conversations && router.query.conversationId  && <ChatConversation id={router.query.conversationId} data={data} conversations={Conversations}/>
+      data && Conversations &&  <ChatConversation id={undefined} data={data} conversations={Conversations}/>
     }
     </>
   );

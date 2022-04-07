@@ -1,12 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import Messagemap from "./Messagemap";
+import Messagemapconv from "./Messagemapconv";
 
-const ChannelChat = (props) => {
+const PrivateConv = (props) => {
+  console.log(props);
+
   const [conversation, setConversation] = useState();
   const fetchconsversation = async () => {
     const response = await axios.get(
-      `http://localhost:3001/conversations/${props.mychannel.conversation?.id}/messages`,
+      `http://localhost:3001/conversations/${props.convid}/messages`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
@@ -29,7 +31,7 @@ const ChannelChat = (props) => {
     e.preventDefault();
     await axios
       .post(
-        `http://localhost:3001/messages/conversations/${props.mychannel.conversation?.id}/users/me`,
+        `http://localhost:3001/messages/conversations/${props.convid}/users/me`,
         {
           message: msg,
         },
@@ -43,17 +45,18 @@ const ChannelChat = (props) => {
         console.log(res);
       });
   };
-
   return (
-    <div className="flex flex-col flex-auto  p-6  max-h-lg" style={{height: "100%"}}>
-      <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl  bg-gray-100 p-4 h-inherit" style={{height: "100%"}}>
-        <div className="flex flex-col  overflow-x-auto mb-4  " style={{height: "100%"}}>
-          <div className="flex flex-col">
-            <div className="grid grid-cols-12 gap-y-2">
-              {conversation && <Messagemap conv={conversation} />}
-            </div>
-          </div>
-        </div>
+    <div
+      className="w-full py-2 flex flex-col justify-between"
+      style={{ height: "95%" }}
+    >
+      <div
+        className="flex flex-col  overflow-x-auto "
+        style={{ height: "100%" }}
+      >
+        {conversation && <Messagemapconv conversation={conversation} />}
+      </div>
+      <div className="py-5">
         <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
           <div>
             <button className="flex items-center justify-center text-gray-400 hover:text-gray-600">
@@ -113,5 +116,4 @@ const ChannelChat = (props) => {
     </div>
   );
 };
-
-export default ChannelChat;
+export default PrivateConv;
