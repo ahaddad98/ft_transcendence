@@ -26,7 +26,7 @@ const HomeNavbar = (props) => {
             <div className="w-1/2 flex flex-row justify-arround">
               <ul className="md:flex px-2 mx-auto font-semibold font-heading space-x-12">
                 <li>
-                  <Link href="/Chats/1">
+                  <Link href="/Chats/">
                     <p className="hover:text-gray-200 cursor-pointer">Going Chats</p>
                   </Link>
                 </li>
