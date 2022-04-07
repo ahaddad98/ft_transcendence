@@ -27,6 +27,7 @@ import { GameController } from './interface-adapters/controllers/game.controller
 import { GameModule } from './services/use-cases/game/game.module';
 import { BlockModule } from './services/use-cases/block/block.module';
 import { BlockController } from './interface-adapters/controllers/block.controller';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [
@@ -62,5 +63,6 @@ import { BlockController } from './interface-adapters/controllers/block.controll
     GameController,
     BlockController,
   ],
+  providers: [AppGateway],
 })
 export class AppModule {}

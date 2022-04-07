@@ -355,7 +355,7 @@ export class DataService {
     const check = privateConversations.find((element) => {
       return element.user.id == userId;
     });
-    if (check) return check; // hta nt2akad manha
+    if (check) return check;
     let conversation: Conversation = new Conversation();
     conversation = await this.conversationService.saveNewConversation(
       conversation,
@@ -651,20 +651,28 @@ export class DataService {
     const newChannel: Channel = await this.channelService.findChannelById(
       channelId,
     );
-    // const newUser: User = await this.usersService.findOneById(myId);
     const result = await this.channelUserService.findAllUsersInChannelWithoutMe(
       newChannel,
     );
-    const all = { owner: {}, admins: [], users: [] };
+    let all = {
+      owner: {},
+      admins: [],
+      users: [],
+      usersNumber: 0,
+      adminsNumber: 0,
+    };
     for (let i = 0; i < result.length; i++) {
+      let newStat = undefined;
+      if (result[i].ban == true) newStat = 'ban';
+      else if (result[i].mute == true) newStat = 'mute';
+
       let object = {
         id: result[i].user.id,
         username: result[i].user.username,
         avatar: result[i].user.avatar,
         is_online: result[i].user.is_online,
         userType: result[i].userType,
-        block: result[i].ban,
-        mute: result[i].mute,
+        stat: newStat,
       };
       if (result[i].userType == UserType.OWNER) {
         all.owner = object;
@@ -672,6 +680,9 @@ export class DataService {
         all.admins.push(object);
       } else all.users.push(object);
     }
+    all.adminsNumber = all.admins.length;
+    all.usersNumber = all.users.length;
+    console.log(all);
     return all;
   }
 

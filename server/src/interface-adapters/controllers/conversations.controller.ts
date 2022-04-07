@@ -25,10 +25,10 @@ export class ConversationsController {
   @UseGuards(JwtAuthGuard)
   async findAllConversations() {
     try {
-      return await this.conversationService.findPrivateConversationOfTwoUsers(
-        62196,
-        62296,
-      );
+      // return await this.conversationService.findPrivateConversationOfTwoUsers(
+      //   62196,
+      //   62296,
+      // );
       // return await this.conversationService.findAll();
     } catch (err) {
       return err;
