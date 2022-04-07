@@ -435,7 +435,8 @@ export class DataService {
         if (
           (element.ban == true || element.mute == true) &&
           element.period > 0
-        ) {
+          ) {
+          console.log("periode: " + element.period)
           const firstDate = moment(element.timeOfOperation);
           const nowDate = moment(new Date());
           const interval = Math.abs(firstDate.diff(nowDate, 'minutes'));
@@ -451,6 +452,8 @@ export class DataService {
 
   async findAllMyChannels(id: number) {
     await this.checkUserBanMute(id);
+    // console.log()
+    // console.log('---------------------------------');
     const channelUser: ChannelUser[] =
       await this.channelUserService.findAllMyChannels(id);
     let arr = [];
