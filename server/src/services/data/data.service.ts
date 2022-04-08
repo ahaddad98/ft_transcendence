@@ -406,16 +406,8 @@ export class DataService {
       allChannels.map(async (newChannel) => {
         let status: string;
         const channelUser = await this.findChannelUser(newChannel.id, id);
-        // console.log(channelUser);
-        if (
-          channelUser &&
-          (channelUser.ban == true || channelUser.userType === 'owner')
-        ) {
-          console.log(
-            'dfk;jasklFJKLDSJKLFJKLADSJFKLDJSAKLFJDKLSAJKLFDJKLSAFJDKLSJAKLFDJSKLAJFADKLSJDFKLASKLJ',
-          );
-          // console.log(channelUser);
-        } else {
+        if (!channelUser) {
+          console.log('amine sba3');
           if (!channelUser) status = 'join';
           else if (channelUser.ban === true) status = 'blocked';
           const object = {
@@ -427,12 +419,11 @@ export class DataService {
             owner: newChannel.owner,
             status: status,
           };
-          console.log('-----------------------------------------------');
           arr.push(object);
         }
       }),
     );
-    console.log(arr);
+    // console.log(arr);
     return arr;
   }
 
@@ -769,6 +760,7 @@ export class DataService {
   }
 
   async muteUserInChannel(channelId: number, myId: number, body) {
+    console.log('mute');
     const chanelUser = await this.findChannelUser(channelId, myId);
     chanelUser.mute = true;
     chanelUser.timeOfOperation = new Date();
@@ -777,6 +769,7 @@ export class DataService {
   }
 
   async banUserInChannel(channelId: number, myId: number, body) {
+    console.log('ban');
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );

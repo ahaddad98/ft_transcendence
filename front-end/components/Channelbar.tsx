@@ -100,6 +100,7 @@ const ChannelBar = (props) => {
         console.log(res);
       });
     setClickmember(false);
+    setClickadmin(false);
     setClickban(false);
     console.log("amine");
   };
@@ -124,6 +125,7 @@ const ChannelBar = (props) => {
         console.log(res);
       });
     setClickmember(false);
+    setClickadmin(false);
     setClickmute(false);
     console.log("amine");
   };
@@ -324,10 +326,12 @@ const ChannelBar = (props) => {
                     aria-label="MAIN BUTTON"
                     className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                   >
-                    <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                    onClick={() => {
-                      setClickmute(!Clickmute);
-                    }}>
+                    <button
+                      className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                      onClick={() => {
+                        setClickmute(!Clickmute);
+                      }}
+                    >
                       Mute
                     </button>
                   </div>
@@ -405,55 +409,59 @@ const ChannelBar = (props) => {
                   aria-label="MAIN BUTTON"
                   className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                 >
-                  <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                   onClick={() => {
-                    setClickban(!Clickban);
-                  }}>
+                  <button
+                    className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                    onClick={() => {
+                      setClickban(!Clickban);
+                    }}
+                  >
                     Ban
                   </button>
                 </div>
                 {Clickban && (
-                    <form onSubmit={(e) => hundelsubmittime(e)}>
-                      <div className="w-32">
-                        <div>
-                          <input
-                            type="text"
-                            id="time"
-                            placeholder="Time"
-                            className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
-                            onChange={(e) => setSelectedtime(e.target.value)}
-                          />
-                        </div>
+                  <form onSubmit={(e) => hundelsubmittime(e)}>
+                    <div className="w-32">
+                      <div>
+                        <input
+                          type="text"
+                          id="time"
+                          placeholder="Time"
+                          className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
+                          onChange={(e) => setSelectedtime(e.target.value)}
+                        />
                       </div>
-                    </form>
-                  )}
+                    </div>
+                  </form>
+                )}
                 <div
                   role="button"
                   aria-label="MAIN BUTTON"
                   className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                 >
-                  <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                  onClick={() => {
-                    setClickmute(!Clickmute);
-                  }}>
+                  <button
+                    className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                    onClick={() => {
+                      setClickmute(!Clickmute);
+                    }}
+                  >
                     Mute
                   </button>
                 </div>
                 {Clickmute && (
-                    <form onSubmit={(e) => hundelsubmittimemute(e)}>
-                      <div className="w-32">
-                        <div>
-                          <input
-                            type="text"
-                            id="time"
-                            placeholder="Time"
-                            className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
-                            onChange={(e) => setSelectedtime(e.target.value)}
-                          />
-                        </div>
+                  <form onSubmit={(e) => hundelsubmittimemute(e)}>
+                    <div className="w-32">
+                      <div>
+                        <input
+                          type="text"
+                          id="time"
+                          placeholder="Time"
+                          className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
+                          onChange={(e) => setSelectedtime(e.target.value)}
+                        />
                       </div>
-                    </form>
-                  )}
+                    </div>
+                  </form>
+                )}
                 <div
                   role="button"
                   aria-label="MAIN BUTTON"
