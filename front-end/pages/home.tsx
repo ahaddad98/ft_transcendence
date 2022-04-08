@@ -5,6 +5,7 @@ import LeaderBoard from "../components/LeaderBoard";
 import ChannlesList from "../components/ChannelsList";
 import HistoryGame from "../components/HistoryGame";
 import ListUseres from "../components/Listuseres";
+import MediaQuery, { useMediaQuery } from "react-responsive";
 
 const Home = () => {
   const [data, setData] = useState({});
@@ -82,10 +83,18 @@ const Home = () => {
   return (
     <div>
       <HomeNavbar data={data}></HomeNavbar>
+      <MediaQuery minWidth={1060}>
       <div className="flex flex-row">
         {stats && <LeaderBoard data={stats} />}
         {history && <HistoryGame data={history} />}
       </div>
+    </MediaQuery>
+      <MediaQuery maxWidth={1060}>
+      <div className="flex flex-col">
+        {stats && <LeaderBoard data={stats} />}
+        {history && <HistoryGame data={history} />}
+      </div>
+    </MediaQuery>
       {channel && <ChannlesList data={channel} />}
     </div>
   );
