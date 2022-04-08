@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import Messagemap from "./Messagemap";
 
 const ChannelChat = (props) => {
+  console.log("asnmasnm");
+  console.log(props);
   const [conversation, setConversation] = useState();
   const fetchconsversation = async () => {
     const response = await axios.get(
@@ -45,9 +47,18 @@ const ChannelChat = (props) => {
   };
 
   return (
-    <div className="flex flex-col flex-auto  p-6  max-h-lg" style={{height: "100%"}}>
-      <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl  bg-gray-100 p-4 h-inherit" style={{height: "100%"}}>
-        <div className="flex flex-col  overflow-x-auto mb-4  " style={{height: "100%"}}>
+    <div
+      className="flex flex-col flex-auto  p-6  max-h-lg"
+      style={{ height: "100%" }}
+    >
+      <div
+        className="flex flex-col flex-auto flex-shrink-0 rounded-2xl  bg-gray-100 p-4 h-inherit"
+        style={{ height: "100%" }}
+      >
+        <div
+          className="flex flex-col  overflow-x-auto mb-4  "
+          style={{ height: "100%" }}
+        >
           <div className="flex flex-col">
             <div className="grid grid-cols-12 gap-y-2">
               {conversation && <Messagemap conv={conversation} />}

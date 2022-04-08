@@ -620,7 +620,7 @@ export class DataService {
     if (!channelUser)
       if (!channel)
         return { status: 500, message: 'U dont have acces to this channel' };
-    const object = { ...channel, myRole: channelUser.userType };
+    const object = { ...channel, myRole: channelUser.userType, mute: channelUser.mute };
     return object;
   }
 
