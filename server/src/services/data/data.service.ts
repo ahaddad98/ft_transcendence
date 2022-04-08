@@ -404,12 +404,8 @@ export class DataService {
     let arr = [];
     await Promise.all(
       allChannels.map(async (newChannel) => {
-        let status: string;
         const channelUser = await this.findChannelUser(newChannel.id, id);
         if (!channelUser) {
-          console.log('amine sba3');
-          if (!channelUser) status = 'join';
-          else if (channelUser.ban === true) status = 'blocked';
           const object = {
             id: newChannel.id,
             name: newChannel.name,
@@ -417,7 +413,7 @@ export class DataService {
             createdAt: format(newChannel.createdAt, 'MMMM dd,yyyy'),
             members: newChannel.members,
             owner: newChannel.owner,
-            status: status,
+            status: 'join',
           };
           arr.push(object);
         }
@@ -436,9 +432,11 @@ export class DataService {
           (element.ban == true || element.mute == true) &&
           element.period > 0
         ) {
+          console.log(element.ban);
           const firstDate = moment(element.timeOfOperation);
           const nowDate = moment(new Date());
           const interval = Math.abs(firstDate.diff(nowDate, 'minutes'));
+          console.log(interval);
           if (interval >= element.period) {
             if (element.ban == true)
               await this.removeBanUserInChannel(element.channel.id, id);
@@ -617,9 +615,12 @@ export class DataService {
     const user: User = await this.usersService.findOneById(me);
     const channelUser: ChannelUser =
       await this.channelUserService.findbyChannelAndUser(channel, user);
-    if (!channelUser)
-      if (!channel)
-        return { status: 500, message: 'U dont have acces to this channel' };
+    if (!channelUser) {
+      console.log('wal a asahbi');
+      throw UnauthorizedException;
+      // return { status: 500, message: 'U dont have acces to this channel' };
+    }
+    // if (!channel)
     const object = { ...channel, myRole: channelUser.userType };
     return object;
   }
@@ -650,6 +651,7 @@ export class DataService {
   }
 
   async listUsersOfChannelWitouhtMe(channelId: number) {
+    console.log('-------------------');
     const newChannel: Channel = await this.channelService.findChannelById(
       channelId,
     );
@@ -684,7 +686,6 @@ export class DataService {
     }
     all.adminsNumber = all.admins.length;
     all.usersNumber = all.users.length;
-    // console.log(all);
     return all;
   }
 
@@ -725,31 +726,43 @@ export class DataService {
     const newChannel: Channel = await this.channelService.findChannelById(
       channelId,
     );
-    // console.log(newChannel);
     const newUser: User = await this.usersService.findOneById(myId);
-    // console.log(newUser);
     const chanelUser = await this.channelUserService.findbyChannelAndUser(
       newChannel,
       newUser,
     );
-    // console.log(chanelUser);
     return chanelUser;
   }
 
   async changeUserToBeAdminInChannel(channelId: number, myId: number) {
+    const channel: Channel = await this.channelService.findChannelById(
+      channelId,
+    );
+    if (!channel) return { status: 500, message: 'Channel not found' };
     const chanelUser = await this.findChannelUser(channelId, myId);
+    if (!chanelUser)
+      return { status: 500, message: 'This user is not found in this channel' };
     return await this.channelUserService.updateToBeAdmin(chanelUser.id);
   }
 
   async changeAdminToBeUserInChannel(channelId: number, myId: number) {
+    const channel: Channel = await this.channelService.findChannelById(
+      channelId,
+    );
+    if (!channel) return { status: 500, message: 'Channel not found' };
     const chanelUser = await this.findChannelUser(channelId, myId);
+    if (!chanelUser)
+      return { status: 500, message: 'This user is not found in this channel' };
     return await this.channelUserService.updateToBeUser(chanelUser.id);
   }
 
   async kickUserFormChannelConversation(channelId: number, myId: number) {
+    const channel: Channel = await this.channelService.findChannelById(
+      channelId,
+    );
+    if (!channel) return { status: 500, message: 'Channel not found' };
     const conversation: Conversation =
       await this.conversationService.findConversationOfChannel(channelId);
-    // console.log(conversation);
     const conversationUser =
       await this.conversationUserService.findConversationUser(
         conversation.id,
@@ -760,8 +773,17 @@ export class DataService {
   }
 
   async muteUserInChannel(channelId: number, myId: number, body) {
-    console.log('mute');
+    const channel: Channel = await this.channelService.findChannelById(
+      channelId,
+    );
+    if (!channel) return { status: 500, message: 'Channel not found' };
     const chanelUser = await this.findChannelUser(channelId, myId);
+    if (!chanelUser)
+      return { status: 500, message: 'This user is not found in this channel' };
+    if (chanelUser.ban == true) {
+      console.log('This user is already banned');
+      return { status: 500, message: 'This user is already banned' };
+    }
     chanelUser.mute = true;
     chanelUser.timeOfOperation = new Date();
     if (body.time > 0) chanelUser.period = body.time;
@@ -769,11 +791,13 @@ export class DataService {
   }
 
   async banUserInChannel(channelId: number, myId: number, body) {
-    console.log('ban');
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );
+    if (!channel) return { status: 500, message: 'Channel not found' };
     const chanelUser = await this.findChannelUser(channelId, myId);
+    if (!chanelUser)
+      return { status: 500, message: 'This user is not found in this channel' };
     chanelUser.ban = true;
     chanelUser.timeOfOperation = new Date();
     if (body.time > 0) chanelUser.period = body.time;
@@ -789,7 +813,10 @@ export class DataService {
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );
+    if (!channel) return { status: 500, message: 'Channel not found' };
     const chanelUser = await this.findChannelUser(channelId, myId);
+    if (!chanelUser)
+      return { status: 500, message: 'This user is not found in this channel' };
     await this.messageService.updateHiddenToBeFalse(
       channel.conversation.id,
       myId,
@@ -798,7 +825,13 @@ export class DataService {
   }
 
   async removeMuteUserInChannel(channelId: number, myId: number) {
+    const channel: Channel = await this.channelService.findChannelById(
+      channelId,
+    );
+    if (!channel) return { status: 500, message: 'Channel not found' };
     const chanelUser = await this.findChannelUser(channelId, myId);
+    if (!chanelUser)
+      return { status: 500, message: 'This user is not found in this channel' };
     return await this.channelUserService.removeMute(chanelUser.id);
   }
 

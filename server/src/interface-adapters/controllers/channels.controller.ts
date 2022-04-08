@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Post,
@@ -71,7 +72,8 @@ export class ChannelsController {
     try {
       return await this.dataService.listUsersOfChannelWitouhtMe(params.id);
     } catch (err) {
-      return err;
+      console.log(err);
+      throw new Error();
     }
   }
 
