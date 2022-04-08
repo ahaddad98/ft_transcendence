@@ -406,10 +406,15 @@ export class DataService {
       allChannels.map(async (newChannel) => {
         let status: string;
         const channelUser = await this.findChannelUser(newChannel.id, id);
-        // console.log('-----------------------------------');
         // console.log(channelUser);
-        // console.log('-----------------------------------');
-        if (channelUser && channelUser.ban == true) {
+        if (
+          channelUser &&
+          (channelUser.ban == true || channelUser.userType === 'owner')
+        ) {
+          console.log(
+            'dfk;jasklFJKLDSJKLFJKLADSJFKLDJSAKLFJDKLSAJKLFDJKLSAFJDKLSJAKLFDJSKLAJFADKLSJDFKLASKLJ',
+          );
+          // console.log(channelUser);
         } else {
           if (!channelUser) status = 'join';
           else if (channelUser.ban === true) status = 'blocked';
@@ -422,10 +427,12 @@ export class DataService {
             owner: newChannel.owner,
             status: status,
           };
+          console.log('-----------------------------------------------');
           arr.push(object);
         }
       }),
     );
+    console.log(arr);
     return arr;
   }
 
