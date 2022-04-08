@@ -616,12 +616,15 @@ export class DataService {
     const channelUser: ChannelUser =
       await this.channelUserService.findbyChannelAndUser(channel, user);
     if (!channelUser) {
-      console.log('wal a asahbi');
+      console.log('findMyChannel');
       throw UnauthorizedException;
       // return { status: 500, message: 'U dont have acces to this channel' };
     }
-    // if (!channel)
-    const object = { ...channel, myRole: channelUser.userType };
+    const object = {
+      ...channel,
+      myRole: channelUser.userType,
+      mute: channelUser.mute,
+    };
     return object;
   }
 
