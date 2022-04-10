@@ -12,7 +12,7 @@ import {
   Notification,
   NotificationType,
 } from 'src/core/entities/notification.entity';
-import { fullImagePath } from '../helpers/image-storage';
+import { fullImagePath, isFileExtensionSafe } from '../helpers/image-storage';
 import {
   Conversation,
   ConversationType,
@@ -250,11 +250,15 @@ export class DataService {
     myId: number,
   ) {
     if (file || body.username) {
-      if (file)
-        await this.usersService.updateAvatar(
-          myId,
-          fullImagePath(file.filename),
-        );
+      if (file) {
+        const check = await isFileExtensionSafe(file.path);
+        if (check == true) {
+          await this.usersService.updateAvatar(
+            myId,
+            fullImagePath(file.filename),
+          );
+        } else console.log('file is not safe');
+      }
       if (body.username)
         await this.usersService.updateUsername(myId, body.username);
       return { message: 'Profile is updated' };
@@ -263,6 +267,8 @@ export class DataService {
 
   async updateAvatar(file: Express.Multer.File, req) {
     if (!file) return { message: 'avatar not updated' };
+    const check = await isFileExtensionSafe(file.path);
+    if (check == false) return { message: 'file is not safe' };
     await this.usersService.updateAvatar(
       req.user.id,
       fullImagePath(file.filename),
