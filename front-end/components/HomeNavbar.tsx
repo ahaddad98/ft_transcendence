@@ -163,7 +163,7 @@ const HomeNavbar = (props) => {
           </div>
         </div>
       </nav>
-      <div className="invisible lg:visible flex flex-wrap bg-orange-400">
+      <div className="hidden lg:block flex flex-wrap bg-orange-400">
         <section className="relative mx-auto">
           <nav className="flex justify-between bg-gradient-to-r from-white via-orange-500 to-orange-300 text-white w-screen">
             <div className="px-20  py-2 flex w-full items-center">
