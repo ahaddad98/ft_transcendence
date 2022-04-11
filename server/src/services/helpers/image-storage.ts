@@ -2,6 +2,10 @@ import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 
 import path = require('path');
+import { readChunkSync } from 'read-chunk';
+
+import fs = require('fs');
+import imageType = require('image-type');
 
 type validMimeType = 'image/png' | 'image/jpg' | 'image/jpeg';
 
@@ -31,4 +35,15 @@ export const fullImagePath = (filename: string): string => {
   const imagesFolderPath = process.cwd() + '/src/avatar';
   const fullPath = imagesFolderPath + '/' + filename;
   return fullPath;
+};
+
+export const isFileExtensionSafe = async (path: string) => {
+  if (imageType(fs.readFileSync(path))) return true;
+  else {
+    fs.unlink(path, (err) => {
+      if (err) throw err;
+      console.log('file is deleted');
+    });
+    return false;
+  }
 };
