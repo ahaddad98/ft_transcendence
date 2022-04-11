@@ -10,7 +10,7 @@ const ChatConversation = (props) => {
     <div className="h-screen justify-center">
       <div>{props.data && <HomeNavbar data={props.data} />}</div>
       <div
-        className="mt-10 container mx-auto shadow-lg rounded-lg"
+        className="lg:mt-10 container mx-auto shadow-lg rounded-lg"
         style={{ height: "80%" }}
       >
         <div className="px-5 py-5 flex justify-between items-center  border-b-2">
