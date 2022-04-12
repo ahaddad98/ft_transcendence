@@ -80,10 +80,10 @@ export class UsersController {
   async getNextUser() {
     return await this.userService.getNextUser();
   }
-
-  @Get('/random/')
-  async getRandomUser() {
-    return await this.userService.getRandomUser();
+  
+  @Get('/random/:id')
+  async getRandomUser(@Param('id') id) {
+    return await this.userService.getRandomUser(id);
   }
 
   @Delete(':id')

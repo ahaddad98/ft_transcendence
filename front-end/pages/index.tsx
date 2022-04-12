@@ -35,9 +35,7 @@ const App = ({data}) => {
       </div>
       <div className="button-resp">
         <div>
-      <Link href="/about">
-        SIGN IN
-        </Link>
+        <SignIN />
         </div>
       </div>
       </MediaQuery> 

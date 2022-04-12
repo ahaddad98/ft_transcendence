@@ -83,18 +83,10 @@ const Home = () => {
   return (
     <div>
       <HomeNavbar data={data}></HomeNavbar>
-      <MediaQuery minWidth={1060}>
-      <div className="flex flex-row">
+      <div className="flex flex-col lg:flex-row">
         {stats && <LeaderBoard data={stats} />}
         {history && <HistoryGame data={history} />}
       </div>
-    </MediaQuery>
-      <MediaQuery maxWidth={1060}>
-      <div className="flex flex-col">
-        {stats && <LeaderBoard data={stats} />}
-        {history && <HistoryGame data={history} />}
-      </div>
-    </MediaQuery>
       {channel && <ChannlesList data={channel} />}
     </div>
   );
