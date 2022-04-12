@@ -1,3 +1,22 @@
+/* To Do List
+
+responsive Channel
+input auth
+change membres in channel style
+notification
+sockets
+responsive profile 80%
+view all in hime channels
+limit 3 in home channel in leaderboeard and hg and list channels
+responsive message chats
+add block users
+style channel when mute users
+sign out
+remove edit profile 
+edit profile like a modal
+add bottton "add friend" in users profile
+*/
+
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -10,8 +29,7 @@ import { Avatar, CssBaseline } from "@mui/material";
 import MediaQuery, { useMediaQuery } from "react-responsive";
 import avat from "../public/avatar.svg";
 import Navbar from "./Navbar";
-//contact@1genei.com
-//
+
 const HomeNavbar = (props) => {
   const [isopen, setIsopen] = React.useState(false);
   const [clickmenu, setClickmenu] = React.useState(false);
@@ -19,23 +37,27 @@ const HomeNavbar = (props) => {
   return (
     <>
       <nav className="lg:hidden bg-white shadow-lg bg-gradient-to-r from-white via-orange-500 to-orange-300 h-20">
-        <div className="max-w-6xl mx-auto px-4">
+        <div
+          className="max-w-6xl mx-auto px-4"
+        >
           <div className="relative flex justify-between">
             <div className="mr-4">
               <div className="mt-3">
-                <button className="outline-none menu-button"
-                onClick={()=>{
-                  setClickimage(!clickimage)
-                  setClickmenu(false);
-                }}>
+                <div
+                  className="outline-none menu-button cursor-pointer"
+                  onClick={() => {
+                    setClickimage(!clickimage);
+                    setClickmenu(false);
+                  }}
+                >
                   <img
                     id=""
                     src={props.data.avatar}
                     className="h-10 w-auto rounded-full"
                     alt=""
                   />
-                </button>
-                {clickimage&& (
+                </div>
+                {clickimage && (
                   <div
                     className="flex flex-col justify-around justify-items-center absolute left-0 py-2 mt-2 bg-white rounded-md shadow-xl  w-64 h-auto md:w-600 "
                     style={{ height: "150px" }}
@@ -68,13 +90,15 @@ const HomeNavbar = (props) => {
             </div>
             <div className="mr-4">
               <div className="mt-3">
-                <button className="outline-none menu-button">
+                <div className="outline-none menu-button cursor-pointer">
+                {
+                  !clickmenu && 
                   <svg
-                    className="w-10 h-10 text-gray-500"
+                    className="w-10 h-10 text-blue-500"
                     fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
+                    // strokeLinecap="round"
+                    // strokeLinejoin="round"
+                    // strokeWidth="2"
                     viewBox="0 00 24 24"
                     stroke="currentColor"
                     onClick={() => {
@@ -84,7 +108,26 @@ const HomeNavbar = (props) => {
                   >
                     <path d="m4 6h16M4 12h16M4 18h16"></path>
                   </svg>
-                </button>
+                }
+                {
+                  clickmenu && 
+                  <svg
+                    className="w-10 h-10 text-blue-500"
+                    fill="none"
+                    // strokeLinecap="round"
+                    // strokeLinejoin="round"
+                    // strokeWidth="2"
+                    viewBox="0 00 24 24"
+                    stroke="currentColor"
+                    onClick={() => {
+                      setClickmenu(!clickmenu);
+                      setClickimage(false);
+                    }}
+                  >
+                    <path d="m4 6h16M4 12h16M4 18h16"></path>
+                  </svg>
+                }
+                </div>
                 {clickmenu && (
                   <div
                     className="flex flex-col justify-around justify-items-center absolute right-0 py-2 mt-2 bg-white rounded-md shadow-xl  w-64 h-auto md:w-600 "
