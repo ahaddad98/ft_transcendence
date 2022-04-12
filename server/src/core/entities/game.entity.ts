@@ -66,9 +66,9 @@ export class Game {
   @Column({ default: '' })
   json_map: string;
 
-  @Column({ default: 0 })
+  @Column({ default: 0,nullable:true })
   score_user1?: number;
 
-  @Column({ default: 0 })
+  @Column({ default: 0 ,nullable:true})
   score_user2?: number;
 }

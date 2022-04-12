@@ -184,7 +184,7 @@ const HomeNavbar = (props) => {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/playgame">
+                    <Link href="/game">
                       <p className="hover:text-gray-200 cursor-pointer">
                         PlayGame
                       </p>

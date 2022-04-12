@@ -4,16 +4,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from '../user/user.service';
 import { Game } from 'src/core/entities/game.entity';
 import { User } from 'src/core/entities/user.entity';
+import { Connection } from 'typeorm';
+// export * from './game.module';
 
 @Injectable()
 export class GameService extends TypeOrmCrudService<Game> {
-  repository: any;
-  userservice: UserService;
+  // repository: any;
+  // userservice: UserService;
 
-  constructor(@InjectRepository(Game) repository, userservice: UserService) {
-    super(repository);
-    this.repository = repository;
-    this.userservice = userservice;
+  constructor(@InjectRepository(Game) readonly repository, readonly userservice: UserService,readonly connection: Connection) {
+      super(repository);
+    // this.repository = repository;
+    // this.userservice = userservice;
   }
 
   async findAll(): Promise<Game[]> {
@@ -29,13 +31,14 @@ export class GameService extends TypeOrmCrudService<Game> {
     game.userId1 = await this.userservice.getIdbyName(username1);
     game.userId2 = await this.userservice.getIdbyName(username2);
     game.user1 = await this.userservice.findOneById(game.userId1);
+    game.user2 = await this.userservice.findOneById(game.userId2);
     game.created_at = new Date();
     game.updated_at = new Date();
     game.is_accepted_by_user2 = false;
     game.is_rejected_by_user2 = false;
     game.is_finished = false;
     game.is_started = false;
-    game.price = 0;
+    game.price = 100;
     game.map = map;
     return await this.repository.save(game);
   }
@@ -83,7 +86,7 @@ export class GameService extends TypeOrmCrudService<Game> {
     return user;
   }
 
-  async rejectInvitation(id: number, idgame: number): Promise<Game> {
+  async rejectInvitation(id: number, idgame: number) {
     const user = await this.repository
       .createQueryBuilder('game')
       .leftJoinAndSelect('game.user1', 'user1')
@@ -100,7 +103,11 @@ export class GameService extends TypeOrmCrudService<Game> {
         TimeEnd: new Date(),
       })
       .execute();
-    return user;
+    return await this.repository.createQueryBuilder('game')
+      .leftJoinAndSelect('game.user1', 'user1')
+      .leftJoinAndSelect('game.user2', 'user2')
+      .where('game.id = :id', { id: idgame })
+      .getOne();
   }
 
   async currentGames() {
@@ -119,12 +126,11 @@ export class GameService extends TypeOrmCrudService<Game> {
     // console.log(user);
     if (user.length > 0) {
       for (let i = 0; i < user.length; i++) {
-        // console.log(user[i].user1.username);
-        if (user[i].user2.name !== null) {
+        if (user[i].user2 !== null) {
           let game = {
             key: user[i].id,
-            User1: [user[i].user1.name, user[i].user1.image],
-            User2: [user[i].user2.name, user[i].user2.image],
+            User1: [user[i].user1.username, user[i].user1.avatar],
+            User2: [user[i].user2.username, user[i].user2.avatar],
             Time: user[i].TimeBegin,
           };
           games.push(game);
@@ -150,8 +156,78 @@ export class GameService extends TypeOrmCrudService<Game> {
     return user;
   }
 
-  async finishGame(id: number, winner: number, json: string): Promise<Game> {
-    this.repository
+  async quitMatch(id: number, winner: number, json: string) {
+
+    console.log("idof Match", id);
+    const res = await this.repository
+      .createQueryBuilder('game')
+      .leftJoinAndSelect('game.user1', 'user1')
+      .leftJoinAndSelect('game.user2', 'user2')
+      .where('game.id = :id', { id: id })
+      .andWhere('game.is_accepted_by_user2 = :is_accepted_by_user2',
+        {
+          is_accepted_by_user2: true,
+        })
+      .andWhere('game.is_finished = :is_finished', { is_finished: false })
+      .andWhere('game.is_started = :is_started', { is_started: true })
+      .update({
+        is_finished: true,
+        TimeEnd: new Date(),
+        winner: winner,
+        price: 100,
+        json_map: json,
+        // score_user2: score2
+      })
+      .execute()
+      .then(res => {
+        return (res);
+      })
+    if (res.affected !== 1)
+      return null;
+    // console.log(res.affected);
+    if (res.affected === 1) {
+      const game = await this.repository
+        .createQueryBuilder('game')
+        .leftJoinAndSelect('game.user1', 'user1')
+        .leftJoinAndSelect('game.user2', 'user2')
+        .where('game.id = :id', { id: id })
+        .getOne();
+      const users = await this.userservice.userRepositor.findOne({ id: winner });
+      users.wins = users.wins + 1;
+      if (users.wins % 5 == 0)
+        users.level = users.level + 1;
+      // console.log(game);
+      await this.userservice.userRepositor.save(users);
+      if (game.user1.id !== game.winner) {
+        let user: any = await this.userservice.userRepositor.findOne({
+          id: game.user1.id,
+        });
+        user.quit = user.quit + 1;
+        await this.userservice.userRepositor.save(user);
+      }
+      else if (game.user2.id !== game.winner) {
+        let user: any = await this.userservice.userRepositor.findOne({
+          id: game.user2.id,
+        });
+        user.quit = user.quit + 1;
+        await this.userservice.userRepositor.save(user);
+      }
+      return await game;
+    }
+
+
+
+  }
+
+  // connection : Connection;
+
+  public getConnection() {
+    console.log(this.connection);
+    // return this.connection.getRepository(Game);
+  }
+
+  public async finishGame(id: number, winner: number, json: string, score1: number, score2: number): Promise<Game> {
+    const res = await this.connection.getRepository(Game)
       .createQueryBuilder('game')
       .leftJoinAndSelect('game.user1', 'user1')
       .leftJoinAndSelect('game.user2', 'user2')
@@ -167,33 +243,46 @@ export class GameService extends TypeOrmCrudService<Game> {
         winner: winner,
         price: 100,
         json_map: json,
+        score_user1: score1,
+        score_user2: score2
       })
-      .execute();
-    const game = await this.repository
-      .createQueryBuilder('game')
-      .leftJoinAndSelect('game.user1', 'user1')
-      .leftJoinAndSelect('game.user2', 'user2')
-      .where('game.id = :id', { id: id })
-      .getOne();
-    const users = await this.userservice.userRepositor.findOne({ id: winner });
-    users.wins = users.wins + 1;
-    await this.userservice.userRepositor.save(users);
-    // console.log(game);
-    if (game.user1.id !== winner) {
-      let user: any = await this.userservice.userRepositor.findOne({
-        id: game.user1.id,
+      .execute().
+      then(res => {
+        return res;
       });
-      user.loses = user.loses + 1;
-      await this.userservice.userRepositor.save(user);
-    } else {
-      let user: any = await this.userservice.userRepositor.findOne({
-        id: game.user2.id,
-      });
-      user.loses = user.loses + 1;
-      await this.userservice.userRepositor.save(user);
-    }
+    // console.log(res);
+    if (res.affected !== 1)
+      return null;
+    if (res.affected === 1) 
+    {
+      const game = await this.repository
+        .createQueryBuilder('game')
+        .leftJoinAndSelect('game.user1', 'user1')
+        .leftJoinAndSelect('game.user2', 'user2')
+        .where('game.id = :id', { id: id })
+        .getOne();
+      const users = await this.userservice.userRepositor.findOne({ id: winner });
+      users.wins = users.wins + 1;
+      if (users.wins % 5 == 0)
+        users.level = users.level + 1;
+      await this.userservice.userRepositor.save(users);
 
-    return await game;
+      if (game.user1.id !== winner) {
+        let user: any = await this.userservice.userRepositor.findOne({
+          id: game.user1.id,
+        });
+        user.loses = user.loses + 1;
+        await this.userservice.userRepositor.save(user);
+      } else if(game.user2.id !== winner) {
+        let user: any = await this.userservice.userRepositor.findOne({
+          id: game.user2.id,
+        });
+        user.loses = user.loses + 1;
+        await this.userservice.userRepositor.save(user);
+      }
+
+      return await game;
+    }
   }
 
   async watch(id: number): Promise<Game> {
@@ -213,11 +302,12 @@ export class GameService extends TypeOrmCrudService<Game> {
 
   //matchmaking
   async matchmaking(id: number, map: string): Promise<Game> {
+    console.log("hello guys");
     const user = await this.repository
       .createQueryBuilder('game')
       .leftJoinAndSelect('game.user1', 'user1')
       .leftJoinAndSelect('game.user2', 'user2')
-      .where('game.user2.id IS NULL', {})
+      .where('game.user2.id IS NULL')
       .andWhere('game.is_accepted_by_user2 = :is_accepted_by_user2', {
         is_accepted_by_user2: false,
       })
@@ -229,6 +319,7 @@ export class GameService extends TypeOrmCrudService<Game> {
     if (user) {
       let t = await this.repository
         .createQueryBuilder('game')
+        .where('game.id = :id', { id: user.id })
         .update({
           is_accepted_by_user2: true,
           is_started: true,
@@ -319,6 +410,7 @@ export class GameService extends TypeOrmCrudService<Game> {
           avatar: game[i].user2.avatar,
           score: game[i].score_user2,
           username: game[i].user2.username,
+
           id: game[i].user2.id,
         },
       };

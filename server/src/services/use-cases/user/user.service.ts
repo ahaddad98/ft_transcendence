@@ -70,13 +70,21 @@ export class UserService {
     return await this.userRepository.findOne({ is_online: true });
   }
 
-  async getRandomUser(): Promise<User> {
+  async getRandomUser(myId: string): Promise<User> {
     let ids: number[] = await this.userRepository
       .find({ is_online: true })
       .then((users) => {
         let ids = [];
         users.forEach((user) => {
-          ids.push(user.id);
+          if (parseInt(myId) !== user.id) 
+          {
+            if(myId === undefined)
+            {
+              return null;
+            }
+            // console.log(user.id +' '+myId )
+            ids.push(user.id);
+          }
         });
         return ids;
       });
@@ -85,6 +93,7 @@ export class UserService {
     // await this.connection.getRepository(User).findOne()
     return await this.userRepository.findOne({ id: ids[random] });
   }
+  
   async leaderboard() {
     const user = await this.userRepository
       .createQueryBuilder('user')
