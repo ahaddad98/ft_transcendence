@@ -29,16 +29,19 @@ const PrivateConv = ({ socket, ...props }) => {
   };
   const [msg, setMsg] = useState("");
   useEffect(() => {
-    fetchconsversation()
-    .then((res) => {
-      if (res.data) {
-        setConversation(res.data);
-        console.log(conversation);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    if (!conversation)
+    {
+      fetchconsversation()
+      .then((res) => {
+        if (res.data) {
+          setConversation(res.data);
+          console.log(conversation);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
   }, []);
 
   useEffect(() => {
