@@ -3,7 +3,6 @@ import HomeNavbar from "./HomeNavbar";
 import PrivateConv from "./PrivateConv";
 
 const ChatConversation = (props) => {
-  console.log(props);
   const [clickconv, setClickconv] = useState(false);
   const [clickconvresp, setClickconvresp] = useState(false);
   const [convid, setConvid] = useState(-1);
@@ -15,51 +14,56 @@ const ChatConversation = (props) => {
         style={{ height: "80%" }}
       >
         <div className="px-5 py-5 flex justify-between items-center  border-b-2">
-          <div className="font-semibold text-2xl text-orange-500"
-          onClick={()=>{
-            setClickconvresp(false)
-          }}>
+          <div
+            className="font-semibold text-2xl text-orange-500"
+            onClick={() => {
+              setClickconvresp(false);
+            }}
+          >
             GoingChat
           </div>
           <div className="lg:hidden font-semibold text-2xl text-orange-500">
-          <button className="outline-none menu-button"
-                onClick={()=>{
-                  setClickconvresp(true)
-                }}>
-            <img src="/members.svg">
-            </img>
+            <button
+              className="outline-none menu-button"
+              onClick={() => {
+                setClickconvresp(true);
+              }}
+            >
+              <img src="/members.svg"></img>
             </button>
-            {clickconvresp&& (
-                  <div
-                    className=" absolute right-0 py-2 mt-2 bg-white rounded-md shadow-xl  w-full  md:w-600 "
-                    style={{ height: "500px" }}
-                  >
-                    {props.conversations.map((stat, key) => {
-                    return (
-                      <div
-                        className="flex flex-row py-4 px-2 items-center border-b-2"
-                        key={key}
-                        onClick={()=>{
-                          setClickconv(!clickconv)
-                          setConvid(stat.id)
-                        }}
-                      >
-                        <div className="w-1/4">
-                          <img
-                            src={stat.user.avatar}
-                            className="object-cover h-12 w-12 rounded-full"
-                            alt=""
-                          />
-                        </div>
-                        <div className="w-full">
-                          {stat.user.username}
-                          <div className="text-lg font-semibold"></div>
-                          <span className="text-gray-500">{stat.user.message}</span>
-                        </div>
+            {clickconvresp && (
+              <div
+                className=" absolute right-0 py-2 mt-2 bg-white rounded-md shadow-xl  w-full  md:w-600 "
+                style={{ height: "500px" }}
+              >
+                {props.conversations.map((stat, key) => {
+                  return (
+                    <div
+                      className="flex flex-row py-4 px-2 items-center border-b-2"
+                      key={key}
+                      onClick={() => {
+                        setClickconv(!clickconv);
+                        setConvid(stat.id);
+                      }}
+                    >
+                      <div className="w-1/4">
+                        <img
+                          src={stat.user.avatar}
+                          className="object-cover h-12 w-12 rounded-full"
+                          alt=""
+                        />
                       </div>
-                    );
-                  })}
-                    {/* <div className="flex justify-around justify-items-center block px-4 py-2 text-sm text-white text-gray-700 hover:bg-gradient-to-r hover:from-white hover:via-orange-500 hover:to-orange-300 hover:text-white">
+                      <div className="w-full">
+                        {stat.user.username}
+                        <div className="text-lg font-semibold"></div>
+                        <span className="text-gray-500">
+                          {stat.user.message}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+                {/* <div className="flex justify-around justify-items-center block px-4 py-2 text-sm text-white text-gray-700 hover:bg-gradient-to-r hover:from-white hover:via-orange-500 hover:to-orange-300 hover:text-white">
                       <button
                         type="button"
                         className="bg-gradient-to-r from-orange-500 to-orange-300 hover:from-orange-100 hover:to-yellow-500 w-32 h-10"
@@ -77,14 +81,14 @@ const ChatConversation = (props) => {
                         Log out
                       </button>
                     </div> */}
-                  </div>
-                )}
+              </div>
+            )}
           </div>
         </div>
         {/* <div className="lg:hidden  px-5 py-5 flex justify-between items-center  border-b-2">
         </div> */}
         <div
-          className="flex flex-col justify-between"
+          className="flex  justify-between"
           style={{ height: "100%" }}
         >
           <div
@@ -96,9 +100,9 @@ const ChatConversation = (props) => {
                 <div
                   className="flex flex-row py-4 px-2 items-center border-b-2"
                   key={key}
-                  onClick={()=>{
-                    setClickconv(!clickconv)
-                    setConvid(stat.id)
+                  onClick={() => {
+                    setClickconv(!clickconv);
+                    setConvid(stat.id);
                   }}
                 >
                   <div className="w-1/4">
@@ -117,14 +121,8 @@ const ChatConversation = (props) => {
               );
             })}
           </div>
-            {
-              convid !== -1 && 
-              <PrivateConv convid={convid}/>
-            }
-            {
-              convid === -1 && props.id && 
-              <PrivateConv convid={props.id}/>
-            }
+          {convid !== -1 && props.data && <PrivateConv convid={convid} data={props.data}/>}
+          {convid === -1 && props.data && props.id && <PrivateConv convid={props.id} data={props.data}/>}
         </div>
       </div>
     </div>

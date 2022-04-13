@@ -6,6 +6,7 @@ import ChannlesList from "../components/ChannelsList";
 import HistoryGame from "../components/HistoryGame";
 import ListUseres from "../components/Listuseres";
 import MediaQuery, { useMediaQuery } from "react-responsive";
+import { io, Socket } from "socket.io-client";
 
 const Home = () => {
   const [data, setData] = useState({});

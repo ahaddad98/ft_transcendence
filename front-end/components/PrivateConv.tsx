@@ -1,10 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Messagemapconv from "./Messagemapconv";
+import { io, Socket } from "socket.io-client";
 
 const PrivateConv = (props) => {
-  console.log(props);
-
+  const [sock, setsock] = useState(null);
+  let socket = io("http://localhost:3001");
+  useEffect(() => {
+    socket.emit("addUser", props.data.id);
+  }, [socket]);
   const [conversation, setConversation] = useState();
   const fetchconsversation = async () => {
     const response = await axios.get(
@@ -44,6 +48,17 @@ const PrivateConv = (props) => {
       .then((res) => {
         console.log(res);
       });
+    if (conversation)
+    {
+      console.log(conversation);
+      
+      socket.emit("sendMessage", {
+        senderId: props.data.id,
+        message: msg,
+      });
+    }
+
+    // setMsg("");
   };
   return (
     <div
@@ -78,11 +93,12 @@ const PrivateConv = (props) => {
           </div>
           <div className="flex-grow ml-4">
             <div className="relative w-full">
-              <form onSubmit={sendmsg}>
+              <form onSubmit={sendmsg} id="myForm">
                 <input
                   type="text"
                   className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
                   onChange={(e) => setMsg(e.target.value)}
+                  // value={"amine"}
                 />
               </form>
             </div>
