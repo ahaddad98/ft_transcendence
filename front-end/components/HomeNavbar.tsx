@@ -1,14 +1,14 @@
 /* To Do List
 
-responsive Channel
-input auth
-change membres in channel style
-notification
-sockets
-responsive profile 80%
-view all in hime channels
-limit 3 in home channel in leaderboeard and hg and list channels
-responsive message chats
+responsive Channel la
+input two factor
+change membres in channel style la
+notification la
+sockets fej
+responsive profile 80% la
+view all in home channels
+limit 3 in home channel in leaderboeard and hg and list channels 
+responsive message chats 
 add block users
 style channel when mute users
 sign out

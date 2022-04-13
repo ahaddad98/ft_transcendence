@@ -28,6 +28,7 @@ const PrivateConv = (props) => {
   }, [props.mychannels]);
   const [msg, setMsg] = useState("");
   const sendmsg = async (e) => {
+    
     e.preventDefault();
     await axios
       .post(
@@ -44,6 +45,7 @@ const PrivateConv = (props) => {
       .then((res) => {
         console.log(res);
       });
+      setMsg('');
   };
   return (
     <div
@@ -78,11 +80,12 @@ const PrivateConv = (props) => {
           </div>
           <div className="flex-grow ml-4">
             <div className="relative w-full">
-              <form onSubmit={sendmsg}>
+              <form onSubmit={sendmsg} id="myForm">
                 <input
                   type="text"
                   className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
                   onChange={(e) => setMsg(e.target.value)}
+                  // value={"amine"}
                 />
               </form>
             </div>
