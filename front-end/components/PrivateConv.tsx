@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Messagemapconv from "./Messagemapconv";
 import { io, Socket } from "socket.io-client";
 
-const PrivateConv = ({socket, ...props}) => {
+const PrivateConv = ({ socket, ...props }) => {
   useEffect(() => {
     socket.emit("addUser", props.data.id);
   }, [socket]);
@@ -17,6 +17,19 @@ const PrivateConv = ({socket, ...props}) => {
     );
     return response;
   };
+  useEffect(() => {
+    socket.on("newMessage", (data) => {
+      fetchconsversation()
+        .then((res) => {
+          if (res.data) {
+            setConversation(res.data);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+  }, []);
   const [msg, setMsg] = useState("");
   useEffect(() => {
     console.log("mamiennnasd");
@@ -29,7 +42,7 @@ const PrivateConv = ({socket, ...props}) => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [socket]);
   const sendmsg = async (e) => {
     e.preventDefault();
     await axios
@@ -48,7 +61,6 @@ const PrivateConv = ({socket, ...props}) => {
         console.log(res);
       });
     if (conversation) {
-      
       fetchconsversation()
         .then((res) => {
           if (res.data) {
@@ -64,7 +76,7 @@ const PrivateConv = ({socket, ...props}) => {
         receiverId: 62196,
       });
     }
-    setMsg("")
+    setMsg("");
   };
   return (
     <div
