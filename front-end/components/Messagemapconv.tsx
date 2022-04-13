@@ -1,6 +1,8 @@
 import React from "react";
 
 const Messagemapconv = (props) => {
+  // console.log(props);
+  
   return (
     <>
       {props.conversation.map((stat, key) => {

@@ -48,8 +48,12 @@ export class ChatGateway
 
   @SubscribeMessage('sendMessage')
   handleSendMessage(client: any, payload: any) {
+    // console.log(payload);
     console.log('msg server');
-    const user = this.getUser(payload.receiverId);
+    const user = this.getUser(payload.receiver.id);
+    console.log('--------------------');
+    console.log(payload.receiver);
+    console.log('--------------------');
     console.log('user');
     console.log(this.users);
     this.server.to(user.socketId).emit('newMessage', payload);

@@ -7,7 +7,7 @@ const PrivateConv = ({ socket, ...props }) => {
   useEffect(() => {
     socket.emit("addUser", props.data.id);
   }, [socket]);
-  const [conversation, setConversation] = useState();
+  const [conversation, setConversation] = useState([]);
   const fetchconsversation = async () => {
     const response = await axios.get(
       `http://localhost:3001/conversations/${props.convid}/messages`,
@@ -17,32 +17,40 @@ const PrivateConv = ({ socket, ...props }) => {
     );
     return response;
   };
-  useEffect(() => {
-    socket.on("newMessage", (data) => {
-      fetchconsversation()
-        .then((res) => {
-          if (res.data) {
-            setConversation(res.data);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    });
-  }, []);
+  const [conversationdata, setConversationdata] = useState();
+  const fetchconsversationdata = async () => {
+    const response = await axios.get(
+      `http://localhost:3001/conversations/${props.convid}`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
+    return response;
+  };
   const [msg, setMsg] = useState("");
   useEffect(() => {
-    console.log("mamiennnasd");
     fetchconsversation()
-      .then((res) => {
-        if (res.data) {
-          setConversation(res.data);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [socket]);
+    .then((res) => {
+      if (res.data) {
+        setConversation(res.data);
+        console.log(conversation);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.on("newMessage", (data) => {
+      const me = props.data;
+      const sender = data.sender;
+      const receiver = data.receiver;
+      const content = data.message;
+      const object = { me, sender, receiver, content };
+      setConversation((conversation) => [...conversation, object]);
+    });
+  }, []);
   const sendmsg = async (e) => {
     e.preventDefault();
     await axios
@@ -71,9 +79,9 @@ const PrivateConv = ({ socket, ...props }) => {
           console.log(err);
         });
       socket.emit("sendMessage", {
-        senderId: 62296,
+        sender: props.data,
         message: msg,
-        receiverId: 62196,
+        receiver: props.reciver,
       });
     }
     setMsg("");
