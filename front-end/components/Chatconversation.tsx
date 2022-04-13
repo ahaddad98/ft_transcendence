@@ -3,7 +3,6 @@ import HomeNavbar from "./HomeNavbar";
 import PrivateConv from "./PrivateConv";
 
 const ChatConversation = (props) => {
-  console.log(props);
   const [clickconv, setClickconv] = useState(false);
   const [clickconvresp, setClickconvresp] = useState(false);
   const [convid, setConvid] = useState(-1);
@@ -122,8 +121,8 @@ const ChatConversation = (props) => {
               );
             })}
           </div>
-          {convid !== -1 && <PrivateConv convid={convid} />}
-          {convid === -1 && props.id && <PrivateConv convid={props.id} />}
+          {convid !== -1 && props.data && <PrivateConv convid={convid} data={props.data}/>}
+          {convid === -1 && props.data && props.id && <PrivateConv convid={props.id} data={props.data}/>}
         </div>
       </div>
     </div>

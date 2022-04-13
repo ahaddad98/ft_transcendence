@@ -1,10 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Messagemapconv from "./Messagemapconv";
+import { io, Socket } from "socket.io-client";
 
 const PrivateConv = (props) => {
-  console.log(props);
-
+  const [sock, setsock] = useState(null);
+  let socket = io("http://localhost:3001");
+  useEffect(() => {
+    socket.emit("addUser", props.data.id);
+  }, [socket]);
   const [conversation, setConversation] = useState();
   const fetchconsversation = async () => {
     const response = await axios.get(
@@ -28,7 +32,6 @@ const PrivateConv = (props) => {
   }, [props.mychannels]);
   const [msg, setMsg] = useState("");
   const sendmsg = async (e) => {
-    
     e.preventDefault();
     await axios
       .post(
@@ -45,7 +48,17 @@ const PrivateConv = (props) => {
       .then((res) => {
         console.log(res);
       });
-      setMsg('');
+    if (conversation)
+    {
+      console.log(conversation);
+      
+      socket.emit("sendMessage", {
+        senderId: props.data.id,
+        message: msg,
+      });
+    }
+
+    setMsg("");
   };
   return (
     <div
