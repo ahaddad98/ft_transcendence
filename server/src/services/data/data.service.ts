@@ -346,6 +346,15 @@ export class DataService {
     return messages;
   }
 
+  async findConversationById(id: number) {
+    const conversation = await this.conversationService.findConversationById(id);
+    const usersOfConversation = await this.conversationUserService.findUsersOfConversations(id);
+    let arrayOfUsers = [];
+    usersOfConversation.map((user) => arrayOfUsers.push(user.user));
+    let conversationWithUsers = {users: arrayOfUsers,conversation};
+    return conversationWithUsers;
+  }
+
   async getallMessageOfoneOfmyConversations(conversationId: number) {
     const conversation: Conversation =
       await this.conversationService.findConversationById(conversationId);

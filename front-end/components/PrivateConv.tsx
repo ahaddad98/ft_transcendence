@@ -58,7 +58,7 @@ const PrivateConv = (props) => {
       });
     }
 
-    setMsg("");
+    // setMsg("");
   };
   return (
     <div

@@ -39,7 +39,7 @@ export class ConversationsController {
   @UseGuards(JwtAuthGuard)
   async findConversation(@Param() params: ConversationParams) {
     try {
-      return await this.conversationService.findConversationById(params.id);
+      return await this.dataService.findConversationById(params.id);
     } catch (err) {
       return err;
     }
