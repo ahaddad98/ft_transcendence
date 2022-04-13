@@ -26,7 +26,7 @@ export class ChatGateway
   };
 
   private getUser = (userId: number) => {
-      return this.users.find(user => user.userId === userId);
+      return this.users.find(user => user.userId == userId);
   };
 
   @WebSocketServer() server: Server;
@@ -48,12 +48,16 @@ export class ChatGateway
 
   @SubscribeMessage('sendMessage')
   handleSendMessage(client: any, payload: any) {
+    console.log('msg server');
     const user = this.getUser(payload.receiverId);
+    console.log('user');
+    console.log(this.users);
     this.server.to(user.socketId).emit('newMessage', payload);
   }
   
   @SubscribeMessage('addUser')
   handleUser(client: any, payload: any) {
+    console.log('adduser server');
     this.addUser(payload, client.id);
     return this.users;
   }

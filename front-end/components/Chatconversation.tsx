@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import HomeNavbar from "./HomeNavbar";
 import PrivateConv from "./PrivateConv";
+import { io, Socket } from "socket.io-client";
 
 const ChatConversation = (props) => {
+  let socket = io("http://localhost:3001");
   const [clickconv, setClickconv] = useState(false);
   const [clickconvresp, setClickconvresp] = useState(false);
   const [convid, setConvid] = useState(-1);
@@ -121,8 +123,8 @@ const ChatConversation = (props) => {
               );
             })}
           </div>
-          {convid !== -1 && props.data && <PrivateConv convid={convid} data={props.data}/>}
-          {convid === -1 && props.data && props.id && <PrivateConv convid={props.id} data={props.data}/>}
+          {convid !== -1 && props.data && <PrivateConv convid={convid} data={props.data} socket={socket}/>}
+          {convid === -1 && props.data && props.id && <PrivateConv convid={props.id} data={props.data} socket={socket}/>}
         </div>
       </div>
     </div>
