@@ -8,8 +8,8 @@ const ListuseresCompon = (props) => {
     <ListUseres
       data={props.data}
       socket={props.socket}
-    //   fetchData={props.fetchData}
-    //   setData={props.setData}
+      fetchData={props.fetchData}
+      setData={props.setData}
       mydata={props.mydata}
     />
   );

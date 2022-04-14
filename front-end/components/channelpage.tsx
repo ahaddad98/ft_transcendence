@@ -5,7 +5,7 @@ import ChannelChat from "./ChannelChat";
 import HomeNavbar from "./HomeNavbar";
 
 const ChannelPage = (props) => {
-  console.log(props);
+  // console.log(props);
   
   const [mychannel, setMychannel] = useState({});
 

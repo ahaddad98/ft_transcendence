@@ -8,7 +8,7 @@ import ListuseresCompon from "../components/Listuserscompon";
 import { socketcontext } from "./home";
 const UsersList = () => {
   const socket = useContext(socketcontext);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState();
   const fetchData = async () => {
     const response = await axios.get("http://localhost:3001/users/me/all", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -48,6 +48,7 @@ const UsersList = () => {
       {data && mydata && (
         <ListuseresCompon
           data={data}
+          socket={socket}
           fetchData={fetchData}
           setData={setData}
           mydata={mydata}

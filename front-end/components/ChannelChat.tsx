@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import Messagemap from "./Messagemap";
 
 const ChannelChat = (props) => {
-  console.log("asnmasnm");
-  console.log(props);
+  // console.log("asnmasnm");
+  // console.log(props);
   const [conversation, setConversation] = useState();
   const fetchconsversation = async () => {
     const response = await axios.get(

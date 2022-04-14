@@ -4,26 +4,30 @@ import React, { useEffect, useState } from "react";
 import HomeNavbar from "./HomeNavbar";
 
 const ListUseres = ({ socket, ...props }) => {
-  const [check, setCheck] = useState(false);
-  const [test, setTest] = useState(0);
   let k = 0;
-  // useEffect(() => {
-  //   socket.emit("addUser", props.data.id);
-  // }, [socket]);
-  // useEffect(() => {
-  //   if (test !== 0)
-  //   {
-  //     props
-  //     .fetchData()
-  //     .then((res) => {
-  //       if (res.data) props.setData(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  //   }
-  // }, []);
-  const hundelClick1 = async (e, id) => {
+  // let state = '';
+  const [stater, setStat] = useState('');
+  useEffect(() => {
+    socket.emit("addUser", props.data.id);
+  }, [socket]);
+  useEffect(() => {
+    console.log('asdasda');
+    
+      props
+      .fetchData()
+      .then((res) => {
+        if (res.data) 
+        {
+          props.setData(res.data);
+          // console.log(res.data);
+          
+        }
+        })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [stater],);
+  const hundelClick1 = async (e, id, state) => {
     e.preventDefault();
     await axios.post(
       `http://localhost:3001/requests/users/me/friends/${id}`,
@@ -34,7 +38,9 @@ const ListUseres = ({ socket, ...props }) => {
         },
       }
       );
-      // setTest(test => test + 1)
+      console.log(state);
+      // state = 'requsester'
+      // setState('check => check + 1')
   };
   const hundelClick2 = async (e, req_id) => {
     e.preventDefault();
@@ -42,8 +48,10 @@ const ListUseres = ({ socket, ...props }) => {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    });
-    // setTest(test => test + 1)
+    })
+    // state = 'requester'
+    // setCheck(check => check + 1)
+
   };
   const hundelClick3 = async (e, req_id, id) => {
     e.preventDefault();
@@ -56,7 +64,7 @@ const ListUseres = ({ socket, ...props }) => {
         },
       }
       );
-      // setTest(test => test + 1)
+      // setCheck(check => check + 1)
   };
   return (
     <div>
@@ -114,7 +122,10 @@ const ListUseres = ({ socket, ...props }) => {
                                 {stat.stats === "add" && (
                                   <button
                                     className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                                    onClick={(e) => hundelClick1(e, stat.id)}
+                                    onClick={(e) => {
+                                      hundelClick1(e, stat.id, stat.stats)
+                                      setStat(stat.stats)
+                                    }}
                                   >
                                     <div>{stat.stats}</div>
                                   </button>

@@ -38,8 +38,6 @@ import {
     }
   
     handleConnection(client: Socket, ...args: any[]) {
-        console.log('--------------3001-----------------');
-        
       this.logger.log(`Client connected ${client.id}`);
     }
   
@@ -50,7 +48,7 @@ import {
   
     @SubscribeMessage('changeStat')
     handleSendMessage(client: any, payload: any) {
-      // console.log(payload);
+      
       console.log('msg server');
       const user = this.getUser(payload.friend.id);
       console.log('--------------------');

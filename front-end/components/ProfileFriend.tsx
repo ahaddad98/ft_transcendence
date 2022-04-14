@@ -6,7 +6,7 @@ import FriendComponent from "./FriendComponent";
 import HomeNavbar from "./HomeNavbar";
 
 const ProfileFriend = (props) => {
-    console.log(props);
+    // console.log(props);
     const [myprofile, setMyprofile] = useState({});
   const [hasResult, setHasResult] = useState(false);
   const fetchmyprofile = async () => {

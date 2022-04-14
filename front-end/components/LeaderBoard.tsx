@@ -4,7 +4,7 @@ import Modal from "@material-tailwind/react/Modal";
 import MediaQuery, { useMediaQuery } from "react-responsive";
 
 const LeaderBoard = (props) => {
-  console.log(props);
+  // console.log(props);
   const [viewclick, setViewclick] = useState(false);
   return (
     <>
@@ -39,7 +39,7 @@ const LeaderBoard = (props) => {
                 </div>
               </li>
               {props.data.map((stat, key) => {
-                console.log(stat.username);
+                // console.log(stat.username);
                 return (
                   <li className=" y-3 sm:py-4" key={key}>
                     <div className="flex items-center space-x-4">
