@@ -10,19 +10,19 @@ const ListUseres = ({ socket, ...props }) => {
   // useEffect(() => {
   //   socket.emit("addUser", props.data.id);
   // }, [socket]);
-  useEffect(() => {
-    if (test !== 0)
-    {
-      props
-      .fetchData()
-      .then((res) => {
-        if (res.data) props.setData(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    }
-  }, [test]);
+  // useEffect(() => {
+  //   if (test !== 0)
+  //   {
+  //     props
+  //     .fetchData()
+  //     .then((res) => {
+  //       if (res.data) props.setData(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  //   }
+  // }, []);
   const hundelClick1 = async (e, id) => {
     e.preventDefault();
     await axios.post(
@@ -34,7 +34,7 @@ const ListUseres = ({ socket, ...props }) => {
         },
       }
       );
-      setTest(test => test + 1)
+      // setTest(test => test + 1)
   };
   const hundelClick2 = async (e, req_id) => {
     e.preventDefault();
@@ -43,7 +43,7 @@ const ListUseres = ({ socket, ...props }) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-    setTest(test => test + 1)
+    // setTest(test => test + 1)
   };
   const hundelClick3 = async (e, req_id, id) => {
     e.preventDefault();
@@ -56,7 +56,7 @@ const ListUseres = ({ socket, ...props }) => {
         },
       }
       );
-      setTest(test => test + 1)
+      // setTest(test => test + 1)
   };
   return (
     <div>

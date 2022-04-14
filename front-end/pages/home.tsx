@@ -7,10 +7,11 @@ import HistoryGame from "../components/HistoryGame";
 import ListUseres from "../components/Listuseres";
 import MediaQuery, { useMediaQuery } from "react-responsive";
 import { io, Socket } from "socket.io-client";
+let socket = io("http://localhost:6209");
+export const socketcontext = React.createContext(socket)
 
 const Home = () => {
   const [data, setData] = useState({});
-
   const fetchData = async () => {
     const response = await axios.get("http://localhost:3001/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -81,6 +82,7 @@ const Home = () => {
         console.log(err);
       });
   }, []);
+
   return (
     <div>
       <HomeNavbar data={data}></HomeNavbar>
