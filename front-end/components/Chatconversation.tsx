@@ -4,7 +4,6 @@ import PrivateConv from "./PrivateConv";
 import { io, Socket } from "socket.io-client";
 
 const ChatConversation = (props) => {
-  // console.log(props);
   let socket = io("http://localhost:3001");
   const [clickconv, setClickconv] = useState(false);
   const [clickconvresp, setClickconvresp] = useState(false);
