@@ -29,8 +29,11 @@ import { Avatar, CssBaseline } from "@mui/material";
 import MediaQuery, { useMediaQuery } from "react-responsive";
 import avat from "../public/avatar.svg";
 import Navbar from "./Navbar";
+import data from "../pages/home"
 
 const HomeNavbar = (props) => {
+  // console.log(data);
+
   const [isopen, setIsopen] = React.useState(false);
   const [clickmenu, setClickmenu] = React.useState(false);
   const [clickimage, setClickimage] = React.useState(false);

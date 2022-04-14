@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import HomeNavbar from "./HomeNavbar";
 import PrivateConv from "./PrivateConv";
+import { io, Socket } from "socket.io-client";
 
 const ChatConversation = (props) => {
+  let socket = io("http://localhost:3001");
   const [clickconv, setClickconv] = useState(false);
   const [clickconvresp, setClickconvresp] = useState(false);
   const [convid, setConvid] = useState(-1);
+  const [reciever, setReciever] = useState();
   return (
     <div className="h-screen justify-center">
       <div>{props.data && <HomeNavbar data={props.data} />}</div>
@@ -44,6 +47,7 @@ const ChatConversation = (props) => {
                       onClick={() => {
                         setClickconv(!clickconv);
                         setConvid(stat.id);
+                        setReciever(stat.user);
                       }}
                     >
                       <div className="w-1/4">
@@ -103,6 +107,7 @@ const ChatConversation = (props) => {
                   onClick={() => {
                     setClickconv(!clickconv);
                     setConvid(stat.id);
+                    setReciever(stat.user);
                   }}
                 >
                   <div className="w-1/4">
@@ -121,8 +126,8 @@ const ChatConversation = (props) => {
               );
             })}
           </div>
-          {convid !== -1 && props.data && <PrivateConv convid={convid} data={props.data}/>}
-          {convid === -1 && props.data && props.id && <PrivateConv convid={props.id} data={props.data}/>}
+          {convid !== -1 && props.data && reciever && <PrivateConv convid={convid} data={props.data} socket={socket} reciver={reciever}/>}
+          {convid === -1 && props.data && props.id && reciever && <PrivateConv convid={props.id} data={props.data} socket={socket} reciver={reciever}/>}
         </div>
       </div>
     </div>

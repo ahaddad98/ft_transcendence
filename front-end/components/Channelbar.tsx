@@ -10,7 +10,7 @@ import axios from "axios";
 
 const ChannelBar = (props) => {
   const [userid, setUserid] = useState(-1);
-  console.log(props);
+  // console.log(props);
   const buttonRef = useRef();
   const router = useRouter();
   const [viewchannels, setViewchannles] = useState(false);
