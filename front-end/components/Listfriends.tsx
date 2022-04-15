@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
-const Listfriends = ({ socket, ...props }) => {
+const Listfriends = ({ socket, ...props}) => {
   const router = useRouter();
   const [data, setData] = useState([]);
 
@@ -15,21 +15,23 @@ const Listfriends = ({ socket, ...props }) => {
     return response;
   };
   useEffect(() => {
-    socket.emit("addUser", props.mydata?.id);
-    fetchData()
-    .then((res) => {
-      if (res.data)
+    if (props.mydata.id)
+    {
+      socket.emit("addUser", props.mydata.id);
+      fetchData()
+      .then((res) => {
+        if (res.data)
       {
         setData(res.data);
-        console.log(data);
       } 
     })
     .catch((err) => {
       console.log(err);
     });
-  }, []);
+  }
+  }, [props.mydata.id]);
   useEffect(() => {
-    console.log('salam');
+    console.log('123456789');
     
       fetchData()
       .then((res) => {
@@ -64,11 +66,6 @@ const Listfriends = ({ socket, ...props }) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }).then(()=>{
-      setCheck((check) => check + 1);
-      socket.emit("changeStatOfFriend", {
-        user1 : props.mydata,
-        user2: state,
-      })
     });
     setCheck((check) => check + 1);
     socket.emit("changeStatOfFriend", {
@@ -87,7 +84,6 @@ const Listfriends = ({ socket, ...props }) => {
         },
       }
     )
-    setCheck((check) => check + 1);
     setCheck((check) => check + 1);
     socket.emit("changeStatOfFriend", {
       user1 : props.mydata,

@@ -170,7 +170,7 @@ export class DataService {
       const friend: User = await this.usersService.findOneById(friendId);
       if (!friend) return { status: 500, message: 'this user is not fount' };
       const user: User = await this.usersService.findOneById(userId);
-      console.log(user);
+      // console.log(user);
       console.log(friend);
       const list: Friend[] = await this.friendsService.findTwoFriends(
         userId,
@@ -188,7 +188,7 @@ export class DataService {
     if (!result) {
       console.log('samir');
       const user = await this.usersService.save(newUser);
-      console.log(user);
+      // console.log(user);
       console.log('tsayva a sahbi');
     } else console.log('wala a sahbi ma blansh');
   }

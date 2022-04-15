@@ -49,12 +49,10 @@ import {
     @SubscribeMessage('changeStat')
     handleSendMessage(client: any, payload: any) {
       
-      console.log('msg server');
+      console.log('msg server user');
+      console.log(payload.user2.id);
       const user = this.getUser(payload.user2.id);
-      // console.log('--------------------');
-      // console.log(payload.user2);
-      // console.log('--------------------');
-      // console.log('user');
+      console.log(user);
       if(user.userId)
       {
         console.log('**-*-*-*-*-*-*-*-*-')
@@ -68,10 +66,6 @@ import {
     changeStatOfFriend(client: any, payload: any) {
       console.log('msg server');
       const user = this.getUser(payload.user2.id);
-      // console.log('--------------------');
-      // console.log(payload.user2);
-      // console.log('--------------------');
-      // console.log('user');
       console.log(this.users);
       if(user.userId)
       {
@@ -79,15 +73,12 @@ import {
         console.log(user)
         this.server.to(user.socketId).emit('newStatFriend', payload);
       }
-      // this.server.to(user.socketId).emit('newStat', payload);
     }
     
     @SubscribeMessage('addUser')
     handleUser(client: any, payload: any) {
-      console.log('samir');
-      
-      console.log('adduser server');
       this.addUser(payload, client.id);
+      console.log('saminr');
       console.log(payload);
       return this.users;
     }

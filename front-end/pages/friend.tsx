@@ -45,7 +45,7 @@ const Friend = (props) => {
       {mydata && (
         <>
           <HomeNavbar data={mydata} />
-          <Listfriends socket={socket}  />
+          <Listfriends mydata={mydata} socket={socket}  />
         </>
       )}
     </div>

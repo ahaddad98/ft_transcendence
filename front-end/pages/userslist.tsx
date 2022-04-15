@@ -47,7 +47,7 @@ const UsersList = () => {
   return (
     <div>
       {mydata && (
-        <ListuseresCompon
+        <ListUseres
           // data={data}
           socket={socket}
           // fetchData={fetchData}
