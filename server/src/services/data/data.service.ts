@@ -78,7 +78,7 @@ export class DataService {
     let check;
     let stats: string;
     let requestId: number;
-    console.log(me);
+    // console.log(me);
     const blockList: Block[] = await this.blockService.findAllMyBlockList(id);
     const newblockList = [];
     blockList.map((blockUser) => {
@@ -186,10 +186,9 @@ export class DataService {
   async save(newUser: User) {
     let result: any = await this.usersService.findOneById(newUser.id);
     if (!result) {
-      console.log('samir');
+      // console.log('samir');
       const user = await this.usersService.save(newUser);
-      console.log(user);
-      console.log('tsayva a sahbi');
+      // console.log(user);
     } else console.log('wala a sahbi ma blansh');
   }
 

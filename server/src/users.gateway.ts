@@ -17,8 +17,12 @@ import {
     users:{userId:number, socketId: string} [];
   
     private logger: Logger = new Logger('AppGateway');
+
     private addUser = (userId: number, socketId: string) => {
         !this.users.some(user => user.userId === userId) && this.users.push({userId, socketId});
+        // console.log('addUser Function');
+        // console.log(this.users);
+        // console.log('End addUser Function');
     };
   
     private removeUser = (socketId: string) => {
@@ -38,12 +42,14 @@ import {
     }
   
     handleConnection(client: Socket, ...args: any[]) {
+      // console.log(this.users);
       this.logger.log(`Client connected ${client.id}`);
     }
   
     handleDisconnect(client: Socket) {
       this.logger.log(`Client desconnected ${client.id}`);
       this.removeUser(client.id);
+      // console.log(this.users);
     }
   
     @SubscribeMessage('changeStat')
@@ -55,12 +61,12 @@ import {
       // console.log(payload.user2);
       // console.log('--------------------');
       // console.log('user');
-      if(user.userId)
-      {
-        console.log('**-*-*-*-*-*-*-*-*-')
-        console.log(user)
-      console.log(this.users);
-      }
+      // if(user.userId)
+      // {
+      //   console.log('**-*-*-*-*-*-*-*-*-')
+      //   console.log(user)
+      // console.log(this.users);
+      // }
       this.server.to(user.socketId).emit('newStat', payload);
     }
 
@@ -72,13 +78,13 @@ import {
       // console.log(payload.user2);
       // console.log('--------------------');
       // console.log('user');
-      console.log(this.users);
-      if(user.userId)
-      {
-        console.log('**-*-*-*-*-*-*-*-*-')
-        console.log(user)
-        this.server.to(user.socketId).emit('newStatFriend', payload);
-      }
+      // console.log(this.users);
+      // if(user.userId)
+      // {
+      //   console.log('**-*-*-*-*-*-*-*-*-')
+      //   console.log(user)
+      //   this.server.to(user.socketId).emit('newStatFriend', payload);
+      // }
       // this.server.to(user.socketId).emit('newStat', payload);
     }
     
@@ -87,9 +93,13 @@ import {
       console.log('samir');
       
       console.log('adduser server');
-      this.addUser(payload, client.id);
       console.log(payload);
-      return this.users;
+      if(payload)
+      {
+        this.addUser(payload, client.id);
+        console.log(this.users);
+        return this.users;
+      }
     }
   }
   
