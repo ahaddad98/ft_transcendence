@@ -11,7 +11,7 @@ const ChatConversation = (props) => {
   const [reciever, setReciever] = useState();
   return (
     <div className="h-screen justify-center">
-      <div>{props.data && <HomeNavbar data={props.data} />}</div>
+      <div>{props.data && <HomeNavbar  />}</div>
       <div
         className="lg:mt-10 container mx-auto shadow-lg rounded-lg flex"
         style={{ height: "80%" }}

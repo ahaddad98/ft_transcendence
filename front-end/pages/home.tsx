@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import HomeNavbar from "../components/HomeNavbar";
 import LeaderBoard from "../components/LeaderBoard";
 import ChannlesList from "../components/ChannelsList";
@@ -9,27 +9,10 @@ import MediaQuery, { useMediaQuery } from "react-responsive";
 import { io, Socket } from "socket.io-client";
 let socket = io("http://localhost:6209");
 export const socketcontext = React.createContext(socket)
+import mydataProvider from '../stats/mydata'
+import { useMyContext } from "../components/ContextProvider";
 
 const Home = () => {
-  const [data, setData] = useState({});
-  const fetchData = async () => {
-    const response = await axios.get("http://localhost:3001/users/me", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    return response;
-  };
-  useEffect(() => {
-    fetchData()
-      .then((res) => {
-        if (res.data)
-        {
-          setData(res.data);
-        } 
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
   const [channel, setChannel] = useState([]);
 
   const fetchChannel = async () => {
@@ -87,14 +70,16 @@ const Home = () => {
   }, []);
 
   return (
+    <>
     <div>
-      <HomeNavbar data={data}></HomeNavbar>
+      <HomeNavbar ></HomeNavbar>
       <div className="flex flex-col lg:flex-row">
         {stats && <LeaderBoard data={stats} />}
         {history && <HistoryGame data={history} />}
       </div>
       {channel && <ChannlesList data={channel} />}
     </div>
+  </>
   );
 };
 

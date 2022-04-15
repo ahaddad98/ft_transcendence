@@ -68,6 +68,7 @@ const Listfriends = ({ socket, ...props}) => {
     }).then(()=>{
     });
     setCheck((check) => check + 1);
+    setCheck((check) => check + 1);
     socket.emit("changeStatOfFriend", {
       user1 : props.mydata,
       user2: state,

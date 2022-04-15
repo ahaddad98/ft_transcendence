@@ -151,7 +151,7 @@ const ListUseres = ({ socket, ...props }) => {
   };
   return (
     <div>
-      <HomeNavbar data={props.mydata} />
+      <HomeNavbar />
       <div className="mb-16">
         <div className="container flex justify-center mx-auto pt-16">
           <div>

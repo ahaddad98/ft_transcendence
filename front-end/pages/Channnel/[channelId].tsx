@@ -55,7 +55,7 @@ const Channel = () => {
   return (
     <div className="h-screen">
       { 
-        <HomeNavbar data={data} />
+        <HomeNavbar/>
       }
       {allmychannel && router.query.channelId  && <ChannelPage allmychannels={allmychannel} id={router.query.channelId} mydata={data} />}
     </div>

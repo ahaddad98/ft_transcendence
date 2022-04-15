@@ -29,11 +29,10 @@ import { Avatar, CssBaseline } from "@mui/material";
 import MediaQuery, { useMediaQuery } from "react-responsive";
 import avat from "../public/avatar.svg";
 import Navbar from "./Navbar";
-import data from "../pages/home"
+import { useMyContext } from "../components/ContextProvider";
 
-const HomeNavbar = (props) => {
-  // console.log(data);
-
+const HomeNavbar = () => {
+  let data1:any = useMyContext();
   const [isopen, setIsopen] = React.useState(false);
   const [clickmenu, setClickmenu] = React.useState(false);
   const [clickimage, setClickimage] = React.useState(false);
@@ -55,7 +54,7 @@ const HomeNavbar = (props) => {
                 >
                   <img
                     id=""
-                    src={props.data.avatar}
+                    src={data1.data.avatar}
                     className="h-10 w-auto rounded-full"
                     alt=""
                   />
@@ -261,7 +260,7 @@ const HomeNavbar = (props) => {
                   <img id="" src="/notif.svg" className="h-7" />
                 </a>
                 <a className="flex items-center hover:text-gray-200" href="#">
-                  {props.data.username}
+                  {data1.data.username}
                 </a>
                 <a className="flex items-center hover:text-gray-200">
                   <div className="relative group bg-transparent">
@@ -275,7 +274,7 @@ const HomeNavbar = (props) => {
                       <span>
                         <img
                           id=""
-                          src={props.data.avatar}
+                          src={data1.data.avatar}
                           className="h-10 w-auto rounded-full"
                           alt=""
                         />

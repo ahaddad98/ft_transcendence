@@ -4,7 +4,7 @@ import HomeNavbar from "../components/HomeNavbar";
 import Listfriends from "../components/Listfriends";
 import { socketcontext } from "./home";
 
-const Friend = (props) => {
+const Friend = () => {
   // const [data, setData] = useState([]);
   const socket = useContext(socketcontext);
   // const fetchData = async () => {
@@ -44,7 +44,7 @@ const Friend = (props) => {
     <div>
       {mydata && (
         <>
-          <HomeNavbar data={mydata} />
+          <HomeNavbar/>
           <Listfriends mydata={mydata} socket={socket}  />
         </>
       )}
