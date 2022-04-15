@@ -50,19 +50,45 @@ import {
     handleSendMessage(client: any, payload: any) {
       
       console.log('msg server');
-      const user = this.getUser(payload.friend.id);
-      console.log('--------------------');
-      console.log(payload.friend);
-      console.log('--------------------');
-      console.log('user');
+      const user = this.getUser(payload.user2.id);
+      // console.log('--------------------');
+      // console.log(payload.user2);
+      // console.log('--------------------');
+      // console.log('user');
+      if(user.userId)
+      {
+        console.log('**-*-*-*-*-*-*-*-*-')
+        console.log(user)
       console.log(this.users);
+      }
       this.server.to(user.socketId).emit('newStat', payload);
+    }
+
+    @SubscribeMessage('changeStatOfFriend')
+    changeStatOfFriend(client: any, payload: any) {
+      console.log('msg server');
+      const user = this.getUser(payload.user2.id);
+      // console.log('--------------------');
+      // console.log(payload.user2);
+      // console.log('--------------------');
+      // console.log('user');
+      console.log(this.users);
+      if(user.userId)
+      {
+        console.log('**-*-*-*-*-*-*-*-*-')
+        console.log(user)
+        this.server.to(user.socketId).emit('newStatFriend', payload);
+      }
+      // this.server.to(user.socketId).emit('newStat', payload);
     }
     
     @SubscribeMessage('addUser')
     handleUser(client: any, payload: any) {
+      console.log('samir');
+      
       console.log('adduser server');
       this.addUser(payload, client.id);
+      console.log(payload);
       return this.users;
     }
   }
