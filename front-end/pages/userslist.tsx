@@ -8,25 +8,25 @@ import ListuseresCompon from "../components/Listuserscompon";
 import { socketcontext } from "./home";
 const UsersList = () => {
   const socket = useContext(socketcontext);
-  const [data, setData] = useState();
-  const fetchData = async () => {
-    const response = await axios.get("http://localhost:3001/users/me/all", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    return response;
-  };
-  useEffect(() => {
-    if (!data) {
-      fetchData()
-        .then((res) => {
-          if (res.data) 
-          setData(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, []);
+  // const [data, setData] = useState([]);
+  // const fetchData = async () => {
+  //   const response = await axios.get("http://localhost:3001/users/me/all", {
+  //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  //   });
+  //   return response;
+  // };
+  // useEffect(() => {
+  //   if (!data) {
+  //     fetchData()
+  //       .then((res) => {
+  //         if (res.data) 
+  //         setData(res.data);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   }
+  // }, []);
   const [mydata, setmyData] = useState({});
 
   const fetchmyData = async () => {
@@ -46,12 +46,12 @@ const UsersList = () => {
   }, []);
   return (
     <div>
-      {data && mydata && (
+      {mydata && (
         <ListuseresCompon
-          data={data}
+          // data={data}
           socket={socket}
-          fetchData={fetchData}
-          setData={setData}
+          // fetchData={fetchData}
+          // setData={setData}
           mydata={mydata}
         />
       )}

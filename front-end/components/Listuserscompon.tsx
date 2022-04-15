@@ -5,10 +5,10 @@ import { io, Socket } from "socket.io-client";
 const ListuseresCompon = (props) => {
   return (
     <ListUseres
-      data={props.data}
+      // data={props.data}
       socket={props.socket}
-      fetchData={props.fetchData}
-      setData={props.setData}
+      // fetchData={props.fetchData}
+      // setData={props.setData}
       mydata={props.mydata}
     />
   );

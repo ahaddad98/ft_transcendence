@@ -55,8 +55,31 @@ import {
       // console.log(payload.user2);
       // console.log('--------------------');
       // console.log('user');
+      if(user.userId)
+      {
+        console.log('**-*-*-*-*-*-*-*-*-')
+        console.log(user)
       console.log(this.users);
+      }
       this.server.to(user.socketId).emit('newStat', payload);
+    }
+
+    @SubscribeMessage('changeStatOfFriend')
+    changeStatOfFriend(client: any, payload: any) {
+      console.log('msg server');
+      const user = this.getUser(payload.user2.id);
+      // console.log('--------------------');
+      // console.log(payload.user2);
+      // console.log('--------------------');
+      // console.log('user');
+      console.log(this.users);
+      if(user.userId)
+      {
+        console.log('**-*-*-*-*-*-*-*-*-')
+        console.log(user)
+        this.server.to(user.socketId).emit('newStatFriend', payload);
+      }
+      // this.server.to(user.socketId).emit('newStat', payload);
     }
     
     @SubscribeMessage('addUser')

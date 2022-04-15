@@ -7,13 +7,28 @@ const ListUseres = ({ socket, ...props }) => {
   const [stater, setStat] = useState(0);
   useEffect(() => {
     socket.emit("addUser", props.mydata?.id);
-  }, []);
-  useEffect(() => {
-    props
-      .fetchData()
+    fetchData()
       .then((res) => {
         if (res.data) {
-          props.setData(res.data);
+          setData(res.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+  const [data, setData] = useState([]);
+  const fetchData = async () => {
+    const response = await axios.get("http://localhost:3001/users/me/all", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return response;
+  };
+  useEffect(() => {
+    fetchData()
+      .then((res) => {
+        if (res.data) {
+          setData(res.data);
         }
       })
       .catch((err) => {
@@ -21,24 +36,22 @@ const ListUseres = ({ socket, ...props }) => {
       });
   }, [stater]);
   useEffect(() => {
-    
     socket.on("newStat", (data) => {
-      console.log('aaaaaaaa');
-      props
-      .fetchData()
-      .then((res) => {
-        if (res.data) {
-          props.setData(res.data);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      // console.log('aaaaaaaa');
+      fetchData()
+        .then((res) => {
+          if (res.data) {
+            setData(res.data);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     });
   }, []);
   const hundelClick1 = async (e, id, state) => {
-    console.log(state);
-    
+    // console.log(state);
+
     e.preventDefault();
     await axios.post(
       `http://localhost:3001/requests/users/me/friends/${id}`,
@@ -48,66 +61,65 @@ const ListUseres = ({ socket, ...props }) => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
-      );
-      setStat(stater => stater + 1);
-      socket.emit("changeStat", {
-        user1 : props.mydata,
-        user2: state,
-        stat: "requester",
-      })
-    };
-    const hundelClick4 = async (e, req_id, state) => {
-      console.log(state);
-      e.preventDefault();
-      await axios.delete(`http://localhost:3001/requests/${req_id}`, {
+    );
+    setStat((stater) => stater + 1);
+    socket.emit("changeStat", {
+      user1: props.mydata,
+      user2: state,
+      stat: "requester",
+    });
+  };
+  const hundelClick4 = async (e, req_id, state) => {
+    console.log(state);
+    e.preventDefault();
+    await axios.delete(`http://localhost:3001/requests/${req_id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    setStat((stater) => stater + 1);
+    // setStat("add");
+    socket.emit("changeStat", {
+      user1: props.mydata,
+      user2: state,
+      stat: "add",
+    });
+  };
+  const hundelClick2 = async (e, req_id, state) => {
+    console.log(state);
+    e.preventDefault();
+    await axios.delete(`http://localhost:3001/requests/${req_id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    setStat((stater) => stater + 1);
+    // setStat("add");
+
+    socket.emit("changeStat", {
+      user1: props.mydata,
+      user2: state,
+      stat: "add",
+    });
+  };
+  const hundelClick3 = async (e, req_id, id, state) => {
+    console.log(state);
+    e.preventDefault();
+    await axios.post(
+      `http://localhost:3001/requests/${req_id}/users/me/friends/${id}/accept`,
+      {},
+      {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      });
-      setStat(stater => stater + 1);
-      // setStat("add");
-      socket.emit("changeStat", {
-        user1: props.mydata,
-        user2: state,
-        stat: "add",
-      })
-    };
-    const hundelClick2 = async (e, req_id, state) => {
-      console.log(state);
-      e.preventDefault();
-      await axios.delete(`http://localhost:3001/requests/${req_id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      setStat(stater => stater + 1);
-      // setStat("add");
-      console.log('click2'+state);
-      
-      socket.emit("changeStat", {
-        user1 : props.mydata,
-        user2: state,
-        stat: "add",
-      })
-    };
-    const hundelClick3 = async (e, req_id, id, state) => {
-      console.log(state);
-      e.preventDefault();
-      await axios.post(
-        `http://localhost:3001/requests/${req_id}/users/me/friends/${id}/accept`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-        );
-        setStat(stater => stater + 1);
-        socket.emit("changeStat", {
-      user1 : props.mydata,
+      }
+    );
+    setStat((stater) => stater + 1);
+    socket.emit("changeStat", {
+      user1: props.mydata,
       user2: state,
       stat: "accept",
-    })
+    });
   };
   return (
     <div>
@@ -127,7 +139,7 @@ const ListUseres = ({ socket, ...props }) => {
               aria-label="Behind the scenes People "
               className="space-x-px lg:flex md:flex sm:flex items-center xl:justify-between flex-wrap md:justify-around sm:justify-around lg:justify-around"
             >
-              {props.data.map((stat, key) => {
+              {  data.map((stat, key) => {
                 return (
                   <>
                     {stat.stats !== "remove" && (
@@ -190,8 +202,8 @@ const ListUseres = ({ socket, ...props }) => {
                                         hundelClick3(
                                           e,
                                           stat.requestId,
-                                          stat.id
-                                          ,stat
+                                          stat.id,
+                                          stat
                                         );
                                         // setStat(stat.stats);
                                       }}

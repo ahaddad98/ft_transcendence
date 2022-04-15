@@ -1,21 +1,102 @@
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const Listfriends = (props) => {
+const Listfriends = ({ socket, ...props }) => {
   const router = useRouter();
-  const hundelClick = async (e, id) => {
+  const [data, setData] = useState([]);
+
+  const [check, setCheck] = useState(0);
+  const fetchData = async () => {
+    const response = await axios.get("http://localhost:3001/friends/users/me", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return response;
+  };
+  useEffect(() => {
+    socket.emit("addUser", props.mydata?.id);
+    fetchData()
+    .then((res) => {
+      if (res.data)
+      {
+        setData(res.data);
+        console.log(data);
+      } 
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }, []);
+  useEffect(() => {
+    console.log('salam');
+    
+      fetchData()
+      .then((res) => {
+        if (res.data)
+        {
+          setData(res.data);
+        } 
+      })
+      .catch((err) => {
+        console.log(err);
+      });      
+  }, [check]);
+  useEffect(() => {
+    socket.on("newStatFriend", (data) => {
+      fetchData()
+      .then((res) => {
+        if (res.data) {
+          setData(res.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    });
+  }, []);
+  const hundelClick = async (e, id, state) => {
+    console.log(state);
+    
     e.preventDefault();
-    axios.delete(`http://localhost:3001/friends/users/me/${id}`, {
+    await axios.delete(`http://localhost:3001/friends/users/me/${id}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
+    }).then(()=>{
+      setCheck((check) => check + 1);
+      socket.emit("changeStatOfFriend", {
+        user1 : props.mydata,
+        user2: state,
+      })
     });
+    setCheck((check) => check + 1);
+    socket.emit("changeStatOfFriend", {
+      user1 : props.mydata,
+      user2: state,
+    })
+  };
+  const hundelClickblock = async (e, id, state) => {
+    e.preventDefault();
+    await axios.post(
+      `http://localhost:3001/blocks/users/me/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    )
+    setCheck((check) => check + 1);
+    setCheck((check) => check + 1);
+    socket.emit("changeStatOfFriend", {
+      user1 : props.mydata,
+      user2: state,
+    })
   };
   const hundelfriendprofile = async (e, id) => {
     e.preventDefault();
-    router.push(`FriendPage/${id}`)
+    router.push(`FriendPage/${id}`);
   };
   return (
     <div className="mb-16">
@@ -33,7 +114,7 @@ const Listfriends = (props) => {
             aria-label="Behind the scenes People "
             className="space-x-px lg:flex md:flex sm:flex items-center xl:justify-between flex-wrap md:justify-around sm:justify-around lg:justify-around"
           >
-            {props.data.map((stat, key) => {
+            { data.map((stat, key) => {
               return (
                 <div
                   key={key}
@@ -53,15 +134,14 @@ const Listfriends = (props) => {
                     </div>
                     <div className="px-6 mt-16">
                       <h1 className="font-bold text-3xl text-center mb-1">
-                        
-                        <button className="rounded-none"
-                        onClick={(e)=> 
-                        hundelfriendprofile(e, stat.friend.id)
-                        }
+                        <button
+                          className="rounded-none"
+                          onClick={(e) =>
+                            hundelfriendprofile(e, stat.friend.id)
+                          }
                         >
                           {stat.friend.username}
                         </button>
-                        
                       </h1>
                       <p className="text-gray-800 text-sm text-center">
                         {" "}
@@ -76,7 +156,7 @@ const Listfriends = (props) => {
                         >
                           <button
                             className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                            onClick={(e) => hundelClick(e, stat.friend.id)}
+                            onClick={(e) => hundelClick(e, stat.friend.id, stat.friend)}
                           >
                             Remove
                           </button>
@@ -88,7 +168,7 @@ const Listfriends = (props) => {
                         >
                           <button
                             className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                            onClick={(e) => hundelClick(e, stat.friend.id)}
+                            onClick={(e) => hundelClickblock(e, stat.friend.id, stat.friend)}
                           >
                             Block
                           </button>
