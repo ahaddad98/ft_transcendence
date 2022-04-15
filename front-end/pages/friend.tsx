@@ -1,11 +1,12 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import HomeNavbar from "../components/HomeNavbar";
 import Listfriends from "../components/Listfriends";
+import { socketcontext } from "./home";
 
 const Friend = (props) => {
   const [data, setData] = useState();
-
+  const socket = useContext(socketcontext);
   const fetchData = async () => {
     const response = await axios.get("http://localhost:3001/friends/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -40,14 +41,12 @@ const Friend = (props) => {
   }, []);
   return (
     <div>
-        {  
-            data && mydata && (
-                <>
-            <HomeNavbar data={mydata} />
-            <Listfriends data={data}/>
-            </>
-            )
-        }
+      {data && mydata && (
+        <>
+          <HomeNavbar data={mydata} />
+          <Listfriends socket={socket} data={data} fetchData={fetchData} setData={setData}/>
+        </>
+      )}
     </div>
   );
 };

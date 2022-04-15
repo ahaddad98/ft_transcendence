@@ -19,7 +19,8 @@ const UsersList = () => {
     if (!data) {
       fetchData()
         .then((res) => {
-          if (res.data) setData(res.data);
+          if (res.data) 
+          setData(res.data);
         })
         .catch((err) => {
           console.log(err);

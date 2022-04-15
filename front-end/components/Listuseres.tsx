@@ -1,33 +1,44 @@
 import axios from "axios";
-import { Stats } from "fs";
+import { stat, Stats } from "fs";
 import React, { useEffect, useState } from "react";
 import HomeNavbar from "./HomeNavbar";
 
 const ListUseres = ({ socket, ...props }) => {
-  let k = 0;
-  // let state = '';
-  const [stater, setStat] = useState('');
+  const [stater, setStat] = useState(0);
   useEffect(() => {
-    socket.emit("addUser", props.data.id);
-  }, [socket]);
+    socket.emit("addUser", props.mydata?.id);
+  }, []);
   useEffect(() => {
-    console.log('asdasda');
-    
-      props
+    props
       .fetchData()
       .then((res) => {
-        if (res.data) 
-        {
+        if (res.data) {
           props.setData(res.data);
-          // console.log(res.data);
-          
         }
-        })
+      })
       .catch((err) => {
         console.log(err);
       });
-  }, [stater],);
+  }, [stater]);
+  useEffect(() => {
+    
+    socket.on("newStat", (data) => {
+      console.log('aaaaaaaa');
+      props
+      .fetchData()
+      .then((res) => {
+        if (res.data) {
+          props.setData(res.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    });
+  }, []);
   const hundelClick1 = async (e, id, state) => {
+    console.log(state);
+    
     e.preventDefault();
     await axios.post(
       `http://localhost:3001/requests/users/me/friends/${id}`,
@@ -38,33 +49,65 @@ const ListUseres = ({ socket, ...props }) => {
         },
       }
       );
+      setStat(stater => stater + 1);
+      socket.emit("changeStat", {
+        user1 : props.mydata,
+        user2: state,
+        stat: "requester",
+      })
+    };
+    const hundelClick4 = async (e, req_id, state) => {
       console.log(state);
-      // state = 'requsester'
-      // setState('check => check + 1')
-  };
-  const hundelClick2 = async (e, req_id) => {
-    e.preventDefault();
-    await axios.delete(`http://localhost:3001/requests/${req_id}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-    // state = 'requester'
-    // setCheck(check => check + 1)
-
-  };
-  const hundelClick3 = async (e, req_id, id) => {
-    e.preventDefault();
-    await axios.post(
-      `http://localhost:3001/requests/${req_id}/users/me/friends/${id}/accept`,
-      {},
-      {
+      e.preventDefault();
+      await axios.delete(`http://localhost:3001/requests/${req_id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      }
-      );
-      // setCheck(check => check + 1)
+      });
+      setStat(stater => stater + 1);
+      // setStat("add");
+      socket.emit("changeStat", {
+        user1: props.mydata,
+        user2: state,
+        stat: "add",
+      })
+    };
+    const hundelClick2 = async (e, req_id, state) => {
+      console.log(state);
+      e.preventDefault();
+      await axios.delete(`http://localhost:3001/requests/${req_id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setStat(stater => stater + 1);
+      // setStat("add");
+      console.log('click2'+state);
+      
+      socket.emit("changeStat", {
+        user1 : props.mydata,
+        user2: state,
+        stat: "add",
+      })
+    };
+    const hundelClick3 = async (e, req_id, id, state) => {
+      console.log(state);
+      e.preventDefault();
+      await axios.post(
+        `http://localhost:3001/requests/${req_id}/users/me/friends/${id}/accept`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+        );
+        setStat(stater => stater + 1);
+        socket.emit("changeStat", {
+      user1 : props.mydata,
+      user2: state,
+      stat: "accept",
+    })
   };
   return (
     <div>
@@ -123,8 +166,8 @@ const ListUseres = ({ socket, ...props }) => {
                                   <button
                                     className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
                                     onClick={(e) => {
-                                      hundelClick1(e, stat.id, stat.stats)
-                                      setStat(stat.stats)
+                                      hundelClick1(e, stat.id, stat);
+                                      // setStat(stat.stats);
                                     }}
                                   >
                                     <div>{stat.stats}</div>
@@ -134,17 +177,24 @@ const ListUseres = ({ socket, ...props }) => {
                                   <div className="flex flex-row ">
                                     <button
                                       className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r "
-                                      onClick={(e) =>
-                                        hundelClick2(e, stat.requestId)
-                                      }
+                                      onClick={(e) => {
+                                        hundelClick2(e, stat.requestId, stat);
+                                        // setStat(stat.stats);
+                                      }}
                                     >
                                       <div>Cancel</div>
                                     </button>
                                     <button
                                       className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                                      onClick={(e) =>
-                                        hundelClick3(e, stat.requestId, stat.id)
-                                      }
+                                      onClick={(e) => {
+                                        hundelClick3(
+                                          e,
+                                          stat.requestId,
+                                          stat.id
+                                          ,stat
+                                        );
+                                        // setStat(stat.stats);
+                                      }}
                                     >
                                       <div>Accept</div>
                                     </button>
@@ -153,9 +203,10 @@ const ListUseres = ({ socket, ...props }) => {
                                 {stat.stats === "requester" && (
                                   <button
                                     className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                                    onClick={(e) =>
-                                      hundelClick2(e, stat.requestId)
-                                    }
+                                    onClick={(e) => {
+                                      hundelClick2(e, stat.requestId, stat);
+                                      // setStat(stat.stats);
+                                    }}
                                   >
                                     <div>Cancel</div>
                                   </button>

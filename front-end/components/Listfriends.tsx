@@ -81,6 +81,18 @@ const Listfriends = (props) => {
                             Remove
                           </button>
                         </div>
+                        <div
+                          role="button"
+                          aria-label="MAIN BUTTON"
+                          className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
+                        >
+                          <button
+                            className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                            onClick={(e) => hundelClick(e, stat.friend.id)}
+                          >
+                            Block
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
