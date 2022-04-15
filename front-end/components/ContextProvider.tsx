@@ -35,8 +35,13 @@ export function MyProvider({ children }) {
   });
 
   return (
-    <MyContext.Provider value={{ ShowCanvas, setShowCanvas , data}}>
-      {children}
-    </MyContext.Provider>
+      <>
+      {
+          data && 
+          <MyContext.Provider value={{ ShowCanvas, setShowCanvas , data}}>
+          {children}
+          </MyContext.Provider>
+        }
+        </>
   );
 }

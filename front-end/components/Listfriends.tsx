@@ -20,7 +20,7 @@ const Listfriends = ({ socket, ...props }) => {
   useEffect(() => {
     let isMounted = true;
     if (data1.data.id) {
-      socket.emit("addUser", data1.data.id);
+      // socket.emit("addUser", data1.data.id);
       fetchData()
         .then((res) => {
           if (res.data && isMounted) {

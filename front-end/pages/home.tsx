@@ -22,6 +22,7 @@ const Home = () => {
     return response;
   };
   useEffect(() => {
+    
     fetchChannel()
       .then((res) => {
         if (res.data) setChannel(res.data);

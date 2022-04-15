@@ -1,22 +1,3 @@
-/* To Do List
-
-responsive Channel la
-input two factor
-change membres in channel style la
-notification la
-sockets fej
-responsive profile 80% la
-view all in home channels
-limit 3 in home channel in leaderboeard and hg and list channels 
-responsive message chats 
-add block users
-style channel when mute users
-sign out
-remove edit profile 
-edit profile like a modal
-add bottton "add friend" in users profile
-*/
-
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -30,18 +11,21 @@ import MediaQuery, { useMediaQuery } from "react-responsive";
 import avat from "../public/avatar.svg";
 import Navbar from "./Navbar";
 import { useMyContext } from "../components/ContextProvider";
+import { socketcontext } from "../pages/home";
 
 const HomeNavbar = () => {
-  let data1:any = useMyContext();
+  let data1: any = useMyContext();
+  const socket = React.useContext(socketcontext);
+  React.useEffect (()=>{
+    socket.emit("addUser", data1.data.id);
+  },[])
   const [isopen, setIsopen] = React.useState(false);
   const [clickmenu, setClickmenu] = React.useState(false);
   const [clickimage, setClickimage] = React.useState(false);
   return (
     <>
       <nav className="lg:hidden bg-white shadow-lg bg-gradient-to-r from-white via-orange-500 to-orange-300 h-20">
-        <div
-          className="max-w-6xl mx-auto px-4"
-        >
+        <div className="max-w-6xl mx-auto px-4">
           <div className="relative flex justify-between">
             <div className="mr-4">
               <div className="mt-3">
@@ -93,42 +77,40 @@ const HomeNavbar = () => {
             <div className="mr-4">
               <div className="mt-3">
                 <div className="outline-none menu-button cursor-pointer">
-                {
-                  !clickmenu && 
-                  <svg
-                    className="w-10 h-10 text-blue-500"
-                    fill="none"
-                    // strokeLinecap="round"
-                    // strokeLinejoin="round"
-                    // strokeWidth="2"
-                    viewBox="0 00 24 24"
-                    stroke="currentColor"
-                    onClick={() => {
-                      setClickmenu(!clickmenu);
-                      setClickimage(false);
-                    }}
-                  >
-                    <path d="m4 6h16M4 12h16M4 18h16"></path>
-                  </svg>
-                }
-                {
-                  clickmenu && 
-                  <svg
-                    className="w-10 h-10 text-blue-500"
-                    fill="none"
-                    // strokeLinecap="round"
-                    // strokeLinejoin="round"
-                    // strokeWidth="2"
-                    viewBox="0 00 24 24"
-                    stroke="currentColor"
-                    onClick={() => {
-                      setClickmenu(!clickmenu);
-                      setClickimage(false);
-                    }}
-                  >
-                    <path d="m4 6h16M4 12h16M4 18h16"></path>
-                  </svg>
-                }
+                  {!clickmenu && (
+                    <svg
+                      className="w-10 h-10 text-blue-500"
+                      fill="none"
+                      // strokeLinecap="round"
+                      // strokeLinejoin="round"
+                      // strokeWidth="2"
+                      viewBox="0 00 24 24"
+                      stroke="currentColor"
+                      onClick={() => {
+                        setClickmenu(!clickmenu);
+                        setClickimage(false);
+                      }}
+                    >
+                      <path d="m4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                  )}
+                  {clickmenu && (
+                    <svg
+                      className="w-10 h-10 text-blue-500"
+                      fill="none"
+                      // strokeLinecap="round"
+                      // strokeLinejoin="round"
+                      // strokeWidth="2"
+                      viewBox="0 00 24 24"
+                      stroke="currentColor"
+                      onClick={() => {
+                        setClickmenu(!clickmenu);
+                        setClickimage(false);
+                      }}
+                    >
+                      <path d="m4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                  )}
                 </div>
                 {clickmenu && (
                   <div
