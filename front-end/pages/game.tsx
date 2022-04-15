@@ -211,7 +211,7 @@ const Game = () => {
     }, [MyData, context.ShowCanvas]);
     return (
         <div>
-            <HomeNavbar data={MyData} />
+            <HomeNavbar />
             <link
                 rel="stylesheet"
                 href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css"

@@ -1,9 +1,10 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Messagemapconv from "./Messagemapconv";
 import { io, Socket } from "socket.io-client";
-
-const PrivateConv = ({ socket, ...props }) => {
+import { socketchatcontext } from "../pages/home";
+const PrivateConv = (props) => {
+  let socket = useContext(socketchatcontext)
   useEffect(() => {
     socket.emit("addUser", props.data.id);
   }, [socket]);
@@ -29,7 +30,7 @@ const PrivateConv = ({ socket, ...props }) => {
   };
   const [msg, setMsg] = useState("");
   useEffect(() => {
-    if (!conversation)
+    if (conversation.length == 0)
     {
       fetchconsversation()
       .then((res) => {

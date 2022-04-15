@@ -63,7 +63,6 @@ export class DataService {
     );
     if (!body.password) throw new UnauthorizedException();
     const check = await bcrypt.compare(body.password, channel.password);
-    console.log(check);
     if (channel && check) {
       return await this.addNewUserToChannel(channelId, myId, UserType.USER);
     }
@@ -78,7 +77,6 @@ export class DataService {
     let check;
     let stats: string;
     let requestId: number;
-    // console.log(me);
     const blockList: Block[] = await this.blockService.findAllMyBlockList(id);
     const newblockList = [];
     blockList.map((blockUser) => {
@@ -119,7 +117,6 @@ export class DataService {
   async getProfileOfUser(id: number) {
     let user: User = await this.usersService.findOneById(id);
     let numberFriends = await this.friendsService.findAllByUser(user);
-    console.log(numberFriends.length);
     const userInfo: Object = {
       user,
       numberOfFriends: numberFriends.length,
@@ -170,8 +167,6 @@ export class DataService {
       const friend: User = await this.usersService.findOneById(friendId);
       if (!friend) return { status: 500, message: 'this user is not fount' };
       const user: User = await this.usersService.findOneById(userId);
-      console.log(user);
-      console.log(friend);
       const list: Friend[] = await this.friendsService.findTwoFriends(
         userId,
         friendId,
@@ -186,9 +181,7 @@ export class DataService {
   async save(newUser: User) {
     let result: any = await this.usersService.findOneById(newUser.id);
     if (!result) {
-      // console.log('samir');
       const user = await this.usersService.save(newUser);
-      // console.log(user);
     } else console.log('wala a sahbi ma blansh');
   }
 
@@ -199,8 +192,6 @@ export class DataService {
 
   // addFriend
   async sendRequestToNewFriend(myId: number, friendId: number) {
-    // console.log(myId);
-    // console.log(friendId);
     if (myId == friendId)
       return { status: 500, message: 'U cant send a request to urself' };
     const me: User = await this.usersService.findOneById(myId);
@@ -446,11 +437,9 @@ export class DataService {
           (element.ban == true || element.mute == true) &&
           element.period > 0
         ) {
-          console.log(element.ban);
           const firstDate = moment(element.timeOfOperation);
           const nowDate = moment(new Date());
           const interval = Math.abs(firstDate.diff(nowDate, 'minutes'));
-          console.log(interval);
           if (interval >= element.period) {
             if (element.ban == true)
               await this.removeBanUserInChannel(element.channel.id, id);
@@ -630,7 +619,6 @@ export class DataService {
     const channelUser: ChannelUser =
       await this.channelUserService.findbyChannelAndUser(channel, user);
     if (!channelUser) {
-      console.log('findMyChannel');
       throw UnauthorizedException;
       // return { status: 500, message: 'U dont have acces to this channel' };
     }

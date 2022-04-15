@@ -22,7 +22,6 @@ export class FortyTwoStrategyStrategy extends PassportStrategy(Strategy) {
     profile: any,
     cb: VerifyCallback,
   ): Promise<any> {
-    // console.log(profile);
     const user: User = {
       id: profile._json.id,
       avatar: profile._json.image_url,

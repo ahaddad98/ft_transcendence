@@ -72,7 +72,6 @@ export class ChannelsController {
     try {
       return await this.dataService.listUsersOfChannelWitouhtMe(params.id);
     } catch (err) {
-      console.log(err);
       throw new Error();
     }
   }

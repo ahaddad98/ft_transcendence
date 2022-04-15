@@ -4,14 +4,14 @@ import PrivateConv from "./PrivateConv";
 import { io, Socket } from "socket.io-client";
 
 const ChatConversation = (props) => {
-  let socket = io("http://localhost:3001");
+  // let socket = io("http://localhost:3080");
   const [clickconv, setClickconv] = useState(false);
   const [clickconvresp, setClickconvresp] = useState(false);
   const [convid, setConvid] = useState(-1);
   const [reciever, setReciever] = useState();
   return (
     <div className="h-screen justify-center">
-      <div>{props.data && <HomeNavbar data={props.data} />}</div>
+      <div>{props.data && <HomeNavbar  />}</div>
       <div
         className="lg:mt-10 container mx-auto shadow-lg rounded-lg flex"
         style={{ height: "80%" }}
@@ -126,8 +126,8 @@ const ChatConversation = (props) => {
               );
             })}
           </div>
-          {convid !== -1 && props.data && reciever && <PrivateConv convid={convid} data={props.data} socket={socket} reciver={reciever}/>}
-          {convid === -1 && props.data && props.id && reciever && <PrivateConv convid={props.id} data={props.data} socket={socket} reciver={reciever}/>}
+          {convid !== -1 && props.data && reciever && <PrivateConv convid={convid} data={props.data}  reciver={reciever}/>}
+          {convid === -1 && props.data && props.id && reciever && <PrivateConv convid={props.id} data={props.data}  reciver={reciever}/>}
         </div>
       </div>
     </div>

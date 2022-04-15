@@ -15,7 +15,6 @@ export class AppController {
   @Get('')
   @UseGuards(JwtAuthGuard)
   getHello(@Param() id: number) {
-    // console.log(typeof id.id);
     return id;
   }
 }

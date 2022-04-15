@@ -65,6 +65,6 @@ import { UsersGateway } from './users.gateway';
     GameController,
     BlockController,
   ],
-  providers: [AppGateway,UsersGateway],
+  providers: [AppGateway,UsersGateway, ChatGateway],
 })
 export class AppModule {}

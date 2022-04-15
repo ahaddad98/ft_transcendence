@@ -70,9 +70,6 @@ export class ProfileController {
   @UseInterceptors(FileInterceptor('file', saveImageToStorage))
   uploadAvatar(@UploadedFile() file: Express.Multer.File, @Req() req): Object {
     try {
-      // console.log(readFile(file.path));
-      // console.log(file);
-      // return file;
       return this.dataService.updateAvatar(file, req);
     } catch (err) {
       return err;

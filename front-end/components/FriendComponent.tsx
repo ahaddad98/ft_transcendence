@@ -22,7 +22,7 @@ const FriendComponent = (props) => {
   };
   return (
     <div className="profile-page">
-      <HomeNavbar data={props.data} />
+      <HomeNavbar />
       <link
         rel="stylesheet"
         href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css"

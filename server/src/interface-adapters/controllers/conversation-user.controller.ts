@@ -13,7 +13,6 @@ export class ConversationUserController {
   @Get('conversations/:id/users/me/all')
   @UseGuards(JwtAuthGuard)
   async findUsersOfConversations(@Param('id') id: number) {
-    // console.log('cb4');
     return await this.conversationUserService.findUsersOfConversations(id);
   }
 
