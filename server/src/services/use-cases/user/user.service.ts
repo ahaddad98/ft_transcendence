@@ -107,7 +107,6 @@ export class UserService {
       .orderBy('user.level', 'DESC')
       .getMany();
     let winners = [];
-    // console.log(user);
     for (let i = 0; i < user.length; i++) {
       let winner = {
         avatar: user[i].avatar,
@@ -118,7 +117,6 @@ export class UserService {
       };
       winners.push(winner);
     }
-    console.log(winners);
     return winners;
   }
 

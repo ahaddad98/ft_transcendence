@@ -941,8 +941,6 @@ export class DataService {
       const blockUser: User = await this.usersService.findOneById(blockId);
       if (!blockUser) return { status: 500, message: 'this user is not fount' };
       const me: User = await this.usersService.findOneById(myId);
-      // console.log(me);
-      // console.log(blockUser);
       const block = await this.blockService.findBlockUser(me, blockUser);
       if (block) return await this.blockService.remove(block);
       return { status: 500, message: 'error' };
