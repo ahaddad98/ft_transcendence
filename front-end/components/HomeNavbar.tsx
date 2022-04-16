@@ -278,15 +278,13 @@ const HomeNavbar = () => {
                             </Link>
                           </li>
                           <li>
-                            <Link href="/editprofile">
-                              <p className="w-22 block py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                                Edit Profile
-                              </p>
-                            </Link>
-                          </li>
-                          <li>
                             <Link href="/">
-                              <p className="w-22 block py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                              <p className="w-22 block py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                              onClick={
+                                ()=>{
+                                  localStorage.removeItem("token")
+                                }
+                              }>
                                 Sign out{" "}
                               </p>
                             </Link>
