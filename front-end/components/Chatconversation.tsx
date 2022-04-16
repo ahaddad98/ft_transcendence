@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HomeNavbar from "./HomeNavbar";
 import PrivateConv from "./PrivateConv";
 import { io, Socket } from "socket.io-client";
 
 const ChatConversation = (props) => {
-  // let socket = io("http://localhost:3080");
   const [clickconv, setClickconv] = useState(false);
   const [clickconvresp, setClickconvresp] = useState(false);
   const [convid, setConvid] = useState(-1);
   const [reciever, setReciever] = useState();
+  useEffect(()=>{
+    console.log(convid);
+    
+  },[convid])
   return (
     <div className="h-screen justify-center">
       <div>{props.data && <HomeNavbar  />}</div>
@@ -39,8 +42,7 @@ const ChatConversation = (props) => {
                 className=" absolute right-0 py-2 mt-2 bg-white rounded-md shadow-xl  w-full  md:w-600 "
                 style={{ height: "500px" }}
               >
-                {props.conversations.map((stat, key) => {
-                  return (
+                {props.conversations.map((stat, key) => 
                     <div
                       className="flex flex-row py-4 px-2 items-center border-b-2"
                       key={key}
@@ -65,32 +67,11 @@ const ChatConversation = (props) => {
                         </span>
                       </div>
                     </div>
-                  );
-                })}
-                {/* <div className="flex justify-around justify-items-center block px-4 py-2 text-sm text-white text-gray-700 hover:bg-gradient-to-r hover:from-white hover:via-orange-500 hover:to-orange-300 hover:text-white">
-                      <button
-                        type="button"
-                        className="bg-gradient-to-r from-orange-500 to-orange-300 hover:from-orange-100 hover:to-yellow-500 w-32 h-10"
-                        
-                      >
-                        View profile
-                      </button>
-                    </div>
-                    <div className="flex justify-around justify-items-center block px-4 py-2 text-sm text-white text-gray-700 hover:bg-gradient-to-r hover:from-white hover:via-orange-500 hover:to-orange-300 hover:text-white">
-                      <button
-                        type="button"
-                        className="bg-gradient-to-r from-orange-500 to-orange-300 hover:from-orange-100 hover:to-yellow-500 w-32 h-10"
-                        
-                      >
-                        Log out
-                      </button>
-                    </div> */}
+                 )}
               </div>
             )}
           </div>
         </div>
-        {/* <div className="lg:hidden  px-5 py-5 flex justify-between items-center  border-b-2">
-        </div> */}
         <div
           className="flex  justify-between"
           style={{ height: "100%" }}
@@ -99,8 +80,7 @@ const ChatConversation = (props) => {
             className="hidden lg:block flex flex-col w-2/5 border-r-2 overflow-y-auto"
             style={{ height: "93%" }}
           >
-            {props.conversations.map((stat, key) => {
-              return (
+            {props.conversations.map((stat, key) => 
                 <div
                   className="flex flex-row py-4 px-2 items-center border-b-2"
                   key={key}
@@ -123,8 +103,7 @@ const ChatConversation = (props) => {
                     <span className="text-gray-500">{stat.user.message}</span>
                   </div>
                 </div>
-              );
-            })}
+             )}
           </div>
           {convid !== -1 && props.data && reciever && <PrivateConv convid={convid} data={props.data}  reciver={reciever}/>}
           {convid === -1 && props.data && props.id && reciever && <PrivateConv convid={props.id} data={props.data}  reciver={reciever}/>}

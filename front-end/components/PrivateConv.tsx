@@ -4,6 +4,8 @@ import Messagemapconv from "./Messagemapconv";
 import { io, Socket } from "socket.io-client";
 import { socketchatcontext } from "../pages/home";
 const PrivateConv = (props) => {
+  console.log(props);
+  
   let socket = useContext(socketchatcontext)
   useEffect(() => {
     socket.emit("addUser", props.data.id);
@@ -19,6 +21,7 @@ const PrivateConv = (props) => {
     return response;
   };
   const [conversationdata, setConversationdata] = useState();
+  const [object, setObject] = useState({me:{}, sender:{}, receiver:{}, content: ""});
   const fetchconsversationdata = async () => {
     const response = await axios.get(
       `http://localhost:3001/conversations/${props.convid}`,
@@ -36,7 +39,6 @@ const PrivateConv = (props) => {
       .then((res) => {
         if (res.data) {
           setConversation(res.data);
-          // console.log(conversation);
         }
       })
       .catch((err) => {
@@ -44,17 +46,45 @@ const PrivateConv = (props) => {
       });
     }
   }, []);
+  useEffect(() => {
+    if (conversation.length > 0)
+    {
+      fetchconsversation()
+      .then((res) => {
+        if (res.data) {
+          setConversation(res.data);
+          console.log(conversation);
+          
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+  }, [props.convid]);
 
   useEffect(() => {
     socket.on("newMessage", (data) => {
-      const me = props.data;
-      const sender = data.sender;
-      const receiver = data.receiver;
-      const content = data.message;
-      const object = { me, sender, receiver, content };
-      setConversation((conversation) => [...conversation, object]);
+      const me1 = props.data;
+      const sender1 = data.sender;
+      const receiver1 = data.receiver;
+      const content1 = data.message;
+      // const objecttmp = { me, sender, receiver, content };
+      setObject({me: me1, sender:sender1, receiver:receiver1, content:content1});
+      // if (object.content.length > 0)
+      // {
+      //   setConversation((conversation) => [...conversation, object]);
+      // }
     });
   }, []);
+
+  useEffect(() => {
+    object && conversation.includes(element => element.sender?.id == props.reciver.id) && setConversation((conversation) => [...conversation, object]);
+    // if(object)
+    // {
+    //   const index = conversation.findIndex((element) => )
+    // }
+  }, [object])
   const sendmsg = async (e) => {
     e.preventDefault();
     await axios

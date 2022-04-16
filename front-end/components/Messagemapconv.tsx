@@ -5,8 +5,7 @@ const Messagemapconv = (props) => {
   
   return (
     <>
-      {props.conversation.map((stat, key) => {
-        return (
+      {props.conversation.map((stat, key) => 
           <React.Fragment key={key}>
             <div className="flex flex-col mt-5 flex-shrink-0 rounded-2xl ">
                   {stat.sender.username === stat.me.username && (
@@ -35,8 +34,7 @@ const Messagemapconv = (props) => {
               )}
             </div>
           </React.Fragment>
-        );
-      })}
+        )}
     </>
   );
 };
