@@ -3,8 +3,9 @@ import React, { useContext, useEffect, useState } from "react";
 import Messagemapconv from "./Messagemapconv";
 import { io, Socket } from "socket.io-client";
 import { socketchatcontext } from "../pages/home";
+
 const PrivateConv = (props) => {
-  console.log(props);
+  // console.log(props);
   
   let socket = useContext(socketchatcontext)
   useEffect(() => {

@@ -1,17 +1,28 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ChannelBar from "./Channelbar";
 import ChannelChat from "./ChannelChat";
 import HomeNavbar from "./HomeNavbar";
-
+import { useMydataContext } from "./mydataprovider";
 const ChannelPage = (props) => {
-  // console.log(props);
-  
+ 
+  let data1: any = useMydataContext();
   const [mychannel, setMychannel] = useState({});
 
   const fetchmychannel = async () => {
     const response = await axios.get(
       `http://localhost:3001/channels/${props.id}`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
+    return response;
+  };
+  const [mychannelusers, setMychannelusers] = useState();
+
+  const fetchmychannelusers = async () => {
+    const response = await axios.get(
+      `http://localhost:3001/channels/${props.id}/users/all`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
@@ -29,17 +40,6 @@ const ChannelPage = (props) => {
         console.log(err);
       });
   }, []);
-  const [mychannelusers, setMychannelusers] = useState();
-
-  const fetchmychannelusers = async () => {
-    const response = await axios.get(
-      `http://localhost:3001/channels/${props.id}/users/all`,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-    );
-    return response;
-  };
   useEffect(() => {
     fetchmychannelusers()
       .then((res) => {
@@ -55,10 +55,17 @@ const ChannelPage = (props) => {
   return (
     <div className="flex antialiased text-gray-800" style={{ height: "90%" }}>
       <div className="flex flex-row w-full overflow-x-hidden">
-        {
-          mychannel && mychannelusers && props.allmychannels  && props.mydata  && <ChannelBar mydata={props.mydata} mychannel={mychannel} mychannelusers={mychannelusers} allmychannel={props.allmychannels}></ChannelBar>
-        }
-        {mychannel.conversation && <ChannelChat mychannel={mychannel} />}
+        {mychannel && mychannelusers && props.allmychannels && (
+          <ChannelBar
+            mydata={props.mydata}
+            mychannel={mychannel}
+            mychannelusers={mychannelusers}
+            allmychannel={props.allmychannels}
+          ></ChannelBar>
+        )}
+        {mychannel.conversation && (
+          <ChannelChat mydata={data1.data} mychannel={mychannel} />
+        )}
       </div>
     </div>
   );

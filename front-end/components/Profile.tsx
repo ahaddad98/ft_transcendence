@@ -30,7 +30,7 @@ const Profile = (props) => {
   const [participatechannel, setParticipatechannel] = useState("");
   return (
     <div className="profile-page">
-      <HomeNavbar data={data} />
+      <HomeNavbar />
       <link
         rel="stylesheet"
         href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css"

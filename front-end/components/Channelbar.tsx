@@ -7,9 +7,12 @@ import PopoverHeader from "@material-tailwind/react/PopoverHeader";
 import PopoverBody from "@material-tailwind/react/PopoverBody";
 import Button from "@material-tailwind/react/Button";
 import axios from "axios";
+import { MydataProvider, useMydataContext } from "./mydataprovider";
 
 const ChannelBar = (props) => {
   const [userid, setUserid] = useState(-1);
+  let data1: any = useMydataContext();
+
   // console.log(props);
   const buttonRef = useRef();
   const router = useRouter();
@@ -36,14 +39,14 @@ const ChannelBar = (props) => {
     }
   };
   useEffect(() => {
-    if (props.mychannelusers.owner?.username === props.mydata.username) {
+    if (props.mychannelusers.owner?.username === data1.data.username) {
       setImowner(true);
     } else if (props.mychannel.myRole === "admin") {
       setImadmin(true);
     }
   }, [props]);
   useEffect(() => {
-    if (props.mychannelusers.owner?.username === props.mydata.username) {
+    if (props.mychannelusers.owner?.username === data1.data.username) {
       setImowner(true);
     } else if (props.mychannel.myRole === "admin") {
       setImadmin(true);
@@ -102,7 +105,7 @@ const ChannelBar = (props) => {
         }
       )
       .then((res) => {
-        console.log(res);
+       
       });
     setClickmember(false);
     setClickadmin(false);
@@ -126,7 +129,7 @@ const ChannelBar = (props) => {
         }
       )
       .then((res) => {
-        console.log(res);
+      
       });
     setClickmember(false);
     setClickadmin(false);
@@ -160,7 +163,7 @@ const ChannelBar = (props) => {
           <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
             {props.mychannelusers?.users.map((stat, key) => {
               return (
-                <>
+                <React.Fragment key={key}>
                   <button
                     className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
                     key={key}
@@ -656,7 +659,7 @@ const ChannelBar = (props) => {
                       </div>
                     </Modal>
                   )}
-                </>
+                </React.Fragment>
               );
             })}
           </div>

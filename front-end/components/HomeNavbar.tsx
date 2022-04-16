@@ -16,7 +16,6 @@ import { useMydataContext } from "./mydataprovider";
 
 const HomeNavbar = () => {
   let data1: any = useMydataContext();
-  console.log(data1);
   
   const socket = React.useContext(socketcontext);
   React.useEffect (()=>{

@@ -9,22 +9,25 @@ import { Router, useRouter } from "next/router";
 import { MydataProvider } from "../../components/mydataprovider";
 
 const Channel = () => {
+  console.log('1555');
+  
   const [mychannel, setMychannel] = useState({});
   const [allmychannel, setAllmychannel] = useState();
   const [convid, setconvid] = useState();
   const [chanid, setchanid] = useState();
   const router = useRouter();
+  // const { query, isReady } = useRouter();
   const fetchAllmychannel = async () => {
     const response = await axios.get(
       `http://localhost:3001/channels/users/me`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
-    )
+    );
     return response;
-  }
+  };
   useEffect(() => {
-    fetchAllmychannel()
+      fetchAllmychannel()
       .then((res) => {
         if (res.data) {
           setAllmychannel(res.data);
@@ -33,35 +36,17 @@ const Channel = () => {
       .catch((err) => {
         console.log(err);
       });
-
-  }, []);
-  const [data, setData] = useState({});
-
-  const fetchData = async () => {
-    const response = await axios.get("http://localhost:3001/users/me", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    return response;
-  };
-  useEffect(() => {
-    fetchData()
-      .then((res) => {
-        if (res.data) setData(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   }, []);
 
   return (
     <MydataProvider>
-    <div className="h-screen">
-      { 
-        <HomeNavbar/>
-      }
-      {allmychannel && router.query.channelId  && <ChannelPage allmychannels={allmychannel} id={router.query.channelId} mydata={data} />}
-    </div>
-      </MydataProvider>
+      <div className="h-screen">
+        {
+          <HomeNavbar/>
+        }
+        { router.query.channelId  ?  <ChannelPage allmychannels={allmychannel} id={router.query.channelId} /> : <div>21321564</div>}
+      </div>
+    </MydataProvider>
   );
 };
 export default Channel;

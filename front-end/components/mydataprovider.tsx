@@ -26,7 +26,6 @@ export function MydataProvider({ children }) {
     if (tok && tok.length > 0) {
         fetchData()
         .then((res) => {
-            console.log(res);
             if (res.data) {
             setData(res.data);
             setCheck(true);

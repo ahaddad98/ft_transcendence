@@ -1,11 +1,11 @@
 import React from "react";
 
 const Messagemap = (props) => {
-
+  console.log('in message');
+  
   return (
     <>
-      {props.conv.map((stat, key) => {
-        return (
+      {props.conv.map((stat, key) => 
           <React.Fragment key={key}>
             {stat.sender.username !== stat.me.username && (
               <div className="col-start-1 col-end-8 p-3 rounded-lg">
@@ -32,8 +32,7 @@ const Messagemap = (props) => {
               </div>
             )}
           </React.Fragment>
-        );
-      })}
+       )}
     </>
   );
 };
