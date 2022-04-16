@@ -62,15 +62,16 @@ const HomeNavbar = () => {
                       </button>
                     </div>
                     <div className="flex justify-around justify-items-center block px-4 py-2 text-sm text-white text-gray-700 hover:bg-gradient-to-r hover:from-white hover:via-orange-500 hover:to-orange-300 hover:text-white">
-                      <button
-                        type="button"
-                        className="bg-gradient-to-r from-orange-500 to-orange-300 hover:from-orange-100 hover:to-yellow-500 w-32 h-10"
-                        onClick={() => {
-                          setClickimage(false);
-                        }}
-                      >
-                        Log out
-                      </button>
+                    <Link href="/">
+                              <p className="w-22 block py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                              onClick={
+                                ()=>{
+                                  localStorage.removeItem("token")
+                                }
+                              }>
+                                Sign out{" "}
+                              </p>
+                            </Link>
                     </div>
                   </div>
                 )}

@@ -12,6 +12,7 @@ import { MydataProvider, useMydataContext } from "./mydataprovider";
 const ChannelBar = (props) => {
   const [userid, setUserid] = useState(-1);
   let data1: any = useMydataContext();
+  console.log(props.mychannelusers);
 
   // console.log(props);
   const buttonRef = useRef();
@@ -157,7 +158,7 @@ const ChannelBar = (props) => {
           <div className="flex flex-row items-center justify-between text-xs">
             <span className="font-bold">Members</span>
             <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">
-              {props.mychannel.members}
+              {props.mychannelusers.usersNumber}
             </span>
           </div>
           <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
@@ -668,7 +669,7 @@ const ChannelBar = (props) => {
           <div className="flex flex-row items-center justify-between text-xs">
             <span className="font-bold">Admins</span>
             <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">
-              {props.mychannelusers.admins.length}
+              {props.mychannelusers.adminsNumber}
             </span>
           </div>
           <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
