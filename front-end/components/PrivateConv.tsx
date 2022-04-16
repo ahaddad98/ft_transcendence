@@ -47,7 +47,7 @@ const PrivateConv = (props) => {
     }
   }, []);
   useEffect(() => {
-    if (conversation.length > 0)
+    if (conversation.length >= 0)
     {
       fetchconsversation()
       .then((res) => {
