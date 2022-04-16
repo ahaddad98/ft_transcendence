@@ -23,7 +23,7 @@ export function MydataProvider({ children }) {
   useEffect(() => {
     let tok = localStorage.getItem("token");
 
-    if (tok.length > 0) {
+    if (tok && tok.length > 0) {
         fetchData()
         .then((res) => {
             console.log(res);
@@ -33,9 +33,12 @@ export function MydataProvider({ children }) {
           }
         })
         .catch((err) => {
-          console.log(err);
+          localStorage.removeItem('token')
+          router.push(`/`);
         });
-    }
+      }
+      else
+      router.push(`/`);
   }, []);
 
   return (
@@ -45,7 +48,7 @@ export function MydataProvider({ children }) {
           {children}
         </MydataContext.Provider>
       ) : (
-        "amine"
+        ""
       )}
     </>
   );

@@ -79,11 +79,9 @@ const PrivateConv = (props) => {
   }, []);
 
   useEffect(() => {
-    object && conversation.includes(element => element.sender?.id == props.reciver.id) && setConversation((conversation) => [...conversation, object]);
-    // if(object)
-    // {
-    //   const index = conversation.findIndex((element) => )
-    // }
+    if(object)
+      if(props.reciver.id == object.sender.id)
+        setConversation((conversation) => [...conversation, object]);
   }, [object])
   const sendmsg = async (e) => {
     e.preventDefault();
