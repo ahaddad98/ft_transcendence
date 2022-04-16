@@ -2,10 +2,10 @@ import axios from "axios";
 import { stat, Stats } from "fs";
 import React, { useEffect, useState } from "react";
 import HomeNavbar from "./HomeNavbar";
-import { useMyContext } from "../components/ContextProvider";
+import { useMydataContext } from "../components/mydataprovider";
 
 const ListUseres = ({ socket, ...props }) => {
-  let data1: any = useMyContext();
+  let data1: any = useMydataContext();
 
   const [stater, setStat] = useState(0);
   useEffect(() => {

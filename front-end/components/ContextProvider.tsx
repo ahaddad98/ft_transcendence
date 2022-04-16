@@ -12,40 +12,17 @@ export function useMyContext() {
 
 export function MyProvider({ children }) {
   const [data, setData] = useState();
-  const [check, setCheck] = useState(false);
-  const fetchData = async () => {
-    const response = await axios.get("http://localhost:3001/users/me", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    return response;
-  };
-  useEffect(() => {
-    fetchData()
-      .then((res) => {
-        if (res.data) {
-          setData(res.data);
-          console.log(data);
-
-          setCheck(true);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+ 
   const [ShowCanvas, setShowCanvas] = useState({
     show: false,
     gameInfo: {},
   });
 
   return (
-      <>
-      {
-        check ? 
+    
           <MyContext.Provider value={{ ShowCanvas, setShowCanvas , data}}>
           {children}
-          </MyContext.Provider> : ""
-        }
-        </>
+          </MyContext.Provider> 
+       
   );
 }

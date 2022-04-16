@@ -12,6 +12,8 @@ import SignIN from "../components/Signin";
 import { useState } from "react";
 import Home from "./home";
 
+
+
 const loginSuccess = () => {
   const { query } = useRouter();
   const Router = useRouter();
@@ -26,7 +28,7 @@ const loginSuccess = () => {
       const tok = query.token;
       localStorage.setItem("token", `${tok}`);
       fetchData().then((result) => {
-        if (result.data.username !== null) router.push("/home");
+        if (localStorage.getItem("token")) router.push("/home");
       });
     }
   }, [query]);

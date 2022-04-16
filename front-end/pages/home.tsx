@@ -9,10 +9,11 @@ import MediaQuery, { useMediaQuery } from "react-responsive";
 import { io, Socket } from "socket.io-client";
 let socket = io("http://localhost:6209");
 let socketchat = io("http://localhost:3080");
-export const socketcontext = React.createContext(socket)
-export const socketchatcontext = React.createContext(socketchat)
-import mydataProvider from '../stats/mydata'
+export const socketcontext = React.createContext(socket);
+export const socketchatcontext = React.createContext(socketchat);
+import mydataProvider from "../stats/mydata";
 import { useMyContext } from "../components/ContextProvider";
+import { MydataProvider } from "../components/mydataprovider";
 
 const Home = () => {
   const [channel, setChannel] = useState([]);
@@ -24,7 +25,6 @@ const Home = () => {
     return response;
   };
   useEffect(() => {
-    
     fetchChannel()
       .then((res) => {
         if (res.data) setChannel(res.data);
@@ -74,15 +74,17 @@ const Home = () => {
 
   return (
     <>
-    <div>
-      <HomeNavbar ></HomeNavbar>
-      <div className="flex flex-col lg:flex-row">
-        {stats && <LeaderBoard data={stats} />}
-        {history && <HistoryGame data={history} />}
-      </div>
-      {channel && <ChannlesList data={channel} />}
-    </div>
-  </>
+      <MydataProvider>
+        <div>
+          <HomeNavbar></HomeNavbar>
+          <div className="flex flex-col lg:flex-row">
+            {stats && <LeaderBoard data={stats} />}
+            {history && <HistoryGame data={history} />}
+          </div>
+          {channel && <ChannlesList data={channel} />}
+        </div>
+      </MydataProvider>
+    </>
   );
 };
 

@@ -6,6 +6,7 @@ import CardBody from "@material-tailwind/react/CardBody";
 import ChannelPage from "../../components/channelpage";
 import axios from "axios";
 import { Router, useRouter } from "next/router";
+import { MydataProvider } from "../../components/mydataprovider";
 
 const Channel = () => {
   const [mychannel, setMychannel] = useState({});
@@ -53,12 +54,14 @@ const Channel = () => {
   }, []);
 
   return (
+    <MydataProvider>
     <div className="h-screen">
       { 
         <HomeNavbar/>
       }
       {allmychannel && router.query.channelId  && <ChannelPage allmychannels={allmychannel} id={router.query.channelId} mydata={data} />}
     </div>
+      </MydataProvider>
   );
 };
 export default Channel;

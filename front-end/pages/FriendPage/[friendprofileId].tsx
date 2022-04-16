@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { MydataProvider } from "../../components/mydataprovider";
 import ProfileFriend from "../../components/ProfileFriend";
 
 const friendprofile = () => {
@@ -27,9 +28,12 @@ const friendprofile = () => {
   const [myhistory, setMyhistory] = useState();
 
   const fetchmyhistory = async () => {
-    const response = await axios.get("http://localhost:3001/game/history/users/me", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    const response = await axios.get(
+      "http://localhost:3001/game/history/users/me",
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
     return response;
   };
   useEffect(() => {
@@ -42,16 +46,17 @@ const friendprofile = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, []); 
+  }, []);
   const router = useRouter();
-    
+
   return (
-    <div>
-      {
-        router.query.friendprofileId && 
-      <ProfileFriend id={router.query.friendprofileId}/>
-      }
-    </div>
+    <MydataProvider>
+      <div>
+        {router.query.friendprofileId && (
+          <ProfileFriend id={router.query.friendprofileId} />
+        )}
+      </div>
+    </MydataProvider>
   );
 };
 export default friendprofile;

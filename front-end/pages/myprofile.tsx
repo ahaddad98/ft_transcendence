@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import HomeNavbar from "../components/HomeNavbar";
 import Profile from "../components/Profile";
+import { MydataProvider } from "../components/mydataprovider";
 
 const Myprofile = () => {
   const [myprofile, setMyprofile] = useState({});
@@ -27,9 +28,12 @@ const Myprofile = () => {
   const [myhistory, setMyhistory] = useState();
 
   const fetchmyhistory = async () => {
-    const response = await axios.get("http://localhost:3001/game/history/users/me", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    const response = await axios.get(
+      "http://localhost:3001/game/history/users/me",
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
     return response;
   };
   useEffect(() => {
@@ -42,12 +46,15 @@ const Myprofile = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, []); 
+  }, []);
   const [mychannel, setMychannel] = useState();
   const fetchmychannel = async () => {
-    const response = await axios.get("http://localhost:3001/channels/users/me", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    const response = await axios.get(
+      "http://localhost:3001/channels/users/me",
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
     return response;
   };
   useEffect(() => {
@@ -62,8 +69,20 @@ const Myprofile = () => {
       });
   }, []);
   const is_me = {
-      check: true,
-  }
-  return <div>{hasResult && mychannel &&  <Profile mydata={myprofile} myhistory={myhistory} mychannels={mychannel}/>}</div>;
+    check: true,
+  };
+  return (
+    <MydataProvider>
+      <div>
+        {hasResult && mychannel && (
+          <Profile
+            mydata={myprofile}
+            myhistory={myhistory}
+            mychannels={mychannel}
+          />
+        )}
+      </div>
+    </MydataProvider>
+  );
 };
 export default Myprofile;

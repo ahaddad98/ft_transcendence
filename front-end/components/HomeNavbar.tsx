@@ -12,9 +12,12 @@ import avat from "../public/avatar.svg";
 import Navbar from "./Navbar";
 import { useMyContext } from "../components/ContextProvider";
 import { socketcontext } from "../pages/home";
+import { useMydataContext } from "./mydataprovider";
 
 const HomeNavbar = () => {
-  let data1: any = useMyContext();
+  let data1: any = useMydataContext();
+  console.log(data1);
+  
   const socket = React.useContext(socketcontext);
   React.useEffect (()=>{
     socket.emit("addUser", data1.data.id);

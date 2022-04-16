@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import ChatConversation from "../../components/Chatconversation";
 import HomeNavbar from "../../components/HomeNavbar";
+import { MydataProvider } from "../../components/mydataprovider";
 
 const Conversation = () => {
   const router = useRouter();
@@ -26,9 +27,12 @@ const Conversation = () => {
   const [Conversations, setConversations] = useState();
 
   const fetchConversations = async () => {
-    const response = await axios.get("http://localhost:3001/conversations/private/users/me", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    const response = await axios.get(
+      "http://localhost:3001/conversations/private/users/me",
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
     return response;
   };
   useEffect(() => {
@@ -41,11 +45,17 @@ const Conversation = () => {
       });
   }, []);
   return (
-    <>
-    {
-      data && Conversations &&  <ChatConversation id={undefined} data={data} conversations={Conversations}/>
-    }
-    </>
+    <MydataProvider>
+      <>
+        {data && Conversations && (
+          <ChatConversation
+            id={undefined}
+            data={data}
+            conversations={Conversations}
+          />
+        )}
+      </>
+    </MydataProvider>
   );
 };
 export default Conversation;

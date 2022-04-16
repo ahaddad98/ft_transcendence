@@ -6,13 +6,17 @@ import ListUseres from "../components/Listuseres";
 import { io, Socket } from "socket.io-client";
 import ListuseresCompon from "../components/Listuserscompon";
 import { socketcontext } from "./home";
+import { MydataProvider } from "../components/mydataprovider";
+
 const UsersList = () => {
   const socket = useContext(socketcontext);
   return (
+    <MydataProvider>
     <div>
       <HomeNavbar />
       <ListUseres socket={socket} />
     </div>
+    </MydataProvider>
   );
 };
 

@@ -2,10 +2,10 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useMyContext } from "../components/ContextProvider";
+import { useMydataContext } from "../components/mydataprovider";
 
 const Listfriends = ({ socket, ...props }) => {
-  let data1: any = useMyContext();
+  let data1: any = useMydataContext();
 
   const router = useRouter();
   const [data, setData] = useState([]);
