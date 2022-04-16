@@ -52,6 +52,16 @@ export class ChatGateway
     if(user?.userId)
     this.server.to(user.socketId).emit('newMessage', payload);
   }
+
+  @SubscribeMessage('sendMessageChannel')
+  handleSendMessageChannel(client: any, payload: any) {
+    this.server.to(payload.id.toString()).emit('newMessageChannel', payload);
+  }
+
+  @SubscribeMessage('joinChannel')
+  joinChannel(client: any, payload: any) {
+    this.server.socketsJoin(payload.id.toString());
+  }
   
   @SubscribeMessage('addUser')
   handleUser(client: any, payload: any) {

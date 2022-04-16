@@ -6,6 +6,7 @@ import MediaQuery, { useMediaQuery } from "react-responsive";
 const LeaderBoard = (props) => {
   // console.log(props);
   const [viewclick, setViewclick] = useState(false);
+  console.log(props.data)
   return (
     <>
     <div className="mt-20 w-full lg:w-1/2">
@@ -60,7 +61,7 @@ const LeaderBoard = (props) => {
                         </p>
                       </div>
                       <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                        ONLINE
+                        {stat.online? "ONLINE":"OFFLINE"}
                       </div>
                       <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                         {stat.level}
@@ -167,7 +168,7 @@ const LeaderBoard = (props) => {
                                                       </p>
                                                   </div>
                                                   <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                                      ONLINE
+                                                    {stat.online? "ONLINE":"OFFLINE"}
                                                   </div>
                                                   <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                                                       {stat.level}

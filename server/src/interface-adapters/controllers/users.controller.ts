@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, Req, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Put, Req, UseGuards } from '@nestjs/common';
 import { DataService } from 'src/services/data/data.service';
 import { UserService } from 'src/services/use-cases/user/user.service';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
@@ -84,6 +84,16 @@ export class UsersController {
   @Get('/random/:id')
   async getRandomUser(@Param('id') id) {
     return await this.userService.getRandomUser(id);
+  }
+
+  @Put('/users/:id/online')
+  async onlineUser(@Param('id') id) {
+    return await this.userService.onlineUser(id);
+  }
+  
+  @Put('/users/:id/offline')
+  async offlineUser(@Param('id') id) {
+    return await this.userService.offlineUser(id);
   }
 
   @Delete(':id')

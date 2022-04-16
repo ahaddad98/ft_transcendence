@@ -70,6 +70,13 @@ export class UserService {
     return await this.userRepository.findOne({ is_online: true });
   }
 
+  async onlineUser(id: number) {
+    return await this.userRepository.update(id, {is_online: true});
+  }
+
+  async offlineUser(id: number) {
+    return await this.userRepository.update(id, {is_online: false});
+  }
   async getRandomUser(myId: string): Promise<User> {
     let ids: number[] = await this.userRepository
       .find({ is_online: true })
@@ -100,6 +107,7 @@ export class UserService {
       .orderBy('user.level', 'DESC')
       .getMany();
     let winners = [];
+    // console.log(user);
     for (let i = 0; i < user.length; i++) {
       let winner = {
         avatar: user[i].avatar,
@@ -110,8 +118,11 @@ export class UserService {
       };
       winners.push(winner);
     }
+    console.log(winners);
     return winners;
   }
+
+
   async update(id: number, object: Object) {
     return await this.userRepository.update(id, object);
   }

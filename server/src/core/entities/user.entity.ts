@@ -60,6 +60,6 @@ export class User {
   @Column({ default: 0 })
   quit?: number;
 
-  @Column({ type: 'boolean', default: true })
+  @Column({ type: 'boolean', default: false })
   is_online?: boolean;
 }
