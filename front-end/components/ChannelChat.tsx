@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Messagemap from "./Messagemap";
 import { socketchannelcontext } from "../pages/home";
 import { SocketAddress } from "net";
+import { useRouter } from "next/router";
 
 const ChannelChat = (props) => {
    let socket = useContext(socketchannelcontext);
@@ -43,6 +44,11 @@ const ChannelChat = (props) => {
         const content1 = data.message;
         setObject({me: me1, sender:sender1, content:content1});
       });
+      return (
+        ()=>{
+          socket.off("newMessageChannel")
+        }
+      )
     }, []);
     useEffect(() => {
       if(object)
@@ -57,7 +63,6 @@ const ChannelChat = (props) => {
           console.log(err);
         });
     }
-        // setConversation((conversation) => [...conversation, object]);
   }, [object])
   const [msg, setMsg] = useState("");
   const sendmsg = async (e) => {
@@ -74,7 +79,10 @@ const ChannelChat = (props) => {
           },
         }
       )
-      .then((res) => {});
+      .then((res) => {
+
+        console.log(res);
+      });
       socket.emit("sendMessageChannel", {
         sender: props.mydata,
         message: msg,
@@ -126,12 +134,15 @@ const ChannelChat = (props) => {
               <div className="flex-grow ml-4">
                 <div className="relative w-full">
                   <form onSubmit={sendmsg}>
+                    {
+                      props.mychannel.mute == false && 
                     <input
-                      type="text"
+                      // type="text"
                       value={msg}
                       className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
                       onChange={(e) => setMsg(e.target.value)}
                     />
+                    }
                   </form>
                 </div>
               </div>

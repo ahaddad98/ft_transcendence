@@ -81,7 +81,7 @@ const PrivateConv = (props) => {
 
   useEffect(() => {
     if(object)
-      if(props.reciver.id == object.sender.id)
+      if(props.reciver.id == object.sender?.id)
         setConversation((conversation) => [...conversation, object]);
   }, [object])
   const sendmsg = async (e) => {

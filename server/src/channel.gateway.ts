@@ -50,6 +50,11 @@ import {
     handleEventChannel(client: any, payload: any) {
       this.server.to(payload.id.toString()).emit('newEventChannel', payload);
     }
+
+    @SubscribeMessage('updateConversationChannel')
+    updateConversation(client: any, payload: any) {
+      this.server.to(payload.id.toString()).emit('newUpdateConversationChannel', payload);
+    }
   
     @SubscribeMessage('sendMessageChannel')
     handleSendMessageChannel(client: any, payload: any) {
@@ -67,6 +72,7 @@ import {
     joinChannel(client: any, payload: any) {
       console.log('im in join channel id: ' + payload);
       this.server.socketsJoin(payload.toString());
+      this.server.to(payload.toString()).emit('newEventChannel', payload);
     }
     
     @SubscribeMessage('addUser')

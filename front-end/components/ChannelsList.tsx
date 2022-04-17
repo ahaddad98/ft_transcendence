@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Modal from "@material-tailwind/react/Modal";
 import Checkbox from "@material-tailwind/react/Checkbox";
 import ModalHeader from "@material-tailwind/react/ModalHeader";
@@ -9,7 +9,9 @@ import Button from "@material-tailwind/react/Button";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { socketchannelcontext } from "../pages/home";
 const ChannlesList = (props) => {
+  let socket = useContext(socketchannelcontext)
   const router = useRouter();
   const [isjoin, setIsjoin] = useState(false);
   const [isjoinpublic, setIsjoinpublic] = useState(false);
@@ -37,7 +39,6 @@ const ChannlesList = (props) => {
         }
       )
       .then((res) => {
-        // console.log(res);
         setCreatechannel(!createchannel);
       });
   };
@@ -59,7 +60,7 @@ const ChannlesList = (props) => {
       )
       .then((res) => {
         console.log(res);
-        router.push("/channel");
+        router.push(`/Channnel/${id}`);
       });
   };
   const hundelsubmitpublic = async (e) => {

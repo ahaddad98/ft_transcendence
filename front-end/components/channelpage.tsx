@@ -5,8 +5,12 @@ import ChannelBar from "./Channelbar";
 import ChannelChat from "./ChannelChat";
 import HomeNavbar from "./HomeNavbar";
 import { useMydataContext } from "./mydataprovider";
+import { socketchannelcontext } from "../pages/home";
+
 const ChannelPage = (props) => {
- 
+  console.log(props);
+  
+   let socket = useContext(socketchannelcontext);
   let data1: any = useMydataContext();
   const [mychannel, setMychannel] = useState();
   const router = useRouter();
@@ -40,7 +44,6 @@ const ChannelPage = (props) => {
     }
     catch{
       router.push('/myprofile')
-
     }
   };
   useEffect(() => {
@@ -53,9 +56,9 @@ const ChannelPage = (props) => {
       .catch((err) => {
         console.log(err);
         router.push('/myprofile')
-
       });
   }, []);
+
   useEffect(() => {
     fetchmychannelusers()
       .then((res) => {

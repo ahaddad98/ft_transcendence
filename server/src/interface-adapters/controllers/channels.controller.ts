@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Req,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -62,6 +63,7 @@ export class ChannelsController {
     try {
       return await this.dataService.findMyChannel(params.id, req.user.id);
     } catch (err) {
+      throw new UnauthorizedException();
       return err;
     }
   }

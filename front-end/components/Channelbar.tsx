@@ -11,7 +11,7 @@ import { MydataProvider, useMydataContext } from "./mydataprovider";
 import { socketchannelcontext } from "../pages/home";
 
 const ChannelBar = (props) => {
-  console.log(props);
+  // console.log(props);
   let socket = useContext(socketchannelcontext);
   const [userid, setUserid] = useState(-1);
   let data1: any = useMydataContext();
@@ -69,7 +69,6 @@ const ChannelBar = (props) => {
       setImadmin(true);
     }
     if (props.mychannel?.id) {
-      console.log("ana hna");
       socket.emit("joinChannel", props.mychannel?.id);
     }
   }, []);
@@ -85,23 +84,10 @@ const ChannelBar = (props) => {
         }
       )
       .then(() => {
-        props
-          .fetchmychannelusers()
-          .then((res) => {
-            if (res.data) {
-              props.setMychannelusers(res.data);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            router.push("/myprofile");
-          });
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
       });
-    // setClickmember(false);
-    // setClickadmin(false);
   };
   const hundelsetasadmin = async (e) => {
     e.preventDefault();
@@ -116,23 +102,12 @@ const ChannelBar = (props) => {
         }
       )
       .then(() => {
-        props
-          .fetchmychannelusers()
-          .then((res) => {
-            if (res.data) {
-              props.setMychannelusers(res.data);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            router.push("/myprofile");
-          });
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
       });
-    // setClickmember(false);
-    // setClickadmin(false);
+    setClickmember(false);
+    setClickadmin(false);
   };
   const hundelfireadmin = async (e) => {
     e.preventDefault();
@@ -147,23 +122,12 @@ const ChannelBar = (props) => {
         }
       )
       .then(() => {
-        props
-          .fetchmychannelusers()
-          .then((res) => {
-            if (res.data) {
-              props.setMychannelusers(res.data);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            router.push("/myprofile");
-          });
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
       });
-    // setClickmember(false);
-    // setClickadmin(false);
+    setClickmember(false);
+    setClickadmin(false);
   };
   const hundelsubmittime = async (e) => {
     e.preventDefault();
@@ -182,7 +146,70 @@ const ChannelBar = (props) => {
           },
         }
       )
-      .then((res) => {});
+      .then((res) => {
+        socket.emit("eventChannel", {
+          id: props.mychannel?.id,
+        });
+      });
+    setClickmember(false);
+    setClickadmin(false);
+    setClickban(false);
+  };
+  const handlerclickleave = async (e, id) => {
+    e.preventDefault();
+    axios
+      .delete(`http://localhost:3001/channels/leave/${id}/users/me`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((res) => {
+        socket.emit("eventChannel", {
+          id: props.mychannel?.id,
+        });
+        router.push("/myprofile")
+      });
+  };
+  const hundelremoveban = async (e) => {
+    e.preventDefault();
+
+    var formData = new FormData();
+    formData.append("time", selectedtime);
+    axios
+      .delete(
+        `http://localhost:3001/channels/remove/ban/${props.mychannel.id}/users/${userid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        socket.emit("eventChannel", {
+          id: props.mychannel?.id,
+        });
+      });
+    setClickmember(false);
+    setClickadmin(false);
+    setClickban(false);
+  };
+  const hundelremovemute = async (e) => {
+    e.preventDefault();
+
+    var formData = new FormData();
+    formData.append("time", selectedtime);
+    axios
+      .delete(
+        `http://localhost:3001/channels/remove/mute/${props.mychannel.id}/users/${userid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        socket.emit("eventChannel", {
+          id: props.mychannel?.id,
+        });
+      });
     setClickmember(false);
     setClickadmin(false);
     setClickban(false);
@@ -204,7 +231,11 @@ const ChannelBar = (props) => {
           },
         }
       )
-      .then((res) => {});
+      .then((res) => {
+        socket.emit("eventChannel", {
+          id: props.mychannel?.id,
+        });
+      });
     setClickmember(false);
     setClickadmin(false);
     setClickmute(false);
@@ -261,6 +292,18 @@ const ChannelBar = (props) => {
                   <div className="ml-2 text-sm font-semibold">
                     {stat.username}
                   </div>
+                  {
+                    stat.stat == "ban" && 
+                    <div className="ml-32 text-sm font-semibold">
+                      <img src="/ban.svg" alt="" />
+                    </div>
+                  }
+                  {
+                    stat.stat == "mute" && 
+                    <div className="ml-32 text-sm font-semibold">
+                      <img src="/mute.svg" alt="" />
+                    </div>
+                  }
                 </button>
                 {Clickmember && imowner && ismute1 && (
                   <Modal
@@ -321,30 +364,14 @@ const ChannelBar = (props) => {
                       >
                         <button
                           className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                          onClick={() => {
+                          onClick={(e) => {
                             setClickmute(!Clickmute);
+                            hundelremovemute(e)
                           }}
                         >
                           Remove Mute
                         </button>
                       </div>
-                      {Clickmute && (
-                        <form onSubmit={(e) => hundelsubmittimemute(e)}>
-                          <div className="w-32">
-                            <div>
-                              <input
-                                type="text"
-                                id="time"
-                                placeholder="Time"
-                                className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
-                                onChange={(e) =>
-                                  setSelectedtime(e.target.value)
-                                }
-                              />
-                            </div>
-                          </div>
-                        </form>
-                      )}
                       <div
                         role="button"
                         aria-label="MAIN BUTTON"
@@ -422,30 +449,15 @@ const ChannelBar = (props) => {
                       >
                         <button
                           className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                          onClick={() => {
+                          onClick={(e) => {
                             setClickmute(!Clickmute);
+                            hundelremovemute(e)
                           }}
                         >
                           Remove Mute
                         </button>
                       </div>
-                      {Clickmute && (
-                        <form onSubmit={(e) => hundelsubmittimemute(e)}>
-                          <div className="w-32">
-                            <div>
-                              <input
-                                type="text"
-                                id="time"
-                                placeholder="Time"
-                                className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
-                                onChange={(e) =>
-                                  setSelectedtime(e.target.value)
-                                }
-                              />
-                            </div>
-                          </div>
-                        </form>
-                      )}
+                      
                       <div
                         role="button"
                         aria-label="MAIN BUTTON"
@@ -477,30 +489,14 @@ const ChannelBar = (props) => {
                       >
                         <button
                           className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                          onClick={() => {
+                          onClick={(e) => {
                             setClickban(!Clickban);
+                            hundelremoveban(e)
                           }}
                         >
                           Remove Ban
                         </button>
                       </div>
-                      {Clickban && (
-                        <form onSubmit={(e) => hundelsubmittime(e)}>
-                          <div className="w-32">
-                            <div>
-                              <input
-                                type="text"
-                                id="time"
-                                placeholder="Time"
-                                className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
-                                onChange={(e) =>
-                                  setSelectedtime(e.target.value)
-                                }
-                              />
-                            </div>
-                          </div>
-                        </form>
-                      )}
                     </div>
                   </Modal>
                 )}
@@ -520,28 +516,12 @@ const ChannelBar = (props) => {
                           className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
                           onClick={() => {
                             setClickban(!Clickban);
+                            hundelremoveban
                           }}
                         >
                           Remove Ban
                         </button>
                       </div>
-                      {Clickban && (
-                        <form onSubmit={(e) => hundelsubmittime(e)}>
-                          <div className="w-32">
-                            <div>
-                              <input
-                                type="text"
-                                id="time"
-                                placeholder="Time"
-                                className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
-                                onChange={(e) =>
-                                  setSelectedtime(e.target.value)
-                                }
-                              />
-                            </div>
-                          </div>
-                        </form>
-                      )}
                     </div>
                   </Modal>
                 )}
@@ -770,6 +750,18 @@ const ChannelBar = (props) => {
                   <div className="ml-2 text-sm font-semibold">
                     {stat.username}
                   </div>
+                  {
+                    stat.stat == "ban" && 
+                    <div className="ml-32 text-sm font-semibold">
+                      <img src="/ban.svg" alt="" />
+                    </div>
+                  }
+                  {
+                    stat.stat == "mute" && 
+                    <div className="ml-32 text-sm font-semibold">
+                      <img src="/mute.svg" alt="" />
+                    </div>
+                  }
                 </button>
                 {Clickadmin && imowner && !isbanadmin && !ismuteadmin && (
                   <Modal
@@ -930,30 +922,15 @@ const ChannelBar = (props) => {
                       >
                         <button
                           className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                          onClick={() => {
+                          onClick={(e) => {
                             setClickmute(!Clickmute);
+                            hundelremovemute(e)
                           }}
                         >
                           Remove Mute
                         </button>
                       </div>
-                      {Clickmute && (
-                        <form onSubmit={(e) => hundelsubmittimemute(e)}>
-                          <div className="w-32">
-                            <div>
-                              <input
-                                type="text"
-                                id="time"
-                                placeholder="Time"
-                                className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
-                                onChange={(e) =>
-                                  setSelectedtime(e.target.value)
-                                }
-                              />
-                            </div>
-                          </div>
-                        </form>
-                      )}
+                      
                       <div
                         role="button"
                         aria-label="MAIN BUTTON"
@@ -985,30 +962,14 @@ const ChannelBar = (props) => {
                       >
                         <button
                           className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                          onClick={() => {
-                            setClickban(!Clickban);
+                          onClick={(e) => {
+                            setClickban(!Clickban)
+                            hundelremoveban(e);
                           }}
                         >
                           Remove Ban admin
                         </button>
                       </div>
-                      {Clickban && (
-                        <form onSubmit={(e) => hundelsubmittime(e)}>
-                          <div className="w-32">
-                            <div>
-                              <input
-                                type="text"
-                                id="time"
-                                placeholder="Time"
-                                className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
-                                onChange={(e) =>
-                                  setSelectedtime(e.target.value)
-                                }
-                              />
-                            </div>
-                          </div>
-                        </form>
-                      )}
                     </div>
                   </Modal>
                 )}
@@ -1028,6 +989,18 @@ const ChannelBar = (props) => {
             </button>
           </div>
         </div>
+        {/* <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
+          <div className="inline-flex mt-2 xs:mt-0">
+            <button
+              className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 bg-orange-500 font-semibold py-2 px-4 rounded-r"
+              onClick={(e) => {
+                handlerclickleave(e,props.mychannel.id)
+              }}
+            >
+              Leave channel
+            </button>
+          </div>
+        </div> */}
         {viewchannels && (
           <Modal
             size="lg"

@@ -14,6 +14,10 @@ export class ChannelParams {
   @IsOptional()
   @IsNumberString()
   userId: number;
+
+  @IsOptional()
+  @IsNumberString()
+  conversationId: number;
 }
 
 export class ConversationParams {
