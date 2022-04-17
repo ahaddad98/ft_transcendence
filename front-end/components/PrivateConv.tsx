@@ -5,8 +5,7 @@ import { io, Socket } from "socket.io-client";
 import { socketchatcontext } from "../pages/home";
 
 const PrivateConv = (props) => {
-  // console.log(props);
-  
+
   let socket = useContext(socketchatcontext)
   useEffect(() => {
     socket.emit("addUser", props.data.id);
@@ -22,7 +21,7 @@ const PrivateConv = (props) => {
     return response;
   };
   const [conversationdata, setConversationdata] = useState();
-  const [object, setObject] = useState({me:{}, sender:{}, receiver:{}, content: ""});
+  const [object, setObject] = useState({me:{}, sender:{id: -1}, receiver:{}, content: ""});
   const fetchconsversationdata = async () => {
     const response = await axios.get(
       `http://localhost:3001/conversations/${props.convid}`,
@@ -54,8 +53,6 @@ const PrivateConv = (props) => {
       .then((res) => {
         if (res.data) {
           setConversation(res.data);
-          // console.log(conversation);
-          
         }
       })
       .catch((err) => {
@@ -70,12 +67,7 @@ const PrivateConv = (props) => {
       const sender1 = data.sender;
       const receiver1 = data.receiver;
       const content1 = data.message;
-      // const objecttmp = { me, sender, receiver, content };
       setObject({me: me1, sender:sender1, receiver:receiver1, content:content1});
-      // if (object.content.length > 0)
-      // {
-      //   setConversation((conversation) => [...conversation, object]);
-      // }
     });
   }, []);
 

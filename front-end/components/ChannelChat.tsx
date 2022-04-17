@@ -4,19 +4,18 @@ import Messagemap from "./Messagemap";
 import { socketchannelcontext } from "../pages/home";
 import { SocketAddress } from "net";
 import { useRouter } from "next/router";
+import { useMychannelContext } from "./mychannelprovider";
 
 const ChannelChat = (props) => {
-   let socket = useContext(socketchannelcontext);
-  useEffect(()=>{
-    if (props.mychannel.conversation?.id)
-    {
-      socket.emit('joinChannelConversation',
-        props.mychannel.conversation?.id
-      )
+  let mychanneltmp: any = useMychannelContext();
+  let socket = useContext(socketchannelcontext);
+  useEffect(() => {
+    if (props.mychannel.conversation?.id) {
+      socket.emit("joinChannelConversation", props.mychannel.conversation?.id);
     }
-  }, [])
+  }, []);
   const [conversation, setConversation] = useState([]);
-  const [object, setObject] = useState({me:{}, sender:{}, content: ""});
+  const [object, setObject] = useState({ me: {}, sender: {}, content: "" });
   const fetchconsversation = async () => {
     const response = await axios.get(
       `http://localhost:3001/conversations/${props.mychannel.conversation?.id}/messages`,
@@ -27,6 +26,21 @@ const ChannelChat = (props) => {
     return response;
   };
   useEffect(() => {
+    socket.on("newEventChannel", (data) => {
+      console.log(data);
+      props
+        .fetchmychannel()
+        .then((res) => {
+          if (res.data) {
+            props.setMychannel(res.data);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+  }, []);
+  useEffect(() => {
     fetchconsversation()
       .then((res) => {
         if (res.data) {
@@ -36,23 +50,20 @@ const ChannelChat = (props) => {
       .catch((err) => {
         console.log(err);
       });
-    }, []);
-    useEffect(() => {
-      socket.on("newMessageChannel", (data) => {
-        const me1 = props.mydata;
-        const sender1 = data.sender;
-        const content1 = data.message;
-        setObject({me: me1, sender:sender1, content:content1});
-      });
-      return (
-        ()=>{
-          socket.off("newMessageChannel")
-        }
-      )
-    }, []);
-    useEffect(() => {
-      if(object)
-      {
+  }, []);
+  useEffect(() => {
+    socket.on("newMessageChannel", (data) => {
+      const me1 = props.mydata;
+      const sender1 = data.sender;
+      const content1 = data.message;
+      setObject({ me: me1, sender: sender1, content: content1 });
+    });
+    return () => {
+      socket.off("newMessageChannel");
+    };
+  }, []);
+  useEffect(() => {
+    if (object) {
       fetchconsversation()
         .then((res) => {
           if (res.data) {
@@ -63,7 +74,7 @@ const ChannelChat = (props) => {
           console.log(err);
         });
     }
-  }, [object])
+  }, [object]);
   const [msg, setMsg] = useState("");
   const sendmsg = async (e) => {
     e.preventDefault();
@@ -80,14 +91,13 @@ const ChannelChat = (props) => {
         }
       )
       .then((res) => {
-
         console.log(res);
       });
-      socket.emit("sendMessageChannel", {
-        sender: props.mydata,
-        message: msg,
-        id: props.mychannel.conversation?.id,
-      });
+    socket.emit("sendMessageChannel", {
+      sender: props.mydata,
+      message: msg,
+      id: props.mychannel.conversation?.id,
+    });
     setMsg("");
   };
 
@@ -106,7 +116,11 @@ const ChannelChat = (props) => {
         >
           <div className="flex flex-col">
             <div className="grid grid-cols-12 gap-y-2">
-              {conversation ?  <Messagemap conv={conversation}  /> : <div>amine</div>}
+              {conversation ? (
+                <Messagemap conv={conversation} />
+              ) : (
+                <div>amine</div>
+              )}
             </div>
           </div>
         </div>
@@ -133,17 +147,15 @@ const ChannelChat = (props) => {
             <>
               <div className="flex-grow ml-4">
                 <div className="relative w-full">
-                  <form onSubmit={sendmsg}>
-                    {
-                      props.mychannel.mute == false && 
-                    <input
-                      // type="text"
-                      value={msg}
-                      className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
-                      onChange={(e) => setMsg(e.target.value)}
-                    />
-                    }
-                  </form>
+                    <form onSubmit={sendmsg}>
+                      {props.mychannel.mute == false &&
+                        <input
+                          value={msg}
+                          className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
+                          onChange={(e) => setMsg(e.target.value)}
+                        />
+                      }
+                    </form>
                 </div>
               </div>
               <div className="ml-4">

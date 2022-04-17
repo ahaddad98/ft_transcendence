@@ -9,9 +9,10 @@ import Button from "@material-tailwind/react/Button";
 import axios from "axios";
 import { MydataProvider, useMydataContext } from "./mydataprovider";
 import { socketchannelcontext } from "../pages/home";
+import { useMychannelContext } from "./mychannelprovider";
 
 const ChannelBar = (props) => {
-  // console.log(props);
+  let mychanneltmp: any = useMychannelContext();
   let socket = useContext(socketchannelcontext);
   const [userid, setUserid] = useState(-1);
   let data1: any = useMydataContext();

@@ -1,10 +1,10 @@
-// import React from "react";
+import React from "react";
 
-// const Channnel = () => {
-//     // return (
-//     //     <div>
-//     //         amiebnu
-//     //     </div>
-//     // )
-// }
-// export default Channnel;
+const Channnel = () => {
+    return (
+        <div>
+            amiebnu
+        </div>
+    )
+}
+export default Channnel;
