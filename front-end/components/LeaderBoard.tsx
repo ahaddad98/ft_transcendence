@@ -39,9 +39,10 @@ const LeaderBoard = (props) => {
                   </div>
                 </div>
               </li>
-              {props.data.map((stat, key) => {
-                // console.log(stat.username);
-                return (
+              {props.data.map((stat, key) => 
+              <React.Fragment key={key}>
+                {
+                  key < 3 &&
                   <li className=" y-3 sm:py-4" key={key}>
                     <div className="flex items-center space-x-4">
                       <div>{key + 1}</div>
@@ -68,8 +69,9 @@ const LeaderBoard = (props) => {
                       </div>
                     </div>
                   </li>
-                );
-              })}
+                }
+                  </React.Fragment>
+                )}
             </ul>
             <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
               <div

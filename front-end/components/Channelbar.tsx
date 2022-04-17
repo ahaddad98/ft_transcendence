@@ -42,7 +42,6 @@ const ChannelBar = (props) => {
 
   useEffect(() => {
     socket.on("newEventChannel", (data) => {
-      console.log(data);
       props
         .fetchmychannelusers()
         .then((res) => {
@@ -166,7 +165,6 @@ const ChannelBar = (props) => {
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
-        router.push("/myprofile")
       });
   };
   const hundelremoveban = async (e) => {

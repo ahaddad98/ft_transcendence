@@ -221,6 +221,213 @@ const ChannlesList = (props) => {
                   </tr>
                 </thead>
                 <tbody>
+                  {props.data.map((stat, key) => 
+                      <React.Fragment key={key}>
+                      {
+                        key < 3 && 
+                        <tr key={key}>
+                          <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <div className="flex items-center">
+                              <div className="flex-shrink-0 w-10 h-10">
+                                <img
+                                  className="w-full h-full rounded-full"
+                                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
+                                  alt=""
+                                />
+                              </div>
+                              <div className="ml-3">
+                                <p className="text-gray-900 whitespace-no-wrap">
+                                  {stat.name}
+                                </p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <p className="text-gray-900 whitespace-no-wrap">
+                              {stat.owner.username}
+                            </p>
+                          </td>
+                          <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <p className="text-gray-900 whitespace-no-wrap">
+                              {stat.createdAt}
+                            </p>
+                          </td>
+                          <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <p className="text-gray-900 whitespace-no-wrap">
+                              {stat.members}
+                            </p>
+                          </td>
+                          <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <div
+                              role="button"
+                              aria-label="MAIN BUTTON"
+                              className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
+                            >
+                              {stat.type === "private" && (
+                                <>
+                                  <button
+                                    className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                                    onClick={() => {
+                                      setIsjoinprivate(!isjoinprivate);
+                                    }}
+                                  >
+                                    Join
+                                  </button>
+                                  {isjoinprivate && (
+                                    <Modal
+                                      size="lg"
+                                      active={isjoinprivate}
+                                      toggler={() =>
+                                        setIsjoinprivate(!isjoinprivate)
+                                      }
+                                    >
+                                      <ModalBody>
+                                        <form
+                                          onSubmit={(e) =>
+                                            hundelsubmitprivatejoin(e, stat.id)
+                                          }
+                                        >
+                                          <div className="space-y-4">
+                                            <div>
+                                              <label
+                                                htmlFor="email"
+                                                className="block mb-1 text-gray-600 font-semibold"
+                                              >
+                                                Password
+                                              </label>
+                                              <input
+                                                type="text"
+                                                id="password"
+                                                className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
+                                                onChange={(e) => {
+                                                  setSelectedPasswordjoin(
+                                                    e.target.value
+                                                  );
+                                                }}
+                                              />
+                                            </div>
+                                          </div>
+                                          {
+                                            <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide">
+                                              <Link href="/channel">
+                                                <input
+                                                  type="submit"
+                                                  value="Join"
+                                                />
+                                              </Link>
+                                            </button>
+                                          }
+                                        </form>
+                                      </ModalBody>
+                                    </Modal>
+                                  )}
+                                </>
+                              )}
+                              {stat.type === "public" && (
+                                <>
+                                  <button
+                                    className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                                    onClick={(e) => {
+                                      hundelsubmitpublicjoin(e, stat.id);
+                                    }}
+                                  >
+                                    Join
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </td>
+                          <td>
+                            {stat.type === "private" && (
+                              <div className="mt-6">
+                                <img src="/private.svg" alt="" />
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      }
+                      </React.Fragment>
+                  )}
+                </tbody>
+              </table>
+              <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
+                <div className="inline-flex mt-2 xs:mt-0">
+                  <button
+                    className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 bg-orange-500 font-semibold py-2 px-4 rounded-r"
+                    onClick={() => {
+                      setViewchannles(!viewchannels);
+                    }}
+                  >
+                    View all
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {viewchannels && (
+        <Modal
+          size="lg"
+          active={viewchannels}
+          toggler={() => setViewchannles(false)}
+        >
+          <div className="w-full md:w-auto dark:bg-gray-800 flex flex-col justify-center items-center bg-white  md:px-24 xl:py-4 xl:px-18">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
+                LEADER BOARD
+              </h3>
+            </div>
+            <button
+              onClick={() => {
+                setViewchannles(false);
+              }}
+              className="text-gray-800 dark:text-gray-400 absolute top-8 right-8 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800"
+              aria-label="close"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M18 6L6 18"
+                  stroke="currentColor"
+                  strokeWidth="1.66667"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M6 6L18 18"
+                  stroke="currentColor"
+                  strokeWidth="1.66667"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+            <table className="min-w-full leading-normal">
+                <thead>
+                  <tr>
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      Name
+                    </th>
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      Admin
+                    </th>
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      Created at
+                    </th>
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      Members
+                    </th>
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
+                    <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
+                  </tr>
+                </thead>
+                <tbody>
                   {props.data.map((stat, key) => {
                     return (
                       <tr key={key}>
@@ -347,65 +554,7 @@ const ChannlesList = (props) => {
                   })}
                 </tbody>
               </table>
-              <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
-                <div className="inline-flex mt-2 xs:mt-0">
-                  <button
-                    className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 bg-orange-500 font-semibold py-2 px-4 rounded-r"
-                    onClick={() => {
-                      setViewchannles(!viewchannels);
-                    }}
-                  >
-                    View all
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {viewchannels && (
-        <Modal
-          size="lg"
-          active={viewchannels}
-          toggler={() => setViewchannles(false)}
-        >
-          <div className="w-full md:w-auto dark:bg-gray-800 flex flex-col justify-center items-center bg-white  md:px-24 xl:py-4 xl:px-18">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-                LEADER BOARD
-              </h3>
-            </div>
-            <button
-              onClick={() => {
-                setViewchannles(false);
-              }}
-              className="text-gray-800 dark:text-gray-400 absolute top-8 right-8 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800"
-              aria-label="close"
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M18 6L6 18"
-                  stroke="currentColor"
-                  strokeWidth="1.66667"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M6 6L18 18"
-                  stroke="currentColor"
-                  strokeWidth="1.66667"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-            <table className="min-w-full leading-normal">
+            {/* <table className="min-w-full leading-normal">
               <thead>
                 <tr>
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -545,7 +694,7 @@ const ChannlesList = (props) => {
                   </td>
                 </tr>
               </tbody>
-            </table>
+            </table> */}
           </div>
         </Modal>
       )}

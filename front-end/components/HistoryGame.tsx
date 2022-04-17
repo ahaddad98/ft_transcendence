@@ -53,8 +53,10 @@ const HistoryGame = (props) => {
                     </div> */}
                   </div>
                 </li>
-                {props.data.map((stat, key) => {
-                  return (
+                {props.data.map((stat, key) => 
+                <React.Fragment key={key}>
+                  {
+                    key < 3 && 
                     <li className=" y-3 sm:py-4" key={key}>
                       <div className="flex flex-row justify-around space-x-4">
                         <div className="flex-shrink-0 flex flex-row space-x-4">
@@ -62,7 +64,7 @@ const HistoryGame = (props) => {
                             className="w-8 h-8 rounded-full"
                             src={stat.user1.avatar}
                             alt="Neil image"
-                          />
+                            />
                           <div className="mt-2 flex-1 min-w-0">
                             <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
                               {stat.user1.username}
@@ -84,15 +86,16 @@ const HistoryGame = (props) => {
                             className="w-8 h-8 rounded-full"
                             src={stat.user2.avatar}
                             alt="Neil image"
-                          />
+                            />
                         </div>
                         {/* <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                           Vicotry
                         </div> */}
                       </div>
                     </li>
-                  );
-                })}
+                  }
+                </React.Fragment>
+            )}
               </ul>
               <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
                 <div

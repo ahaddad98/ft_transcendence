@@ -22,7 +22,7 @@ const ChannelPage = (props) => {
       );
       return response;
     } catch {
-      router.push("/myprofile");
+      // router.push("/myprofile");
     }
   };
   const [mychannelusers, setMychannelusers] = useState();
@@ -37,7 +37,7 @@ const ChannelPage = (props) => {
       );
       return response;
     } catch {
-      router.push("/myprofile");
+      // router.push("/myprofile");
     }
   };
   useEffect(() => {
@@ -49,7 +49,7 @@ const ChannelPage = (props) => {
       })
       .catch((err) => {
         console.log(err);
-        router.push("/myprofile");
+        // router.push("/myprofile");
       });
   }, []);
 
@@ -62,8 +62,11 @@ const ChannelPage = (props) => {
       })
       .catch((err) => {
         console.log(err);
-        router.push("/myprofile");
+        // router.push("/myprofile");
       });
+      return (()=>{
+        
+      })
   }, []);
 
   return (

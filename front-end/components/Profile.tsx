@@ -3,9 +3,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import HomeNavbar from "./HomeNavbar";
+import Modal from "@material-tailwind/react/Modal";
+import UpdateProfile from "./updateprofile";
 
 const Profile = (props) => {
   const router = useRouter()
+  const [clickupdateprofile, setclickupdateprofile] = useState(false)
   const handlerclickleave = async (e, id) => {
     e.preventDefault();
     axios
@@ -56,11 +59,22 @@ const Profile = (props) => {
                 </div>
                 <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
                   <div className="py-6 px-3 mt-32 sm:mt-0">
-                    <Link href="/EditProfile">
-                      <button className="text-sm bg-orange-500 text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r">
+                      <button className="text-sm bg-orange-500 text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                      onClick={()=>{
+                        setclickupdateprofile(true)
+                      }}>
                         Edit profile
                       </button>
-                    </Link>
+                      {
+                        clickupdateprofile && 
+                        <Modal
+                        size="lg"
+                        active={clickupdateprofile}
+                        toggler={() => setclickupdateprofile(false)}
+                        >
+                        <UpdateProfile />
+                      </Modal>
+                      }
                   </div>
                 </div>
                 <div className="w-full lg:w-4/12 px-4 lg:order-1">

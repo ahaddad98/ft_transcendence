@@ -66,8 +66,7 @@ const Viewall = ({ props, setViewclick, viewclick }) => {
                 </div>
               </div>
             </li>
-            {props.data.map((stat, key) => {
-              return (
+            {props.data.map((stat, key) => 
                 <li className=" y-3 sm:py-4" key={key}>
                   <div className="flex flex-row justify-around space-x-4">
                     <div className="flex-shrink-0 flex flex-row space-x-4">
@@ -101,8 +100,7 @@ const Viewall = ({ props, setViewclick, viewclick }) => {
                     </div>
                   </div>
                 </li>
-              );
-            })}
+             )}
           </ul>
         </div>
       </div>
