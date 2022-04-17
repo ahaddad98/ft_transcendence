@@ -9,7 +9,7 @@ import { Router, useRouter } from "next/router";
 import { MydataProvider } from "../../components/mydataprovider";
 
 const Channel = () => {
-  console.log('1555');
+  // console.log('1555');
   
   const [mychannel, setMychannel] = useState({});
   const [allmychannel, setAllmychannel] = useState();

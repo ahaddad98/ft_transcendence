@@ -30,6 +30,7 @@ import { BlockController } from './interface-adapters/controllers/block.controll
 import { AppGateway } from './app.gateway';
 import { ChatGateway } from './chat.gateway';
 import { UsersGateway } from './users.gateway';
+import { ChannelGateway } from './channel.gateway';
 
 @Module({
   imports: [
@@ -65,6 +66,6 @@ import { UsersGateway } from './users.gateway';
     GameController,
     BlockController,
   ],
-  providers: [AppGateway,UsersGateway, ChatGateway],
+  providers: [AppGateway,UsersGateway, ChatGateway, ChannelGateway],
 })
 export class AppModule {}

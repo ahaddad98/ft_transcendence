@@ -1,17 +1,15 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import Messagemap from "./Messagemap";
-import { socketchatcontext } from "../pages/home";
+import { socketchannelcontext } from "../pages/home";
 import { SocketAddress } from "net";
 
 const ChannelChat = (props) => {
-  console.log(props);
-  
-  let socket = useContext(socketchatcontext);
+   let socket = useContext(socketchannelcontext);
   useEffect(()=>{
     if (props.mychannel.conversation?.id)
     {
-      socket.emit('joinChannel',
+      socket.emit('joinChannelConversation',
         props.mychannel.conversation?.id
       )
     }

@@ -9,8 +9,8 @@ const SignIN = () => {
         
         try {
             const response = await axios.get('http://localhost:3001/login/intra-42');
-            console.log('sahbi samir');
-            console.log(response);
+            // console.log('sahbi samir');
+            // console.log(response);
         } catch (error) {
           console.log(error);
         }
@@ -19,8 +19,8 @@ const SignIN = () => {
         e.preventDefault();
         axios.post('http://localhost:3001/login/intra-42')
         .then ((res) => {
-            console.log("amine haddad");
-            console.log(res);
+            // console.log("amine haddad");
+            // console.log(res);
             
         })
         .catch((err) => {

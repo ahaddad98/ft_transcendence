@@ -100,7 +100,7 @@ const ListUseres = ({ socket, ...props }) => {
     );
     setStat((stater) => stater + 1);
     if (state && data1.data) {
-      console.log(state);
+      // console.log(state);
 
       socket.emit("changeStat", {
         user1: data1.data,
@@ -110,7 +110,7 @@ const ListUseres = ({ socket, ...props }) => {
     }
   };
   const hundelClick4 = async (e, req_id, state) => {
-    console.log(state);
+    // console.log(state);
     e.preventDefault();
     await axios.delete(`http://localhost:3001/requests/${req_id}`, {
       headers: {
@@ -127,7 +127,7 @@ const ListUseres = ({ socket, ...props }) => {
     }
   };
   const hundelClick2 = async (e, req_id, state) => {
-    console.log(state);
+    // console.log(state);
     e.preventDefault();
     await axios.delete(`http://localhost:3001/requests/${req_id}`, {
       headers: {
@@ -144,7 +144,7 @@ const ListUseres = ({ socket, ...props }) => {
     }
   };
   const hundelClick3 = async (e, req_id, id, state) => {
-    console.log(state);
+    // console.log(state);
     e.preventDefault();
     await axios.post(
       `http://localhost:3001/requests/${req_id}/users/me/friends/${id}/accept`,

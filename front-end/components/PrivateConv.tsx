@@ -54,7 +54,7 @@ const PrivateConv = (props) => {
       .then((res) => {
         if (res.data) {
           setConversation(res.data);
-          console.log(conversation);
+          // console.log(conversation);
           
         }
       })

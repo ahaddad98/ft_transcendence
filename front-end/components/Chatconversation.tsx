@@ -8,10 +8,7 @@ const ChatConversation = (props) => {
   const [clickconvresp, setClickconvresp] = useState(false);
   const [convid, setConvid] = useState(-1);
   const [reciever, setReciever] = useState();
-  useEffect(()=>{
-    console.log(convid);
-    
-  },[convid])
+
   return (
     <div className="h-screen justify-center">
       <div>{props.data && <HomeNavbar  />}</div>

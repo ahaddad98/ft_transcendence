@@ -1,7 +1,6 @@
 import React from "react";
 
 const Messagemap = (props) => {
-  console.log('in message');
   
   return (
     <>

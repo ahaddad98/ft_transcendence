@@ -6,7 +6,7 @@ import MediaQuery, { useMediaQuery } from "react-responsive";
 const LeaderBoard = (props) => {
   // console.log(props);
   const [viewclick, setViewclick] = useState(false);
-  console.log(props.data)
+  // console.log(props.data)
   return (
     <>
     <div className="mt-20 w-full lg:w-1/2">

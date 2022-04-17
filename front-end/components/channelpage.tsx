@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import ChannelBar from "./Channelbar";
 import ChannelChat from "./ChannelChat";
@@ -7,27 +8,40 @@ import { useMydataContext } from "./mydataprovider";
 const ChannelPage = (props) => {
  
   let data1: any = useMydataContext();
-  const [mychannel, setMychannel] = useState({});
-
+  const [mychannel, setMychannel] = useState();
+  const router = useRouter();
   const fetchmychannel = async () => {
-    const response = await axios.get(
-      `http://localhost:3001/channels/${props.id}`,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    try{
+
+      const response = await axios.get(
+        `http://localhost:3001/channels/${props.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+        );
+        return response;
       }
-    );
-    return response;
+      catch {
+        router.push('/myprofile')
+      }
   };
   const [mychannelusers, setMychannelusers] = useState();
 
   const fetchmychannelusers = async () => {
-    const response = await axios.get(
-      `http://localhost:3001/channels/${props.id}/users/all`,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-    );
-    return response;
+    try{
+      const response = await axios.get(
+        `http://localhost:3001/channels/${props.id}/users/all`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      return response;
+
+    }
+    catch{
+      router.push('/myprofile')
+
+    }
   };
   useEffect(() => {
     fetchmychannel()
@@ -38,6 +52,8 @@ const ChannelPage = (props) => {
       })
       .catch((err) => {
         console.log(err);
+        router.push('/myprofile')
+
       });
   }, []);
   useEffect(() => {
@@ -49,6 +65,7 @@ const ChannelPage = (props) => {
       })
       .catch((err) => {
         console.log(err);
+        router.push('/myprofile')
       });
   }, []);
 
@@ -57,13 +74,14 @@ const ChannelPage = (props) => {
       <div className="flex flex-row w-full overflow-x-hidden">
         {mychannel && mychannelusers && props.allmychannels && (
           <ChannelBar
-            mydata={props.mydata}
             mychannel={mychannel}
+            setMychannelusers={setMychannelusers}
+            fetchmychannelusers={fetchmychannelusers}
             mychannelusers={mychannelusers}
             allmychannel={props.allmychannels}
           ></ChannelBar>
         )}
-        {mychannel.conversation && (
+        {mychannel && mychannel.conversation && (
           <ChannelChat mydata={data1.data} mychannel={mychannel} />
         )}
       </div>

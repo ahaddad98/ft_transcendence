@@ -80,7 +80,7 @@ const Listfriends = ({ socket, ...props }) => {
       .then(() => {});
     setCheck((check) => check + 1);
     setCheck((check) => check + 1);
-    console.log(data1.data);
+    // console.log(data1.data);
 
     socket.emit("changeStatOfFriend", {
       user1: data1.data,
@@ -89,7 +89,7 @@ const Listfriends = ({ socket, ...props }) => {
   };
   const hundelClickblock = async (e, id, state) => {
     e.preventDefault();
-    console.log('hundelClickblock: ' + id);
+    // console.log('hundelClickblock: ' + id);
     await axios.post(
       `http://localhost:3001/blocks/add/users/me/${id}`,
       {},
