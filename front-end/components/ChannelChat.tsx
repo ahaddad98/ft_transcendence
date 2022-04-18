@@ -58,9 +58,9 @@ const ChannelChat = (props) => {
       const content1 = data.message;
       setObject({ me: me1, sender: sender1, content: content1 });
     });
-    return () => {
-      socket.off("newMessageChannel");
-    };
+    // return () => {
+    //   socket.off("newMessageChannel");
+    // };
   }, []);
   useEffect(() => {
     if (object) {

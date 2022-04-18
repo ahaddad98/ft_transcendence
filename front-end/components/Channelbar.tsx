@@ -29,6 +29,7 @@ const ChannelBar = (props) => {
   const [ismute1, setIsmute1] = useState(false);
   const [isbanadmin, setisbanadmin] = useState(false);
   const [ismuteadmin, setIsmuteadmin] = useState(false);
+  const [isedit, setIsedit] = useState(false);
   let isban = false;
   let ismute = false;
   const [selectedtime, setSelectedtime] = useState("");
@@ -61,6 +62,11 @@ const ChannelBar = (props) => {
     } else if (props.mychannel.myRole === "admin") {
       setImadmin(true);
     }
+      else{
+        setImadmin(false);
+        setImowner(false);
+
+    }
   }, [props]);
   useEffect(() => {
     if (props.mychannelusers.owner?.username === data1.data.username) {
@@ -71,6 +77,11 @@ const ChannelBar = (props) => {
     if (props.mychannel?.id) {
       socket.emit("joinChannel", props.mychannel?.id);
     }
+    else{
+      setImadmin(false);
+      setImowner(false);
+  
+  }
   }, []);
   const hundelkickuser = async (e) => {
     e.preventDefault();
@@ -122,6 +133,7 @@ const ChannelBar = (props) => {
         }
       )
       .then(() => {
+        
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
@@ -169,7 +181,6 @@ const ChannelBar = (props) => {
   };
   const hundelremoveban = async (e) => {
     e.preventDefault();
-
     var formData = new FormData();
     formData.append("time", selectedtime);
     axios
@@ -268,7 +279,7 @@ const ChannelBar = (props) => {
             {props.mychannelusers?.users.map((stat, key) => (
               <React.Fragment key={key}>
                 <button
-                  className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
+                  className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2 border-0"
                   key={key}
                   onClick={() => {
                     setClickmember(!Clickmember);
@@ -285,24 +296,22 @@ const ChannelBar = (props) => {
                     }
                   }}
                 >
-                  <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
+                  <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full border-0">
                     <img src={stat.avatar} />
                   </div>
                   <div className="ml-2 text-sm font-semibold">
                     {stat.username}
                   </div>
-                  {
-                    stat.stat == "ban" && 
+                  {stat.stat == "ban" && (
                     <div className="ml-32 text-sm font-semibold">
                       <img src="/ban.svg" alt="" />
                     </div>
-                  }
-                  {
-                    stat.stat == "mute" && 
+                  )}
+                  {stat.stat == "mute" && (
                     <div className="ml-32 text-sm font-semibold">
                       <img src="/mute.svg" alt="" />
                     </div>
-                  }
+                  )}
                 </button>
                 {Clickmember && imowner && ismute1 && (
                   <Modal
@@ -317,7 +326,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32 w-32"
                           onClick={(e) => {
                             hundelkickuser(e);
                           }}
@@ -331,7 +340,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={() => {
                             setClickban(!Clickban);
                           }}
@@ -362,10 +371,10 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={(e) => {
                             setClickmute(!Clickmute);
-                            hundelremovemute(e)
+                            hundelremovemute(e);
                           }}
                         >
                           Remove Mute
@@ -377,7 +386,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={(e) => {
                             hundelsetasadmin(e);
                           }}
@@ -401,7 +410,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={(e) => {
                             hundelkickuser(e);
                           }}
@@ -416,7 +425,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={() => {
                             setClickban(!Clickban);
                           }}
@@ -447,23 +456,23 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={(e) => {
                             setClickmute(!Clickmute);
-                            hundelremovemute(e)
+                            hundelremovemute(e);
                           }}
                         >
                           Remove Mute
                         </button>
                       </div>
-                      
+
                       <div
                         role="button"
                         aria-label="MAIN BUTTON"
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={(e) => {
                             hundelsetasadmin(e);
                           }}
@@ -487,10 +496,10 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={(e) => {
                             setClickban(!Clickban);
-                            hundelremoveban(e)
+                            hundelremoveban(e);
                           }}
                         >
                           Remove Ban
@@ -512,10 +521,10 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={() => {
                             setClickban(!Clickban);
-                            hundelremoveban
+                            hundelremoveban;
                           }}
                         >
                           Remove Ban
@@ -537,7 +546,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32 "
                           onClick={(e) => {
                             hundelkickuser(e);
                           }}
@@ -552,7 +561,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={() => {
                             setClickban(!Clickban);
                           }}
@@ -583,7 +592,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={() => {
                             setClickmute(!Clickmute);
                           }}
@@ -614,7 +623,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={(e) => {
                             hundelsetasadmin(e);
                           }}
@@ -638,12 +647,12 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={(e) => {
                             hundelkickuser(e);
                           }}
                         >
-                          Kick
+                          Kick amine
                         </button>
                       </div>
                       <div
@@ -652,7 +661,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={() => {
                             setClickban(!Clickban);
                           }}
@@ -683,7 +692,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={() => {
                             setClickmute(!Clickmute);
                           }}
@@ -749,18 +758,16 @@ const ChannelBar = (props) => {
                   <div className="ml-2 text-sm font-semibold">
                     {stat.username}
                   </div>
-                  {
-                    stat.stat == "ban" && 
+                  {stat.stat == "ban" && (
                     <div className="ml-32 text-sm font-semibold">
                       <img src="/ban.svg" alt="" />
                     </div>
-                  }
-                  {
-                    stat.stat == "mute" && 
+                  )}
+                  {stat.stat == "mute" && (
                     <div className="ml-32 text-sm font-semibold">
                       <img src="/mute.svg" alt="" />
                     </div>
-                  }
+                  )}
                 </button>
                 {Clickadmin && imowner && !isbanadmin && !ismuteadmin && (
                   <Modal
@@ -775,7 +782,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={(e) => {
                             hundelkickuser(e);
                           }}
@@ -789,7 +796,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={() => {
                             setClickban(!Clickban);
                           }}
@@ -820,7 +827,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={() => {
                             setClickmute(!Clickmute);
                           }}
@@ -851,7 +858,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={(e) => {
                             hundelfireadmin(e);
                           }}
@@ -875,7 +882,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={(e) => {
                             hundelkickuser(e);
                           }}
@@ -889,7 +896,7 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={() => {
                             setClickban(!Clickban);
                           }}
@@ -920,23 +927,23 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={(e) => {
                             setClickmute(!Clickmute);
-                            hundelremovemute(e)
+                            hundelremovemute(e);
                           }}
                         >
                           Remove Mute
                         </button>
                       </div>
-                      
+
                       <div
                         role="button"
                         aria-label="MAIN BUTTON"
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={(e) => {
                             hundelfireadmin(e);
                           }}
@@ -960,9 +967,9 @@ const ChannelBar = (props) => {
                         className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-32"
                       >
                         <button
-                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                          className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                           onClick={(e) => {
-                            setClickban(!Clickban)
+                            setClickban(!Clickban);
                             hundelremoveban(e);
                           }}
                         >
@@ -988,18 +995,51 @@ const ChannelBar = (props) => {
             </button>
           </div>
         </div>
-        {/* <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
+        {imowner && (
+          <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
+            <div className="inline-flex mt-2 xs:mt-0">
+              <button
+                className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 bg-orange-500 font-semibold py-2 px-4 rounded-r w-34"
+                onClick={() => {
+                  setIsedit(!isedit);
+                }}
+              >
+                Edit Password
+              </button>
+            </div>
+          </div>
+        )}
+        {isedit && (
+          <Modal size="lg" active={isedit} toggler={() => setIsedit(false)}>
+            <div
+              role="button"
+              aria-label="MAIN BUTTON"
+              className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-34"
+            >
+              <button
+                className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
+                onClick={(e) => {
+                  setClickmute(!Clickmute);
+                  hundelremovemute(e);
+                }}
+              >
+                Reset password
+              </button>
+            </div>
+          </Modal>
+        )}
+        <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
           <div className="inline-flex mt-2 xs:mt-0">
             <button
               className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 bg-orange-500 font-semibold py-2 px-4 rounded-r"
               onClick={(e) => {
-                handlerclickleave(e,props.mychannel.id)
+                handlerclickleave(e, props.mychannel.id);
               }}
             >
               Leave channel
             </button>
           </div>
-        </div> */}
+        </div>
         {viewchannels && (
           <Modal
             size="lg"
@@ -1099,7 +1139,7 @@ const ChannelBar = (props) => {
                           className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
                         >
                           <button
-                            className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                            className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
                             onClick={(e) => {
                               handlerclickparticipate(e, stat.id);
                             }}

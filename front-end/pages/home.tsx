@@ -77,7 +77,8 @@ const Home = () => {
   return (
     <>
       <MydataProvider>
-        <div>
+        {
+          <div>
           <HomeNavbar></HomeNavbar>
           <div className="flex flex-col lg:flex-row">
             {stats && <LeaderBoard data={stats} />}
@@ -85,6 +86,7 @@ const Home = () => {
           </div>
           {channel && <ChannlesList data={channel} />}
         </div>
+        }
       </MydataProvider>
     </>
   );

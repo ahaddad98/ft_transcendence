@@ -11,12 +11,19 @@ import axios from "axios";
 import SignIN from "../components/Signin";
 import { useState } from "react";
 import Home from "./home";
+import UpdateProfile from "../components/updateprofile";
+import { MydataProvider } from "../components/mydataprovider";
 
+import { useMydataContext } from "../components/mydataprovider";
 
 
 const loginSuccess = () => {
+  // let data1: any = useMydataContext();
+  // console.log(data1);
+  
   const { query } = useRouter();
   const Router = useRouter();
+  const [data, setData] = useState<any>();
   const fetchData = async () => {
     const response = await axios.get("http://localhost:3001/users/me", {
       headers: { Authorization: `Bearer ${query.token}` },
@@ -24,14 +31,24 @@ const loginSuccess = () => {
     return response;
   };
   useEffect(() => {
+    
     if (query.token) {
+      console.log('amine');
       const tok = query.token;
       localStorage.setItem("token", `${tok}`);
-      fetchData().then((result) => {
-        if (localStorage.getItem("token")) router.push("/home");
-      });
+      if (localStorage.getItem("token")) router.push("/home");
     }
   }, [query]);
+  // useEffect(()=>{
+  //   if (localStorage.getItem("token"))
+  //   {
+  //     fetchData().then((res) => {
+  //       if (res.data)
+  //         console.log(res.data);
+          
+  //     })
+  //   }
+  // },[])
 
   const [selectedfile, setSelectedfile] = useState();
   const [selectedusername, setSelectedUsername] = useState();
@@ -57,40 +74,16 @@ const loginSuccess = () => {
       });
   };
   return (
-    <div className="container-form">
-      <form
-        onSubmit={handleSubmit}
-        className="myform"
-        encType="multipart/form-data"
-      >
-        <input
-          type="file"
-          className="custom-file-input"
-          name="img"
-          accept="image/*"
-          placeholder="Select Avatar"
-          onChange={fileSelectedHundler}
-        />
-        <br />
-        <input
-          type="text"
-          id="username"
-          name="username"
-          placeholder="Username"
-          onChange={fileSelectedHundlerusername}
-        />
-        <br />
-        <input type="submit" value="Login" />
-      </form>
-      <div className="drops">
-        <div className="drop drop-1"></div>
-        <div className="drop drop-2"></div>
-        <div className="drop drop-3"></div>
-        <div className="drop drop-4"></div>
-        <div className="drop drop-5"></div>
-      </div>
-    </div>
+    <>
+      <UpdateProfile />
+    </>
   );
 };
 
 export default loginSuccess;
+/*
+post /login/register
+{}
+ get response secret 
+ 
+*/

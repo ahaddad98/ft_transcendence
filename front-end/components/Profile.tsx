@@ -5,10 +5,12 @@ import React, { useEffect, useState } from "react";
 import HomeNavbar from "./HomeNavbar";
 import Modal from "@material-tailwind/react/Modal";
 import UpdateProfile from "./updateprofile";
-
 const Profile = (props) => {
-  const router = useRouter()
-  const [clickupdateprofile, setclickupdateprofile] = useState(false)
+  const router = useRouter();
+  const [clickupdateprofile, setclickupdateprofile] = useState(false);
+  const [restwofactor, setRestwofactor] = useState<any>("");
+  const [clicktwofactor, setclickufactor] = useState(false);
+  const [checkmodel, setCheckmodel] = useState(false);
   const handlerclickleave = async (e, id) => {
     e.preventDefault();
     axios
@@ -19,11 +21,22 @@ const Profile = (props) => {
         console.log(res);
       });
   };
+  const handlerTwoFactor = async (e) => {
+    e.preventDefault();
+    axios
+      .post(`http://localhost:3001/login/register`,{} ,{
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((res) => {
+        if (res.data)
+          setRestwofactor(res.data.secret)
+      });
+  };
   const handlerclickparticipate = async (e, id) => {
-    e.preventDefault()
-      {
-        router.push(`/Channnel/${id}`);
-      }
+    e.preventDefault();
+    {
+      router.push(`/Channnel/${id}`);
+    }
   };
   const data = {
     username: props.mydata.user.username,
@@ -59,23 +72,83 @@ const Profile = (props) => {
                 </div>
                 <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
                   <div className="py-6 px-3 mt-32 sm:mt-0">
-                      <button className="text-sm bg-orange-500 text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                      onClick={()=>{
-                        setclickupdateprofile(true)
-                      }}>
-                        Edit profile
-                      </button>
-                      {
-                        clickupdateprofile && 
-                        <Modal
+                    <button
+                      className="text-sm bg-orange-500 text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                      onClick={() => {
+                        setclickupdateprofile(true);
+                      }}
+                    >
+                      Edit profile
+                    </button>
+                    {clickupdateprofile && (
+                      <Modal
                         size="lg"
                         active={clickupdateprofile}
                         toggler={() => setclickupdateprofile(false)}
-                        >
+                      >
                         <UpdateProfile />
                       </Modal>
-                      }
+                    )}
                   </div>
+                  {!clicktwofactor ? (
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="unchecked"
+                        className="mt-3 inline-flex items-center cursor-pointer"
+                      >
+                        <span className="relative">
+                          <span className="block w-10 h-6 bg-gray-400 rounded-full shadow-inner"></span>
+                          <span className="absolute block w-4 h-4 mt-1 ml-1 bg-white rounded-full shadow inset-y-0 left-0 focus-within:shadow-outline transition-transform duration-300 ease-in-out">
+                            <input
+                              id="unchecked"
+                              type="checkbox"
+                              className="absolute opacity-0 w-0 h-0"
+                              onClick={(e) => {
+                                setclickufactor(true);
+                                setCheckmodel(true);
+                                handlerTwoFactor(e)
+                              }}
+                            />
+                          </span>
+                        </span>
+                        <span className="ml-3 text-sm">TwoFactor</span>
+                      </label>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="checked"
+                        className="mt-3 inline-flex items-center cursor-pointer"
+                      >
+                        <span className="relative">
+                          <span className="block w-10 h-6 bg-gray-400 rounded-full shadow-inner"></span>
+                          <span className="absolute block w-4 h-4 mt-1 ml-1 rounded-full shadow inset-y-0 right-1 focus-within:shadow-outline transition-transform duration-300 ease-in-out bg-orange-600 transform translate-x-full">
+                            <input
+                              id="checked"
+                              type="checkbox"
+                              className="absolute opacity-0 w-0 h-0"
+                              onClick={() => {
+                                setclickufactor(false);
+                              }}
+                            />
+                          </span>
+                        </span>
+                        <span className="ml-3 text-sm">TwoFactor</span>
+                      </label>
+                    </div>
+                  )}
+                  {
+                    clicktwofactor && restwofactor && 
+                      <Modal
+                        size="lg"
+                        active={checkmodel}
+                        toggler={() => setCheckmodel(false)}
+                      >
+                        <div>
+                          Your Secret IS: {restwofactor}
+                        </div>
+                      </Modal>
+                  }
                 </div>
                 <div className="w-full lg:w-4/12 px-4 lg:order-1">
                   <div className="flex justify-center py-4 lg:pt-4 pt-8">
@@ -293,10 +366,11 @@ const Profile = (props) => {
                                       aria-label="MAIN BUTTON"
                                       className="inline-flex mt-2 xs:mt-0 bg-orange-500	"
                                     >
-                                      <button className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
-                                      onClick={(e)=>{
-                                        handlerclickparticipate(e, stat.id)
-                                      }}
+                                      <button
+                                        className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
+                                        onClick={(e) => {
+                                          handlerclickparticipate(e, stat.id);
+                                        }}
                                       >
                                         Participate
                                       </button>

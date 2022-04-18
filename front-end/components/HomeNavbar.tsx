@@ -84,9 +84,6 @@ const HomeNavbar = () => {
                     <svg
                       className="w-10 h-10 text-blue-500"
                       fill="none"
-                      // strokeLinecap="round"
-                      // strokeLinejoin="round"
-                      // strokeWidth="2"
                       viewBox="0 00 24 24"
                       stroke="currentColor"
                       onClick={() => {
@@ -101,9 +98,6 @@ const HomeNavbar = () => {
                     <svg
                       className="w-10 h-10 text-blue-500"
                       fill="none"
-                      // strokeLinecap="round"
-                      // strokeLinejoin="round"
-                      // strokeWidth="2"
                       viewBox="0 00 24 24"
                       stroke="currentColor"
                       onClick={() => {
