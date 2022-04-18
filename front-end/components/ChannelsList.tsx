@@ -100,8 +100,6 @@ const ChannlesList = (props) => {
         }
       });
   };
-  // console.log(props.mychannels);
-
   const hundelsubmit = async (e) => {
     if (isprivate) hundelsubmitprivate(e);
     if (!isprivate) hundelsubmitpublic(e);

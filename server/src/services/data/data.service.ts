@@ -80,18 +80,36 @@ export class DataService {
     const blockList: Block[] = await this.blockService.findAllMyBlockList(id);
     const newblockList = [];
     blockList.map((blockUser) => {
-      newblockList.push(
-        blockUser.user.id == id ? blockUser.block : blockUser.user,
-      );
+      if(blockUser.user.id == id)
+      newblockList.push({hide: false, user: blockUser.block})
+      else
+      newblockList.push({hide: true, user:blockUser.user})
+      // newblockList.push(
+      //   blockUser.user.id == id ? blockUser.block : blockUser.user,
+      // );
     });
+    console.log(newblockList);
     await Promise.all(
       users.map(async (user) => {
+        let block: boolean =  false; 
         requestId = undefined;
         let userObject: Object = user;
         const friend = await this.friendsService.findMyFriend(me, user);
-        if (newblockList) {
+        if (newblockList.length > 0) {
+
           check = newblockList.find((element) => {
-            return element.id == user.id;
+            if(element.hide == false && element.user.id == user.id)
+            {
+              block = true;
+              return undefined
+            }
+            else if(element.hide == true && element.user.id == user.id)
+            {
+              block = false
+              return true;
+            }
+            return undefined;
+            // return element.id == user.id;
           });
         }
         if (!check) {
@@ -106,7 +124,7 @@ export class DataService {
               else stats = 'recipient';
             } else stats = 'add';
           } else stats = 'remove';
-          userObject = { ...userObject, requestId, stats };
+          userObject = { ...userObject, requestId, stats , block};
           allUsers = [...allUsers, userObject];
         }
       }),
@@ -876,9 +894,24 @@ export class DataService {
   // TwoFactorAuthenticationRegister
 
   async TwoFactorAuthenticationRegister(userId: number) {
-    const temp_secret = speakeasy.generateSecret();
-    await this.usersService.update(userId, { secret: temp_secret });
-    return { status: 201, secret: temp_secret.base32 };
+    const user =  await this.usersService.findOneById(userId);
+    if(!user.twoFactor)
+    {
+      const temp_secret = speakeasy.generateSecret();
+      await this.usersService.update(userId, { secret: temp_secret, twoFactor:true});
+      return { status: 201, secret: temp_secret.base32 };
+    }
+    return {status: 500, message: 'TwoFactor is already activated'}
+  }
+
+  async removeTwoFactorAuthentication(userId: number) {
+    const user =  await this.usersService.findOneById(userId);
+    if(user.twoFactor)
+    {
+      await this.usersService.update(userId, { secret: null, twoFactor:false});
+      return {status: 200, message: "TwoFactor is desactivated"}
+    }
+    return {status: 500, message: 'TwoFactor is not activated'}
   }
 
   async TwoFactorAuthenticationVerify(userId: number, token: string) {

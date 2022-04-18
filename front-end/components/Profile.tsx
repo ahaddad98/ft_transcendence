@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import HomeNavbar from "./HomeNavbar";
 import Modal from "@material-tailwind/react/Modal";
 import UpdateProfile from "./updateprofile";
-
 const Profile = (props) => {
   const router = useRouter();
   const [clickupdateprofile, setclickupdateprofile] = useState(false);
