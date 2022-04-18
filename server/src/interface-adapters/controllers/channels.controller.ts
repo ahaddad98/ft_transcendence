@@ -56,7 +56,7 @@ export class ChannelsController {
       return err;
     }
   }
-
+  
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async findChannelById(@Param() params: ChannelParams, @Req() req) {
@@ -67,13 +67,15 @@ export class ChannelsController {
       return err;
     }
   }
-
+  
   @Get(':id/users/all')
   @UseGuards(JwtAuthGuard)
   async listAllUsersOfChannelWithoutMe(@Param() params: ChannelParams) {
     try {
+      console.log('@Get(:id/users/all)')
       return await this.dataService.listUsersOfChannelWitouhtMe(params.id);
     } catch (err) {
+      // console.log('waaaa errrorr')
       throw new Error();
     }
   }
@@ -140,8 +142,10 @@ export class ChannelsController {
   @UseGuards(JwtAuthGuard)
   async JoinToPublicChannel(@Param() params: ChannelParams, @Req() req) {
     try {
+      console.log('join/:id/public/users/me');
       return await this.dataService.joinPublicChannel(params.id, req.user.id);
     } catch (err) {
+      console.log('error in join/:id/public/users/me');
       return err;
     }
   }

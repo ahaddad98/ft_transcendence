@@ -61,11 +61,9 @@ const ChannelBar = (props) => {
       setImowner(true);
     } else if (props.mychannel.myRole === "admin") {
       setImadmin(true);
-    }
-      else{
-        setImadmin(false);
-        setImowner(false);
-
+    } else {
+      setImadmin(false);
+      setImowner(false);
     }
   }, [props]);
   useEffect(() => {
@@ -76,12 +74,10 @@ const ChannelBar = (props) => {
     }
     if (props.mychannel?.id) {
       socket.emit("joinChannel", props.mychannel?.id);
-    }
-    else{
+    } else {
       setImadmin(false);
       setImowner(false);
-  
-  }
+    }
   }, []);
   const hundelkickuser = async (e) => {
     e.preventDefault();
@@ -133,7 +129,6 @@ const ChannelBar = (props) => {
         }
       )
       .then(() => {
-        
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
@@ -174,7 +169,7 @@ const ChannelBar = (props) => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((res) => {
-        socket.emit("eventChannel", {
+        socket.emit("leaveRoom", {
           id: props.mychannel?.id,
         });
       });
