@@ -120,6 +120,15 @@ export class UserService {
     return winners;
   }
 
+  async activeTwoFactor(id: number, object: Object)
+  {
+    return await this.userRepository.update(id, {twoFactor:true});
+  }
+
+  async desactiveTwoFactor(id: number, object: Object)
+  {
+    return await this.userRepository.update(id, {twoFactor:false});
+  }
 
   async update(id: number, object: Object) {
     return await this.userRepository.update(id, object);

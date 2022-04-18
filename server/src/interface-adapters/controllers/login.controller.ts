@@ -22,18 +22,6 @@ export class LoginController {
     }
   }
 
-  @Post('register')
-  @UseGuards(JwtAuthGuard)
-  async TwoFactorAuthenticationRegister(@Req() req) {
-    try {
-      return await this.dataService.TwoFactorAuthenticationRegister(
-        req.user.id,
-      );
-    } catch (err) {
-      return err;
-    }
-  }
-
   @Post('/verify')
   @UseGuards(JwtAuthGuard)
   async TwoFactorAuthenticationVerify(@Req() req) {

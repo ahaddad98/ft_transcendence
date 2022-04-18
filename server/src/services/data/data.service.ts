@@ -894,9 +894,24 @@ export class DataService {
   // TwoFactorAuthenticationRegister
 
   async TwoFactorAuthenticationRegister(userId: number) {
-    const temp_secret = speakeasy.generateSecret();
-    await this.usersService.update(userId, { secret: temp_secret });
-    return { status: 201, secret: temp_secret.base32 };
+    const user =  await this.usersService.findOneById(userId);
+    if(!user.twoFactor)
+    {
+      const temp_secret = speakeasy.generateSecret();
+      await this.usersService.update(userId, { secret: temp_secret, twoFactor:true});
+      return { status: 201, secret: temp_secret.base32 };
+    }
+    return {status: 500, message: 'TwoFactor is already activated'}
+  }
+
+  async removeTwoFactorAuthentication(userId: number) {
+    const user =  await this.usersService.findOneById(userId);
+    if(user.twoFactor)
+    {
+      await this.usersService.update(userId, { secret: null, twoFactor:false});
+      return {status: 200, message: "TwoFactor is desactivated"}
+    }
+    return {status: 500, message: 'TwoFactor is not activated'}
   }
 
   async TwoFactorAuthenticationVerify(userId: number, token: string) {

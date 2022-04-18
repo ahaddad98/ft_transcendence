@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -50,6 +51,19 @@ export class ProfileController {
     }
   }
 
+
+  @Post('add/twoFactor')
+  @UseGuards(JwtAuthGuard)
+  async TwoFactorAuthenticationRegister(@Req() req) {
+    try {
+      return await this.dataService.TwoFactorAuthenticationRegister(
+        req.user.id,
+      );
+    } catch (err) {
+      return err;
+    }
+  }
+  
   @Post('update/users/me')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file', saveImageToStorage))
@@ -57,22 +71,35 @@ export class ProfileController {
     @UploadedFile() file: Express.Multer.File,
     @Body() body: UpdateUsername,
     @Req() req,
-  ): Object {
-    try {
-      return this.dataService.updateProfile(file, body, req.user.id);
-    } catch (err) {
-      return err;
+    ): Object {
+      try {
+        return this.dataService.updateProfile(file, body, req.user.id);
+      } catch (err) {
+        return err;
+      }
     }
-  }
+    
+    @Put('update/avatar/users/me')
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(FileInterceptor('file', saveImageToStorage))
+    uploadAvatar(@UploadedFile() file: Express.Multer.File, @Req() req): Object {
+      try {
+        return this.dataService.updateAvatar(file, req);
+      } catch (err) {
+        return err;
+      }
+    }
 
-  @Put('update/avatar/users/me')
-  @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('file', saveImageToStorage))
-  uploadAvatar(@UploadedFile() file: Express.Multer.File, @Req() req): Object {
-    try {
-      return this.dataService.updateAvatar(file, req);
-    } catch (err) {
-      return err;
+    @Delete('remove/twoFactor')
+    @UseGuards(JwtAuthGuard)
+    async removeTwoFactorAuthentication(@Req() req) {
+      try {
+        return await this.dataService.removeTwoFactorAuthentication(
+          req.user.id,
+        );
+      } catch (err) {
+        return err;
+      }
     }
   }
-}
+  
