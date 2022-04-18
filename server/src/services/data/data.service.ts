@@ -80,18 +80,36 @@ export class DataService {
     const blockList: Block[] = await this.blockService.findAllMyBlockList(id);
     const newblockList = [];
     blockList.map((blockUser) => {
-      newblockList.push(
-        blockUser.user.id == id ? blockUser.block : blockUser.user,
-      );
+      if(blockUser.user.id == id)
+      newblockList.push({hide: false, user: blockUser.block})
+      else
+      newblockList.push({hide: true, user:blockUser.user})
+      // newblockList.push(
+      //   blockUser.user.id == id ? blockUser.block : blockUser.user,
+      // );
     });
+    console.log(newblockList);
     await Promise.all(
       users.map(async (user) => {
+        let block: boolean =  false; 
         requestId = undefined;
         let userObject: Object = user;
         const friend = await this.friendsService.findMyFriend(me, user);
-        if (newblockList) {
+        if (newblockList.length > 0) {
+
           check = newblockList.find((element) => {
-            return element.id == user.id;
+            if(element.hide == false && element.user.id == user.id)
+            {
+              block = true;
+              return undefined
+            }
+            else if(element.hide == true && element.user.id == user.id)
+            {
+              block = false
+              return true;
+            }
+            return undefined;
+            // return element.id == user.id;
           });
         }
         if (!check) {
@@ -106,7 +124,7 @@ export class DataService {
               else stats = 'recipient';
             } else stats = 'add';
           } else stats = 'remove';
-          userObject = { ...userObject, requestId, stats };
+          userObject = { ...userObject, requestId, stats , block};
           allUsers = [...allUsers, userObject];
         }
       }),
