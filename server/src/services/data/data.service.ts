@@ -920,14 +920,25 @@ export class DataService {
   async TwoFactorAuthenticationVerify(userId: number, token: string) {
     const user: User = await this.usersService.findOneById(userId);
     const object = JSON.parse(user.secret);
+    console.log('two factor');
+    console.log(object);
+    
+    console.log('two factor');
     const secret = object.base32;
+    
     // console.log(secret);
     const verified = speakeasy.totp.verify({
       secret,
       encoding: 'base32',
       token,
     });
+    console.log('-----------------------');
+    console.log(verified);
+    console.log('-----------------------');
+    
     if (verified) {
+      console.log('fen wsalto');
+      
       await this.usersService.update(userId, { isVerified: true });
       return true;
     } else return false;

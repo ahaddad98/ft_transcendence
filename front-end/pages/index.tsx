@@ -37,7 +37,7 @@ const App = ({ data }) => {
           //     router.push(`/`);
           //   });
         setIshome(true);
-        // router.push("/home");
+        router.push("/home");
       }
   }, []);
   return (

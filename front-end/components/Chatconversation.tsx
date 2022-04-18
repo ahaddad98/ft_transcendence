@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import HomeNavbar from "./HomeNavbar";
 import PrivateConv from "./PrivateConv";
 import { io, Socket } from "socket.io-client";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const ChatConversation = (props) => {
   const [clickconv, setClickconv] = useState(false);
@@ -9,6 +11,13 @@ const ChatConversation = (props) => {
   const [convid, setConvid] = useState(-1);
   const [reciever, setReciever] = useState();
   const [clickprofile, setClickprofile] = useState(false);
+  const [profilehref, setProfilehref] = useState("false");
+  
+  const router  = useRouter();
+  const hundelfriendprofile = async (e, id) => {
+    e.preventDefault();
+    router.push(`FriendPage/${id}`);
+  };
   return (
     <div className="h-screen justify-center">
       <div>{props.data && <HomeNavbar />}</div>
@@ -100,6 +109,7 @@ const ChatConversation = (props) => {
                     alt=""
                     className="cursor-pointer"
                     onClick={() => {
+                      setProfilehref("FriendPage/"+stat.user.id)
                       setClickprofile(!clickprofile);
                     }}
                   />
@@ -111,11 +121,11 @@ const ChatConversation = (props) => {
                         aria-labelledby="dropdownBottomButton"
                       >
                         <li>
-                          {/* <Link href="/myprofile"> */}
+                          <Link href={profilehref}>
                           <p className="cursor-pointer w-22 block py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white ">
                             View Profile
                           </p>
-                          {/* </Link> */}
+                          </Link>
                         </li>
                         <li>
                           {/* <Link href="/"> */}
