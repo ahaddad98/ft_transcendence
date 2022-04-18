@@ -926,8 +926,8 @@ export class DataService {
     });
     if (verified) {
       await this.usersService.update(userId, { isVerified: true });
-      return { status: 201, verified: true };
-    } else return { status: 201, verified: false };
+      return true;
+    } else return false;
   }
 
   async TwoFactorAuthenticationValidate(userId: number, token: string) {
@@ -942,8 +942,8 @@ export class DataService {
       window: 1,
     });
     if (tokenValidates) {
-      return { status: 201, validate: true };
-    } else return { status: 201, validate: false };
+      return true ;
+    } else return false;
   }
 
   // block
