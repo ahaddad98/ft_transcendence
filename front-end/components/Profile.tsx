@@ -6,11 +6,26 @@ import HomeNavbar from "./HomeNavbar";
 import Modal from "@material-tailwind/react/Modal";
 import UpdateProfile from "./updateprofile";
 const Profile = (props) => {
+  console.log(props.mydata);
+
   const router = useRouter();
   const [clickupdateprofile, setclickupdateprofile] = useState(false);
   const [restwofactor, setRestwofactor] = useState<any>("");
-  const [clicktwofactor, setclickufactor] = useState(false);
+  const [data1, setdata1] = useState<any>();
+  const [clicktwofactor, setclickufactor] = useState(
+    props.mydata.user.twoFactor
+  );
   const [checkmodel, setCheckmodel] = useState(false);
+  const [check, setCheck] = useState(false);
+  useEffect(() => {
+    console.log(clicktwofactor);
+  }, [clicktwofactor]);
+  const fetchmyprofile = async () => {
+    const response = await axios.get("http://localhost:3001/profile/users/me", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return response;
+  };
   const handlerclickleave = async (e, id) => {
     e.preventDefault();
     axios
@@ -22,14 +37,29 @@ const Profile = (props) => {
       });
   };
   const handlerTwoFactor = async (e) => {
+    console.log("handlerTwoFactor");
     e.preventDefault();
     axios
-      .post(`http://localhost:3001/login/register`,{} ,{
+      .post(
+        `http://localhost:3001/profile/add/twoFactor`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      )
+      .then((res) => {
+        props.mydata.user.twoFactor = true;
+        if (res.data) setRestwofactor(res.data.secret);
+      });
+  };
+  const handlerremoveTwoFactor = async (e) => {
+    e.preventDefault();
+    axios
+      .delete(`http://localhost:3001/profile/remove/twoFactor`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
-      .then((res) => {
-        if (res.data)
-          setRestwofactor(res.data.secret)
+      .then(() => {
+        props.mydata.user.twoFactor = false;
       });
   };
   const handlerclickparticipate = async (e, id) => {
@@ -90,7 +120,7 @@ const Profile = (props) => {
                       </Modal>
                     )}
                   </div>
-                  {!clicktwofactor ? (
+                  {!clicktwofactor && (
                     <div className="flex flex-col">
                       <label
                         htmlFor="unchecked"
@@ -104,9 +134,9 @@ const Profile = (props) => {
                               type="checkbox"
                               className="absolute opacity-0 w-0 h-0"
                               onClick={(e) => {
-                                setclickufactor(true);
+                                setclickufactor(!clicktwofactor);
                                 setCheckmodel(true);
-                                handlerTwoFactor(e)
+                                handlerTwoFactor(e);
                               }}
                             />
                           </span>
@@ -114,7 +144,8 @@ const Profile = (props) => {
                         <span className="ml-3 text-sm">TwoFactor</span>
                       </label>
                     </div>
-                  ) : (
+                  )}
+                  {clicktwofactor && (
                     <div className="flex flex-col">
                       <label
                         htmlFor="checked"
@@ -127,8 +158,9 @@ const Profile = (props) => {
                               id="checked"
                               type="checkbox"
                               className="absolute opacity-0 w-0 h-0"
-                              onClick={() => {
-                                setclickufactor(false);
+                              onClick={(e) => {
+                                setclickufactor(!clicktwofactor);
+                                handlerremoveTwoFactor(e);
                               }}
                             />
                           </span>
@@ -137,18 +169,15 @@ const Profile = (props) => {
                       </label>
                     </div>
                   )}
-                  {
-                    clicktwofactor && restwofactor && 
-                      <Modal
-                        size="lg"
-                        active={checkmodel}
-                        toggler={() => setCheckmodel(false)}
-                      >
-                        <div>
-                          Your Secret IS: {restwofactor}
-                        </div>
-                      </Modal>
-                  }
+                  {clicktwofactor && (
+                    <Modal
+                      size="lg"
+                      active={checkmodel}
+                      toggler={() => setCheckmodel(false)}
+                    >
+                      <div>Your Secret IS: {restwofactor}</div>
+                    </Modal>
+                  )}
                 </div>
                 <div className="w-full lg:w-4/12 px-4 lg:order-1">
                   <div className="flex justify-center py-4 lg:pt-4 pt-8">

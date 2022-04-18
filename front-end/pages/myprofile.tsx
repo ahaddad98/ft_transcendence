@@ -79,6 +79,8 @@ const Myprofile = () => {
             mydata={myprofile}
             myhistory={myhistory}
             mychannels={mychannel}
+            fetchmyprofile={fetchmyprofile}
+            setMyprofile={setMyprofile}
           />
         )}
       </div>
