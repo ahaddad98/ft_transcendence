@@ -17,6 +17,7 @@ import Home from "./home";
 const loginSuccess = () => {
   const { query } = useRouter();
   const Router = useRouter();
+  const [data, setData] = useState<any>();
   const fetchData = async () => {
     const response = await axios.get("http://localhost:3001/users/me", {
       headers: { Authorization: `Bearer ${query.token}` },
@@ -57,25 +58,28 @@ const loginSuccess = () => {
       });
   };
   return (
-    <div className="container-form">
+    <>
+    {
+      data.twoFactor == false ?
+      <div className="container-form">
       <form
-        onSubmit={handleSubmit}
-        className="myform"
-        encType="multipart/form-data"
+      onSubmit={handleSubmit}
+      className="myform"
+      encType="multipart/form-data"
       >
-        <input
-          type="file"
-          className="custom-file-input"
-          name="img"
-          accept="image/*"
-          placeholder="Select Avatar"
-          onChange={fileSelectedHundler}
-        />
-        <br />
-        <input
-          type="text"
-          id="username"
-          name="username"
+      <input
+      type="file"
+      className="custom-file-input"
+      name="img"
+      accept="image/*"
+      placeholder="Select Avatar"
+      onChange={fileSelectedHundler}
+      />
+      <br />
+      <input
+      type="text"
+      id="username"
+      name="username"
           placeholder="Username"
           onChange={fileSelectedHundlerusername}
         />
@@ -89,8 +93,19 @@ const loginSuccess = () => {
         <div className="drop drop-4"></div>
         <div className="drop drop-5"></div>
       </div>
-    </div>
+    </div> : 
+    <div>
+      samir
+      </div>
+    }
+    </>
   );
 };
 
 export default loginSuccess;
+/*
+post /login/register
+{}
+ get response secret 
+ 
+*/
