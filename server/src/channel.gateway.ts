@@ -68,6 +68,17 @@ import {
       this.server.socketsJoin(payload.toString());
     }
 
+    @SubscribeMessage('leaveRoom')
+    leaveRoom(client: any, payload: any) {
+      console.log('im in leaveRoom');
+      
+      client.broadcast.to(payload.id.toString()).emit('newEventChannel', payload);
+      this.server.socketsLeave(payload.id.toString());
+      console.log('socket leav');
+      console.log('after');
+      
+    }
+
     @SubscribeMessage('joinChannel')
     joinChannel(client: any, payload: any) {
       console.log('im in join channel id: ' + payload);

@@ -675,6 +675,9 @@ export class DataService {
 
   async listUsersOfChannelWitouhtMe(channelId: number) {
     console.log('-------------------');
+    console.log('channelId: '+ channelId)
+    // console.log('channelId: '+ channelId)
+    console.log('-------------------');
     const newChannel: Channel = await this.channelService.findChannelById(
       channelId,
     );
