@@ -52,7 +52,7 @@ class Games {
   }
 }
 
-@WebSocketGateway(3080, { cors: { origin: '*' } })
+@WebSocketGateway(3083, { cors: { origin: '*' } })
 export class AppGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private logger: Logger = new Logger('AppGateway');

@@ -7,11 +7,11 @@ import { User } from "src/core/entities/user.entity";
 const config:TypeOrmModuleOptions = 
 {
     type: 'postgres',
-    host: 'db',
+    host: 'localhost',
     port: 5432,
-    username: 'root',
-    password: 'root',
-    database: 'test_db',
+    username: 'sqatim',
+    password: '13266231',
+    database: 'transcendence',
     synchronize: true,
     entities:  [join(__dirname, '/../**/**.entity{.ts,.js}')]
 };
