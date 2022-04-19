@@ -19,7 +19,7 @@ const Channel = () => {
   // const { query, isReady } = useRouter();
   const fetchAllmychannel = async () => {
     const response = await axios.get(
-      `http://localhost:3001/channels/users/me`,
+      `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/users/me`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }

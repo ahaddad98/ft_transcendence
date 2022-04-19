@@ -14,7 +14,7 @@ const App = ({ data }) => {
   const [ishome, setIshome] = useState(false);
   const router = useRouter();
   const fetchData = async () => {
-    const response = await axios.get("http://localhost:3001/users/me", {
+    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;

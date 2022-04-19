@@ -21,6 +21,7 @@ import Canvas from "../components/Canvas";
 // import "../styles/components/playgame";
 import HomeNavbar from "../components/HomeNavbar";
 import { io, Socket } from "socket.io-client";
+import { MydataProvider } from "../components/mydataprovider";
 
 
 const contentStyle = {
@@ -55,7 +56,7 @@ const datas = [
         title: 'Map3',
         render: (res) =>
             <Space>
-                <Image src="map3.png" />
+                <Image src="/map2.png" />
             </Space>,
 
     },
@@ -63,7 +64,7 @@ const datas = [
         title: 'Map4',
         render: (res) =>
             <Space>
-                <Image src="map4.png" />
+                <Image src="/map3.png" />
             </Space>,
     },
 ];
@@ -79,7 +80,7 @@ const Game = () => {
     const [choosable, setChoosable] = useState(false);
     let context: any = useMyContext();
     const fetchData = async () => {
-        const response = await axios.get('http://localhost:3001/users/me', {
+        const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3001/users/me', {
             headers:
                 { Authorization: `Bearer ${localStorage.getItem('token')}` }
         }).then(res => {
@@ -118,9 +119,12 @@ const Game = () => {
     //create close for component
     const handleClose = (e: any) => {
     };
+    const [socket, setSocket] = useState(context.socket);
+    // useEffect(()=>{
 
+    // },[socket])
     const close = (key: string, data: string) => {
-        axios.get("http://localhost:3001/game/invited/reject/" + MyData['id'] + "/" + data['id']).then(res => {
+        axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/invited/reject/" + MyData['id'] + "/" + data['id']).then(res => {
 
             socket.emit('ConnectServer', {
                 GameInfo: res.data,
@@ -132,7 +136,7 @@ const Game = () => {
     // const [ShowCanvas, setShowCanvas] = useState(false);
     const onclick = (key: string, data: any) => {
         // console.log(data);
-        axios.get("http://localhost:3001/game/invited/confirm/" + MyData['id'] + '/' + data['id']).then(res => {
+        axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/invited/confirm/" + MyData['id'] + '/' + data['id']).then(res => {
             // console.log('data',res.data);
             context.setShowCanvas(
                 {
@@ -170,56 +174,63 @@ const Game = () => {
             // onClose: close,
         });
     };
-    let socket: Socket;
+    // let socket: Socket;
 
     const fetradom = async () => {
-        axios.get("http://localhost:3001/users/random/" + MyData['id'])
+        axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/users/random/" + MyData['id'])
             .then(res => {
                 setData(res.data);
                 setOneTime(1);
             });
     };
     useEffect(() => {
+        if (MyData.length !== 0 && oneTime1 === 0) {
+            axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/is_invited/" + MyData['id'])
+                .then(res => {
+                    if (res.data['id'] !== undefined && oneTime1 === 0) {
+                        context.setShowCanvas(
+                            {
+                                show: false,
+                                gameInfo: res.data
+                            }
+                        );
+                        setOneTime1(1);
+                        openNotification(res.data)
+                    }
+                });
+        }
+
+    }, [MyData])
+    useEffect(() => {
         let i: number = 0;
         // openNotification("Hello");
-        socket = io('http://localhost:3080');
+        // socket = io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080');
+
+        // const inter = setInterval(() => {
+        if (MyData.length !== 0 && oneTime1 === 0) {
+        }
+        fetradom();
+
         socket.on("notificationClient", (msg) => {
             if (msg.idUser == MyData['id']) {
 
                 openNotification(msg.data);
             }
         });
-        // const inter = setInterval(() => {
-        if (MyData.length !== 0 && oneTime1 === 0) {
-            // axios.get("http://localhost:3001/game/is_invited/" + MyData['id'])
-            //     .then(res => {
-            //         if (res.data['id'] !== undefined && oneTime1 === 0) {
-            //             context.setShowCanvas(
-            //                 {
-            //                     show: false,
-            //                     gameInfo: res.data
-            //                 }
-            //             );
-            //             setOneTime1(1);
-            //             openNotification(res.data)
-            //         }
-            //     });
-        }
-        fetradom();
-
-
-    }, [MyData, context.ShowCanvas]);
+    }, [MyData, context.ShowCanvas, socket]);
     return (
+        <MydataProvider>
+
         <div>
             <HomeNavbar />
             <link
                 rel="stylesheet"
                 href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css"
-            />
+                />
             <link
                 rel="stylesheet"
                 href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css"
-            />
+                />
             <Content style={{ padding: '5%' }}>
                 <div style={{ textAlign: 'center' }}>
                     {context.ShowCanvas.show &&
@@ -248,17 +259,19 @@ const Game = () => {
                                     cover={
                                         <div style={{ textAlign: 'center' }}>
                                             <Badge.Ribbon text="online" style={{ backgroundColor: '#87d068', width: "auto", height: "auto" }} placement='start' />
-                                            <Avatar shape="square" style={{ width: "50%", height: "auto", borderRadius: "20px" }} src={data['avatar']} />
+                                            {
+                                                <Avatar shape="square" style={{ width: "50%", height: "auto", borderRadius: "20px" }} src={data['avatar']} />
+                                            }
                                         </div>
                                     }
                                     actions={
                                         [
                                             <ArrowLeftOutlined key="previous" onClick={() => { fetradom(); }} />,
                                             <PlayCircleOutlined
-                                                key="play" onClick={() => {
-                                                    setisRandom(0);
-                                                    setIsModalVisible(true);
-                                                }} />,
+                                            key="play" onClick={() => {
+                                                setisRandom(0);
+                                                setIsModalVisible(true);
+                                            }} />,
                                             <ArrowRightOutlined key="next" onClick={() => { fetradom(); }} />]}>
                                     <Meta
                                         title={data['username']}
@@ -329,7 +342,7 @@ const Game = () => {
                                     <li>You Press [<ArrowDownOutlined />  or S] key to Move Down </li>
                                     <li>You Press [P]  or Space key to Pause the Game</li>
                                     <li>You can join back to play befor 10s(click [P] or Space) or you lose </li>
-                                    <li>If you Quit the Game , You will lose the game </li>
+                                    <li>If you Quit the Game , You will lose </li>
                                     <li>Good Luck <HeartOutlined /> </li>
                                 </div>
                             }
@@ -347,7 +360,7 @@ const Game = () => {
                                             {item.title}
                                             <Button type="primary" onClick={() => {
                                                 if (isRandom === 1) {
-                                                    axios.get("http://localhost:3001/game/matchmaking/" + MyData["id"] + '/' + item.title)
+                                                    axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/matchmaking/" + MyData["id"] + '/' + item.title)
                                                         .then(res => {
                                                             if (res.data.length !== 0) {
                                                                 context.setShowCanvas(
@@ -363,7 +376,7 @@ const Game = () => {
                                                         )
                                                 }
                                                 else if (isRandom === 0) {
-                                                    axios.post("http://localhost:3001/game/invite",
+                                                    axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/invite",
                                                         {
                                                             "username1": MyData['username'],
                                                             "username2": data['username'],
@@ -380,7 +393,7 @@ const Game = () => {
                                                                 )
                                                                 setOneTime(1);
                                                                 setIsModalVisible(false);
-                                                                socket = io('http://localhost:3080');
+                                                                // socket = io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080');
                                                                 socket.emit("notificationServer",
                                                                     {
                                                                         data: res.data,
@@ -406,6 +419,8 @@ const Game = () => {
 
             </Content >
         </div>
+        </MydataProvider>
+
     )
 }
 

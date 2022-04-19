@@ -83,7 +83,7 @@ const ChannelBar = (props) => {
     e.preventDefault();
     axios
       .delete(
-        `http://localhost:3001/channels/kick/${props.mychannel.id}/users/${userid}`,
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/kick/${props.mychannel.id}/users/${userid}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -100,7 +100,7 @@ const ChannelBar = (props) => {
     e.preventDefault();
     axios
       .put(
-        `http://localhost:3001/channels/admin/${props.mychannel.id}/users/${userid}`,
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/admin/${props.mychannel.id}/users/${userid}`,
         {},
         {
           headers: {
@@ -120,7 +120,7 @@ const ChannelBar = (props) => {
     e.preventDefault();
     axios
       .put(
-        ` http://localhost:3001/channels/user/${props.mychannel.id}/users/${userid}`,
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/user/${props.mychannel.id}/users/${userid}`,
         {},
         {
           headers: {
@@ -143,7 +143,7 @@ const ChannelBar = (props) => {
     formData.append("time", selectedtime);
     axios
       .put(
-        `http://localhost:3001/channels/ban/${props.mychannel.id}/users/${userid}`,
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/ban/${props.mychannel.id}/users/${userid}`,
         {
           time: selectedtime,
         },
@@ -165,7 +165,7 @@ const ChannelBar = (props) => {
   const handlerclickleave = async (e, id) => {
     e.preventDefault();
     axios
-      .delete(`http://localhost:3001/channels/leave/${id}/users/me`, {
+      .delete(`${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/leave/${id}/users/me`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((res) => {
@@ -180,7 +180,7 @@ const ChannelBar = (props) => {
     formData.append("time", selectedtime);
     axios
       .delete(
-        `http://localhost:3001/channels/remove/ban/${props.mychannel.id}/users/${userid}`,
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/remove/ban/${props.mychannel.id}/users/${userid}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -203,7 +203,7 @@ const ChannelBar = (props) => {
     formData.append("time", selectedtime);
     axios
       .delete(
-        `http://localhost:3001/channels/remove/mute/${props.mychannel.id}/users/${userid}`,
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/remove/mute/${props.mychannel.id}/users/${userid}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -226,7 +226,7 @@ const ChannelBar = (props) => {
     formData.append("time", selectedtime);
     axios
       .put(
-        `http://localhost:3001/channels/mute/${props.mychannel.id}/users/${userid}`,
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/mute/${props.mychannel.id}/users/${userid}`,
         {
           time: selectedtime,
         },

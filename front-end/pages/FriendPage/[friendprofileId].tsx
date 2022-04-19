@@ -8,7 +8,7 @@ const friendprofile = () => {
   const [myprofile, setMyprofile] = useState({});
   const [hasResult, setHasResult] = useState(false);
   const fetchmyprofile = async () => {
-    const response = await axios.get("http://localhost:3001/profile/users/me", {
+    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/profile/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;
@@ -29,7 +29,7 @@ const friendprofile = () => {
 
   const fetchmyhistory = async () => {
     const response = await axios.get(
-      "http://localhost:3001/game/history/users/me",
+      process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/game/history/users/me",
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }

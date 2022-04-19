@@ -10,7 +10,7 @@ const FriendComponent = (props) => {
     e.preventDefault();
     axios
       .post(
-        `http://localhost:3001/conversations/private/users/me/${props.mydata.user.id}`,{},
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/conversations/private/users/me/${props.mydata.user.id}`,{},
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

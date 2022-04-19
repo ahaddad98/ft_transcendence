@@ -20,10 +20,10 @@ export class LoginController {
       const user = await this.usersService.findOneById(req.user.id);
       console.log(req.user);
       if(user.twoFactor == true)
-        return res.redirect(`http://localhost:3000/twofactor?id=${user.id}`)
+        return res.redirect(`${process.env.NEXT_PUBLIC_FRONTEND_URL}:3000/twofactor?id=${user.id}`)
       else{
         const token = this.dataService.login(req.user);
-        return res.redirect(`http://localhost:3000/loginSuccess?token=${token}`);
+        return res.redirect(`${process.env.NEXT_PUBLIC_FRONTEND_URL}:3000/loginSuccess?token=${token}`);
       }
     } catch (err) {
       return err;
@@ -60,10 +60,10 @@ export class LoginController {
           {
             console.log('in res');
             const token  = this.dataService.login({id: user.id, username: user.username});
-            return {url: `http://localhost:3000/loginSuccess?token=${token}`}
+            return {url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3000/loginSuccess?token=${token}`}
           }
           else
-          return {url: `http://localhost:3000/twofactor?id=${req.body.id}`}
+          return {url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3000/twofactor?id=${req.body.id}`}
         } catch (err) {
 
           console.log('error');

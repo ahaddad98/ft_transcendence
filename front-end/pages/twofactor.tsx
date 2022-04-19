@@ -9,7 +9,7 @@ const TwoFactor = () => {
     e.preventDefault();
       axios
       .post(
-        `http://localhost:3001/login/twoFactor/`,
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/login/twoFactor/`,
         {
           token: token,
           id: router.query.id,

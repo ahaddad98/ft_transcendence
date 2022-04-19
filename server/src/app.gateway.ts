@@ -13,6 +13,7 @@ import { GameService } from './services/use-cases/game/game.service';
 import { UserService } from './services/use-cases/user/user.service';
 // import *  'src/services/use-cases/game/game.module';
 import { Connection } from 'typeorm';
+
 // add  
 
 class Games {
@@ -51,7 +52,7 @@ class Games {
   }
 }
 
-@WebSocketGateway( { cors: { origin: '*' } })
+@WebSocketGateway(3080, { cors: { origin: '*' } })
 export class AppGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private logger: Logger = new Logger('AppGateway');
@@ -83,12 +84,12 @@ export class AppGateway
 
     for (let i = 0; i < this.game.length; i++) {
       // this.connect_users
-      // console.log("Currents Games",this.game[i]);
+      // console.log("Currents Games",t his.game[i]);
       if (this.game[i].socket1 == client.id ) {
-        let url = 'http://localhost:3001/game/quit/' + this.game[i].id + '/'+this.game[i].user2;
+        let url = process.env.FRONTEND_URL+':3001/game/quit/' + this.game[i].id + '/'+this.game[i].user2;
         this.axios.post(url,
           {
-            user1_score: this.game[i].score1,
+            user1_score: this.game[i].score1, 
             user2_score: this.game[i].score2,
             map:"none"
           }).then(response => {
@@ -96,7 +97,7 @@ export class AppGateway
         this.server.emit('QuitgameClient', { gameid: this.game[i].id, userId: this.game[i].user2 });
       }
       if(this.game[i].socket2 == client.id){
-        let url = 'http://localhost:3001/game/quit/' + this.game[i].id + '/'+this.game[i].user1;
+        let url = process.env.FRONTEND_URL+':3001/game/quit/' + this.game[i].id + '/'+this.game[i].user1;
         this.axios.post(url,
           {
             user1_score: this.game[i].score1,

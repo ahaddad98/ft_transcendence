@@ -45,13 +45,13 @@ const ListUseres = ({ socket, ...props }) => {
   const [data, setData] = useState([]);
   const [datablocked, setDatablocked] = useState([]);
   const fetchData = async () => {
-    const response = await axios.get("http://localhost:3001/users/me/all", {
+    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/users/me/all", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;
   };
   const fetchDatablocked = async () => {
-    const response = await axios.get("http://localhost:3001/users/block/me/all", {
+    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/users/block/me/all", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;
@@ -94,7 +94,7 @@ const ListUseres = ({ socket, ...props }) => {
   const hundelClick1 = async (e, id, state) => {
     e.preventDefault();
     await axios.post(
-      `http://localhost:3001/requests/users/me/friends/${id}`,
+      `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/requests/users/me/friends/${id}`,
       {},
       {
         headers: {
@@ -113,7 +113,7 @@ const ListUseres = ({ socket, ...props }) => {
   };
   const hundelClick4 = async (e, req_id, state) => {
     e.preventDefault();
-    await axios.delete(`http://localhost:3001/requests/${req_id}`, {
+    await axios.delete(`${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/requests/${req_id}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -129,7 +129,7 @@ const ListUseres = ({ socket, ...props }) => {
   };
   const hundelClick2 = async (e, req_id, state) => {
     e.preventDefault();
-    await axios.delete(`http://localhost:3001/requests/${req_id}`, {
+    await axios.delete(`${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/requests/${req_id}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -146,7 +146,7 @@ const ListUseres = ({ socket, ...props }) => {
   const hundelClick3 = async (e, req_id, id, state) => {
     e.preventDefault();
     await axios.post(
-      `http://localhost:3001/requests/${req_id}/users/me/friends/${id}/accept`,
+      `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/requests/${req_id}/users/me/friends/${id}/accept`,
       {},
       {
         headers: {

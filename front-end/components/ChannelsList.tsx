@@ -27,7 +27,7 @@ const ChannlesList = (props) => {
     e.preventDefault();
     axios
       .post(
-        "http://localhost:3001/channels/create/private/users/me",
+        process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/channels/create/private/users/me",
         {
           name: selectedname,
           password: selectedpassword,
@@ -48,7 +48,7 @@ const ChannlesList = (props) => {
     formData.append("password", selectedpasswordjoin);
     axios
       .post(
-        `http://localhost:3001/channels/join/${id}/private/users/me`,
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/join/${id}/private/users/me`,
         {
           password: selectedpasswordjoin,
         },
@@ -67,7 +67,7 @@ const ChannlesList = (props) => {
     e.preventDefault();
     axios
       .post(
-        "http://localhost:3001/channels/create/public/users/me",
+        process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/channels/create/public/users/me",
         {
           name: selectedname,
         },
@@ -86,7 +86,7 @@ const ChannlesList = (props) => {
     e.preventDefault();
     axios
       .post(
-        `http://localhost:3001/channels/join/${id}/public/users/me`,
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/join/${id}/public/users/me`,
         {},
         {
           headers: {

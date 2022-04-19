@@ -249,6 +249,7 @@ export class Game {
     b_radius: number;
     p_speed: number;
     b_speed: number;
+    last_x: number = 0;
 
     constructor(canvas: HTMLCanvasElement, data: any, socket: Socket, MyData: any) {
 
@@ -368,9 +369,10 @@ export class Game {
                     }
                 });
                 this.intervalId = null;
+                
                 this.socket.on('BallClient', (msg) => {
-                    if (msg.gameid === this.gameid && this.email1 === msg.idUser) {
-
+                    if (msg.gameid === this.gameid && this.email1 === msg.idUser  &&(this.last_x != msg.ball_x || !this.last_x)) {
+                        this.last_x = msg.ball_x;
                         if (msg.width > this.canvas.width) {
                             let delta = msg.width / this.canvas.width;
                             this._ball.ball_x = (msg.ball_x / delta);
@@ -413,9 +415,9 @@ export class Game {
             }
 
             this.socket.on('QuitgameClient', (msg) => {
-                console.log("QUIT MSG",msg);
+                console.log("QUIT MSG", msg);
                 if (msg.gameid === this.gameid && (msg.userId === this.MyData['id'] || msg.userId === this.MyData['id'])) {
-                    // axios.post('http://localhost:3001/game/quit/' + this.gameid + '/' + msg.userId,
+                    // axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+'/game/quit/' + this.gameid + '/' + msg.userId,
                     //     {
                     //         map: "none",
                     //     })
@@ -441,16 +443,37 @@ export class Game {
             }
             // this.gamePlay = new GPEXPORT(this._ball, this.paddle_left, this.paddle_right, this.time);
             this.time = 10;
-
+            this.countDown();
             setTimeout(() => {
                 this.start();
-            }, 1000);
+            }, 5000);
         }
 
 
         else {
         }
     }
+
+    countDown() {
+        this.ctx.font = "50px Arial";
+        this.ctx.textAlign = "center";
+        this.ctx.fillStyle = "white";
+        var counter = 5;
+        var refreshIntervalId = setInterval(  () => {
+            this.ctx.clearRect(0,0, this.canvas.width, this.canvas.height);
+            if (counter > 0) {
+                this.ctx.fillText(counter, this.canvas.width / 2 - 10, this.canvas.height / 2 - 10);
+                --counter;
+            }
+            else if (counter == 0) {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.fillText("start", this.canvas.width / 2 - 10, this.canvas.height / 2 - 10);
+                clearInterval(refreshIntervalId);
+            }
+        }, 1000);
+        
+    }
+
 
     beforeUnload(event) {
         // alert('Are you sure you want to leave?');
@@ -479,7 +502,7 @@ export class Game {
                         newId = this.data['user1']['id'];
                     }
 
-                    axios.post('http://localhost:3001/game/quit/' + this.gameid + '/' + newId,
+                    axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3001/game/quit/' + this.gameid + '/' + newId,
                         {
                             map: "none",
                         })
@@ -774,7 +797,7 @@ export class Game {
         this.ctx.fillStyle = "white";
         this.ctx.fillText("The WINNER is " + name, this.canvas.width / 2 - this.ctx.measureText("The WINNER is " + name).width / 2, this.canvas.height / 2);
         this.ctx.beginPath();
-        this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2 + (this.canvas.height * 0.3), (this.canvas.width* 0.09), 0, Math.PI * 2);
+        this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2 + (this.canvas.height * 0.3), (this.canvas.width * 0.09), 0, Math.PI * 2);
         this.ctx.fillStyle = "white";
         this.ctx.fill();
         this.ctx.fillStyle = "red";
@@ -896,7 +919,7 @@ export class Game {
             let newId: number = 0;
             if (this.paddle_left.score === 10) {
                 newId = this.data['user2']['id'];
-                axios.post('http://localhost:3001/game/finish/' + this.gameid + '/' + this.data['user2']['id'],
+                axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3001/game/finish/' + this.gameid + '/' + this.data['user2']['id'],
                     {
                         map: "none",
                         user1_score: this.paddle_right._score + ' ',
@@ -908,7 +931,7 @@ export class Game {
             }
             else {
                 newId = this.data['user2']['id'];
-                axios.post('http://localhost:3001/game/finish/' + this.gameid + '/' + this.data['user1']['id'],
+                axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3001/game/finish/' + this.gameid + '/' + this.data['user1']['id'],
                     {
                         map: "none",
                         user1_score: this.paddle_right._score + ' ',
@@ -989,10 +1012,15 @@ const Canvas = (props: any) => {
     const [data, setData] = useState(props.data ? props.data : []);
     const canvasRef = useRef(null);
     let context: any = useMyContext();
+    const [socket, setSocket] = useState(context.socket);
     const [MyData, setMyData] = useState(props.mydata ? props.mydata : []);
     // console.log(props.data);
     const [isWating, setIsWating] = useState(true);
-    var socket = io('http://localhost:3080');
+
+    // if (!socket)
+    // setSocket(io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080'));
+    useEffect(() => {
+    }, [])
     //  console.log(context.GameInfo);
 
     // console.log(window);
@@ -1005,8 +1033,7 @@ const Canvas = (props: any) => {
                 if (isWating === true) {
                     // if ((context.ShowCanvas.gameInfo['user1']['id'] === res.idUser || context.ShowCanvas.gameInfo['user2']['id'] === res.idUser)) 
                     {
-                        if (res.data['is_started'] === true && res.data['id'] === context.ShowCanvas.gameInfo['id'] && res.data['user2'] != undefined)
-                         {
+                        if (res.data['is_started'] === true && res.data['id'] === context.ShowCanvas.gameInfo['id'] && res.data['user2'] != undefined) {
                             setIsWating(false);
                             setData(res.data);
                             context.ShowCanvas.gameInfo = res.data;

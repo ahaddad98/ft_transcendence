@@ -21,7 +21,7 @@ const Profile = (props) => {
     console.log(clicktwofactor);
   }, [clicktwofactor]);
   const fetchmyprofile = async () => {
-    const response = await axios.get("http://localhost:3001/profile/users/me", {
+    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/profile/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;
@@ -29,7 +29,7 @@ const Profile = (props) => {
   const handlerclickleave = async (e, id) => {
     e.preventDefault();
     axios
-      .delete(`http://localhost:3001/channels/leave/${id}/users/me`, {
+      .delete(`${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/leave/${id}/users/me`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((res) => {
@@ -41,7 +41,7 @@ const Profile = (props) => {
     e.preventDefault();
     axios
       .post(
-        `http://localhost:3001/profile/add/twoFactor`,
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/profile/add/twoFactor`,
         {},
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -55,7 +55,7 @@ const Profile = (props) => {
   const handlerremoveTwoFactor = async (e) => {
     e.preventDefault();
     axios
-      .delete(`http://localhost:3001/profile/remove/twoFactor`, {
+      .delete(`${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/profile/remove/twoFactor`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then(() => {

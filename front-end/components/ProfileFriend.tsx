@@ -10,7 +10,7 @@ const ProfileFriend = (props) => {
     const [myprofile, setMyprofile] = useState({});
   const [hasResult, setHasResult] = useState(false);
   const fetchmyprofile = async () => {
-    const response = await axios.get(`http://localhost:3001/profile/users/${props.id}`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/profile/users/${props.id}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;
@@ -30,7 +30,7 @@ const ProfileFriend = (props) => {
   const [myhistory, setMyhistory] = useState();
 
   const fetchmyhistory = async () => {
-    const response = await axios.get(`http://localhost:3001/game/history/users/${props.id}`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/game/history/users/${props.id}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;
@@ -49,7 +49,7 @@ const ProfileFriend = (props) => {
   const [data, setData] = useState({});
 
   const fetchData = async () => {
-    const response = await axios.get("http://localhost:3001/users/me", {
+    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;

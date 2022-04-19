@@ -7,9 +7,9 @@ import HistoryGame from "../components/HistoryGame";
 import ListUseres from "../components/Listuseres";
 import MediaQuery, { useMediaQuery } from "react-responsive";
 import { io, Socket } from "socket.io-client";
-let socket = io("http://localhost:6209");
-let socketchat = io("http://localhost:3080");
-let socketchannel = io("http://localhost:3081");
+let socket = io(process.env.NEXT_PUBLIC_FRONTEND_URL +":6209");
+let socketchat = io(process.env.NEXT_PUBLIC_FRONTEND_URL +":3080");
+let socketchannel = io(process.env.NEXT_PUBLIC_FRONTEND_URL +":3081");
 export const socketcontext = React.createContext(socket);
 export const socketchatcontext = React.createContext(socketchat);
 export const socketchannelcontext = React.createContext(socketchannel);
@@ -21,7 +21,7 @@ const Home = () => {
   const [channel, setChannel] = useState([]);
 
   const fetchChannel = async () => {
-    const response = await axios.get("http://localhost:3001/channels/home", {
+    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/channels/home", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;
@@ -38,7 +38,7 @@ const Home = () => {
   const [stats, setStats] = useState([]);
   const fetchStats = async () => {
     const response = await axios.get(
-      "http://localhost:3001/users/leaderboard",
+      process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/users/leaderboard",
       { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
     );
     return response;
@@ -57,7 +57,7 @@ const Home = () => {
   const [history, setHistory] = useState([]);
   const fetchhistory = async () => {
     const response = await axios.get(
-      "http://localhost:3001/game/history/home",
+      process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/game/history/home",
       { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
     );
     return response;

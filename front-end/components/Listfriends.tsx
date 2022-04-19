@@ -12,7 +12,7 @@ const Listfriends = ({ socket, ...props }) => {
 
   const [check, setCheck] = useState(0);
   const fetchData = async () => {
-    const response = await axios.get("http://localhost:3001/friends/users/me", {
+    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/friends/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;
@@ -72,7 +72,7 @@ const Listfriends = ({ socket, ...props }) => {
 
     e.preventDefault();
     await axios
-      .delete(`http://localhost:3001/friends/users/me/${id}`, {
+      .delete(`${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/friends/users/me/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -91,7 +91,7 @@ const Listfriends = ({ socket, ...props }) => {
     e.preventDefault();
     // console.log('hundelClickblock: ' + id);
     await axios.post(
-      `http://localhost:3001/blocks/add/users/me/${id}`,
+      `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/blocks/add/users/me/${id}`,
       {},
       {
         headers: {

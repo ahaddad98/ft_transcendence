@@ -8,7 +8,7 @@ const SignIN = () => {
         e.preventDefault();
         
         try {
-            const response = await axios.get('http://localhost:3001/login/intra-42');
+            const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL +' :3001/login/intra-42');
             // console.log('sahbi samir');
             // console.log(response);
         } catch (error) {
@@ -17,7 +17,7 @@ const SignIN = () => {
       };
     function hundelsub(e) {
         e.preventDefault();
-        axios.post('http://localhost:3001/login/intra-42')
+        axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL +' :3001/login/intra-42')
         .then ((res) => {
             // console.log("amine haddad");
             // console.log(res);
@@ -30,7 +30,7 @@ const SignIN = () => {
     return (
         <div>
             <form >
-                <Link href="http://localhost:3001/login/intra-42">
+                <Link href={process.env.NEXT_PUBLIC_FRONTEND_URL+":3001/login/intra-42"}>
                 <input type="submit" value="SIGN IN" className="button"/>
                 </Link>
             </form>
