@@ -23,6 +23,7 @@ export class LoginController {
         return res.redirect(`${process.env.NEXT_PUBLIC_FRONTEND_URL}:3000/twofactor?id=${user.id}`)
       else{
         const token = this.dataService.login(req.user);
+        this.usersService.onlineUser(req.user.id);
         return res.redirect(`${process.env.NEXT_PUBLIC_FRONTEND_URL}:3000/loginSuccess?token=${token}`);
       }
     } catch (err) {
@@ -35,10 +36,8 @@ export class LoginController {
     try {
       const user = await this.usersService.findOneById(req.body.id);
       let response;
-      console.log('toto');
       if(!user.isVerified)
       {
-        console.log('verify');
         response =  await this.dataService.TwoFactorAuthenticationVerify(
           req.body.id,
           req.body.token,
@@ -46,8 +45,6 @@ export class LoginController {
         }
         else
         {
-          console.log('validate');
-          
           response =  await this.dataService.TwoFactorAuthenticationValidate(
             req.body.id,
             req.body.token,
@@ -55,10 +52,9 @@ export class LoginController {
             
           }
           console.log(response);
-          
           if(response)
           {
-            console.log('in res');
+            this.usersService.onlineUser(req.body.id);
             const token  = this.dataService.login({id: user.id, username: user.username});
             return {url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3000/loginSuccess?token=${token}`}
           }

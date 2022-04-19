@@ -16,39 +16,26 @@ import { MydataProvider } from "../components/mydataprovider";
 
 import { useMydataContext } from "../components/mydataprovider";
 
-
 const loginSuccess = () => {
-  // let data1: any = useMydataContext();
-  // console.log(data1);
-  
   const { query } = useRouter();
   const Router = useRouter();
   const [data, setData] = useState<any>();
   const fetchData = async () => {
-    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/users/me", {
-      headers: { Authorization: `Bearer ${query.token}` },
-    });
+    const response = await axios.get(
+      process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/users/me",
+      {
+        headers: { Authorization: `Bearer ${query.token}` },
+      }
+    );
     return response;
   };
   useEffect(() => {
-    
     if (query.token) {
-      console.log('amine');
       const tok = query.token;
       localStorage.setItem("token", `${tok}`);
       if (localStorage.getItem("token")) router.push("/home");
     }
   }, [query]);
-  // useEffect(()=>{
-  //   if (localStorage.getItem("token"))
-  //   {
-  //     fetchData().then((res) => {
-  //       if (res.data)
-  //         console.log(res.data);
-          
-  //     })
-  //   }
-  // },[])
 
   const [selectedfile, setSelectedfile] = useState();
   const [selectedusername, setSelectedUsername] = useState();
@@ -64,11 +51,15 @@ const loginSuccess = () => {
     formData.append("file", selectedfile);
     formData.append("username", selectedusername);
     axios
-      .post(process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/profile/update/users/me", formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+      .post(
+        process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/profile/update/users/me",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
       .then((res) => {
         if (res.data.succes !== null) router.push("/home");
       });
@@ -81,9 +72,3 @@ const loginSuccess = () => {
 };
 
 export default loginSuccess;
-/*
-post /login/register
-{}
- get response secret 
- 
-*/

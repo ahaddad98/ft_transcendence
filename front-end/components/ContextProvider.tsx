@@ -19,7 +19,7 @@ export function MyProvider({ children }) {
         console.log(socket);
     if (!socket && isBrowser) 
     {
-        setSocket(io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080'));
+        setSocket(io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3083'));
         console.log("Here");
     }
 

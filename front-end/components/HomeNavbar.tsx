@@ -231,13 +231,15 @@ const HomeNavbar = () => {
                 </ul>
               </div>
               <div className="w-1/4 space-x-5 flex flex-row justify-end">
-                <a className="flex items-center hover:text-gray-200" href="#">
+                {
+                  // notifications
+                /* <a className="flex items-center hover:text-gray-200" href="#">
                   <span className="flex absolute -mt-5 ml-4">
                     <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-pink-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-3 w-3 bg-pink-500"></span>
                   </span>
                   <img id="" src="/notif.svg" className="h-7" />
-                </a>
+                </a> */}
                 <a className="flex items-center hover:text-gray-200" href="#">
                   {data1.data.username}
                 </a>

@@ -164,7 +164,7 @@ export class ChannelsController {
         req.user.id,
       );
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 

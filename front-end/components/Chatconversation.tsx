@@ -81,8 +81,8 @@ const ChatConversation = (props) => {
   const [profilehref, setProfilehref] = useState("false");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [userInvite, setuserInvite] = useState(null);
-  let context = useMyContext();
-  let socket: any = context.socket;
+  // let context = useMyContext();
+  // let socket: any = context.socket;
   const router = useRouter();
   const hundelfriendprofile = async (e, id) => {
     e.preventDefault();
@@ -127,7 +127,7 @@ const ChatConversation = (props) => {
   };
   return (
     <div className="h-screen justify-center">
-      {isModalVisible && (
+      {/* {isModalVisible && (
         <Modal
           title="Choose A Map To Play"
           visible={true}
@@ -234,7 +234,7 @@ const ChatConversation = (props) => {
             />
           </div>
         </Modal>
-      )}
+      )} */}
       <div>{props.data && <HomeNavbar />}</div>
       <div
         className="lg:mt-10 container mx-auto shadow-lg rounded-lg flex"

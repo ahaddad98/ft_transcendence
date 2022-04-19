@@ -14,31 +14,21 @@ const App = ({ data }) => {
   const [ishome, setIshome] = useState(false);
   const router = useRouter();
   const fetchData = async () => {
-    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/users/me", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    const response = await axios.get(
+      process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/users/me",
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
     return response;
   };
   const [data1, setData] = useState<any>();
   const [check, setCheck] = useState(false);
   useEffect(() => {
     if (localStorage.getItem("token")) {
-          // fetchData()
-          //   .then((res) => {
-          //     if (res.data) {
-          //       setData(res.data);
-          //       setCheck(true);
-          //       console.log('data1');
-          //       console.log(data1);
-          //     }
-          //   })
-          //   .catch((err) => {
-          //     localStorage.removeItem("token");
-          //     router.push(`/`);
-          //   });
-        setIshome(true);
-        router.push("/home");
-      }
+      setIshome(true);
+      router.push("/home");
+    }
   }, []);
   return (
     <>

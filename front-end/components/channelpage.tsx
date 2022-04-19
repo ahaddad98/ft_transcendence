@@ -65,7 +65,7 @@ const ChannelPage = (props) => {
         // router.push("/myprofile");
       });
       return (()=>{
-        
+        false
       })
   }, []);
 

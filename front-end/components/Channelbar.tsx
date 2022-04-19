@@ -19,6 +19,7 @@ const ChannelBar = (props) => {
   const buttonRef = useRef();
   const router = useRouter();
   const [viewchannels, setViewchannles] = useState(false);
+  const [selectedpassword, setSelectedPassword] = useState("");
   const [imowner, setImowner] = useState(false);
   const [imadmin, setImadmin] = useState(false);
   const [Clickmember, setClickmember] = useState(false);
@@ -29,6 +30,7 @@ const ChannelBar = (props) => {
   const [ismute1, setIsmute1] = useState(false);
   const [isbanadmin, setisbanadmin] = useState(false);
   const [ismuteadmin, setIsmuteadmin] = useState(false);
+  const [isresetpassword, setIsresetpassword] = useState(false);
   const [isedit, setIsedit] = useState(false);
   let isban = false;
   let ismute = false;
@@ -165,13 +167,35 @@ const ChannelBar = (props) => {
   const handlerclickleave = async (e, id) => {
     e.preventDefault();
     axios
-      .delete(`${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/leave/${id}/users/me`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      })
+      .delete(
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/leave/${id}/users/me`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      )
       .then((res) => {
         socket.emit("leaveRoom", {
           id: props.mychannel?.id,
         });
+        router.push("/home");
+      });
+  };
+  const hundelsubmiteditpassword = async (e, id) => {
+    e.preventDefault();
+    console.log(selectedpassword);
+    axios
+      .put(
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/update/${id}/password/users/me`,{
+          password: selectedpassword
+        },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      )
+      .then((res) => {
+        // socket.emit("eventChannel", {
+        //   id: props.mychannel?.id,
+        // });
       });
   };
   const hundelremoveban = async (e) => {
@@ -997,6 +1021,7 @@ const ChannelBar = (props) => {
                 className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 bg-orange-500 font-semibold py-2 px-4 rounded-r w-34"
                 onClick={() => {
                   setIsedit(!isedit);
+                  setIsresetpassword(true)
                 }}
               >
                 Edit Password
@@ -1006,21 +1031,30 @@ const ChannelBar = (props) => {
         )}
         {isedit && (
           <Modal size="lg" active={isedit} toggler={() => setIsedit(false)}>
-            <div
-              role="button"
-              aria-label="MAIN BUTTON"
-              className="inline-flex mt-2 xs:mt-0 bg-orange-500	w-34"
-            >
-              <button
-                className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r w-32"
-                onClick={(e) => {
-                  setClickmute(!Clickmute);
-                  hundelremovemute(e);
-                }}
-              >
-                Reset password
-              </button>
-            </div>
+            {isresetpassword && (
+              <div className="space-y-4">
+                <form onSubmit={(e)=>hundelsubmiteditpassword(e,props.mychannel.id)}>
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block mb-1 text-gray-600 font-semibold w-34"
+                    >
+                      New Password
+                    </label>
+                    <input
+                      type="text"
+                      id="password"
+                      className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
+                      onChange={(e) => setSelectedPassword(e.target.value)}
+                    />
+                  </div>
+                  <button className="mt-4 w-full bg-yellow-500 font-semibold py-2 rounded-md  tracking-wide text-white">
+                    <div className="h-1 mt-1">Submit</div>
+                    <input type="submit" value=""></input>
+                  </button>
+                </form>
+              </div>
+            )}
           </Modal>
         )}
         <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">

@@ -1,47 +1,47 @@
-version: '3.3'
-services:
-  db:
-    container_name: pg_container
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: test_db
-    ports:
-      - "5432:5432"
-    networks:
-      - web
-  pgadmin:
-    container_name: pgadmin4_container
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
-    depends_on:
-      - db
-    ports:
-      - "5050:80"
-    networks:
-      - web
-  app:
-    build: ./
-    container_name: app
-    image: app
-    restart: always
-    depends_on:
-      - db
-    ports:
-     - "3001:3001"
-     - "3000:3000"
-     - "3080:3080"
-     - "6209:6209"
-     - "3081:3081"
-    networks:
-      - web
-    env_file:
-      - .env  
-networks:
-  web:
-    driver: bridge
+# version: '3.3'
+# services:
+#   db:
+#     container_name: pg_container
+#     image: postgres
+#     restart: always
+#     environment:
+#       POSTGRES_USER: root
+#       POSTGRES_PASSWORD: root
+#       POSTGRES_DB: test_db
+#     ports:
+#       - "5432:5432"
+#     networks:
+#       - web
+#   pgadmin:
+#     container_name: pgadmin4_container
+#     image: dpage/pgadmin4
+#     restart: always
+#     environment:
+#       PGADMIN_DEFAULT_EMAIL: admin@admin.com
+#       PGADMIN_DEFAULT_PASSWORD: root
+#     depends_on:
+#       - db
+#     ports:
+#       - "5050:80"
+#     networks:
+#       - web
+#   app:
+#     build: ./
+#     container_name: app
+#     image: app
+#     restart: always
+#     depends_on:
+#       - db
+#     ports:
+#      - "3001:3001"
+#      - "3000:3000"
+#      - "3080:3080"
+#      - "6209:6209"
+#      - "3081:3081"
+#     networks:
+#       - web
+#     env_file:
+#       - .env  
+# networks:
+#   web:
+#     driver: bridge
