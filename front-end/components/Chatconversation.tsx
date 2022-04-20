@@ -19,6 +19,7 @@ import {
   List,
 } from "antd";
 import { Button, notification, Image, Comment } from "antd";
+import Game from "../../server/src/core/entities/game.entity";
 import {
   ArrowLeftOutlined,
   PlayCircleOutlined,
@@ -71,17 +72,18 @@ const datas = [
 ];
 
 const ChatConversation = (props) => {
-
-
   const [clickconv, setClickconv] = useState(false);
   const [clickconvresp, setClickconvresp] = useState(false);
   const [convid, setConvid] = useState(-1);
   const [reciever, setReciever] = useState();
-  const [clickprofile, setClickprofile] = useState(false);
+  const [clickprofile, setClickprofile] = useState<any>([]);
   const [profilehref, setProfilehref] = useState("false");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [userInvite, setuserInvite] = useState(null);
-  // let context = useMyContext();
+  const [userWatch, setuserWatch] = useState(null);
+  const [GameInfo, setGameInfo] = useState(null);
+
+  let context = useMyContext();
   // let socket: any = context.socket;
   const router = useRouter();
   const hundelfriendprofile = async (e, id) => {
@@ -91,150 +93,51 @@ const ChatConversation = (props) => {
   const hundelinvitegame = async (e, id) => {
     e.preventDefault();
     setuserInvite(id);
-    // isModalVisible(true);
-    // axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/invite",
-    // {
-    //     "username1": MyData['username'],
-    //     "username2": data['username'],
-    //     "map": item.title
-    // })
-    // .then(res => {
-    //     if (res.data.length !== 0) {
-    //         setData(res.data);
-    //         context.setShowCanvas(
-    //             {
-    //                 show: true,
-    //                 gameInfo: res.data
-    //             }
-    //         )
-    //         setOneTime(1);
-    //         setIsModalVisible(false);
-    //         // socket = io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080');
-    //         socket.emit("notificationServer",
-    //             {
-    //                 data: res.data,
-    //                 idUser: res.data['user2']['id']
-    //             });
-    //     }
-    // });
-  };
-  const handleOk = () => {
-    setIsModalVisible(false);
+    context.setMydata(props.data);
+    axios
+      .post(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/invite", {
+        username1: props.data.username,
+        username2: id,
+        map: "default",
+      })
+      .then((res) => {
+        if (res.data.length !== 0) {
+          context.setShowCanvas({
+            show: true,
+            gameInfo: res.data,
+          });
+          setIsModalVisible(false);
+          router.push("/game");
+        }
+      });
   };
 
-  const handleCancel = () => {
+  const hundelWatchgame = async (e, id) => {
+    e.preventDefault();
+    setuserWatch(id);
+    context.setMydata(props.data);
+    context.setShowCanvas({
+      show: true,
+      gameInfo: GameInfo,
+    });
     setIsModalVisible(false);
+    router.push("/game");
   };
+
+  const getCurrentGameOfUser = async (data) => {
+    axios
+      .get(
+        process.env.NEXT_PUBLIC_FRONTEND_URL +
+          ":3001/game/currentMatch/" +
+          data.id
+      )
+      .then((res) => {
+        setGameInfo(res.data);
+      });
+  };
+
   return (
     <div className="h-screen justify-center">
-      {/* {isModalVisible && (
-        <Modal
-          title="Choose A Map To Play"
-          visible={true}
-          onOk={handleOk}
-          maskClosable={true}
-          mask={true}
-          onCancel={handleCancel}
-          style={{ top: "10%", width: "100%", height: "100%" }}
-          footer={[]}
-        >
-          <div style={{ padding: "24px", width: "100%", height: "100%" }}>
-            <Space>
-              <Comment
-                content={
-                  <div
-                    style={{
-                      textAlign: "center",
-                      fontSize: "25px",
-                      fontFamily: "Ro",
-                    }}
-                  >
-                    <h3>Rules:</h3>
-                    <li>
-                      You Press [<ArrowUpOutlined /> or W] key to Move Up{" "}
-                    </li>
-                    <li>
-                      You Press [<ArrowDownOutlined /> or S] key to Move Down{" "}
-                    </li>
-                    <li>You Press [P] or Space key to Pause the Game</li>
-                    <li>
-                      You can join back to play befor 10s(click [P] or Space) or
-                      you lose{" "}
-                    </li>
-                    <li>If you Quit the Game , You will lose </li>
-                    <li>
-                      Good Luck <HeartOutlined />{" "}
-                    </li>
-                  </div>
-                }
-              />
-            </Space>
-          </div>
-          <div>
-            <List
-              grid={{
-                gutter: 16,
-                column: 4,
-                xs: 1,
-                sm: 2,
-                md: 3,
-                lg: 4,
-                xl: 4,
-              }}
-              dataSource={datas}
-              renderItem={(item) => (
-                <List.Item>
-                  <Card
-                    title={
-                      <Space direction="vertical">
-                        {item.title}
-                        <Button
-                          type="primary"
-                          onClick={() => {
-                            {
-                              axios
-                                .post(
-                                  process.env.NEXT_PUBLIC_FRONTEND_URL +
-                                    ":3001/game/invite",
-                                  {
-                                    username1: props.data.user.username,
-                                    username2: userInvite,
-                                    map: item.title,
-                                  }
-                                )
-                                .then((res) => {
-                                  if (res.data.length !== 0) {
-                                    // setData(res.data);
-
-                                    context.setShowCanvas({
-                                      show: true,
-                                      gameInfo: res.data,
-                                    });
-                                    // setOneTime(1);
-                                    setIsModalVisible(false);
-                                    // socket = io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080');
-                                    // socket.emit("notificationServer", {
-                                    //   data: res.data,
-                                    //   idUser: res.data["user2"]["id"],
-                                    // });
-                                  }
-                                });
-                            }
-                          }}
-                        >
-                          Play
-                        </Button>
-                      </Space>
-                    }
-                  >
-                    {item.render(item)}
-                  </Card>
-                </List.Item>
-              )}
-            />
-          </div>
-        </Modal>
-      )} */}
       <div>{props.data && <HomeNavbar />}</div>
       <div
         className="lg:mt-10 container mx-auto shadow-lg rounded-lg flex"
@@ -297,13 +200,15 @@ const ChatConversation = (props) => {
             style={{ height: "93%" }}
           >
             {props.conversations.map((stat, key) => (
+             <React.Fragment key={key}>
               <div
-                className="flex flex-row py-4 px-2 items-center border-b-2"
-                key={key}
-                onClick={() => {
+              className="flex flex-row py-4 px-2 items-center border-b-2"
+              key={key}
+              onClick={() => {
                   setClickconv(!clickconv);
                   setConvid(stat.id);
                   setReciever(stat.user);
+                  getCurrentGameOfUser(stat.user);
                 }}
               >
                 <div className="w-1/4">
@@ -325,10 +230,10 @@ const ChatConversation = (props) => {
                     className="cursor-pointer"
                     onClick={() => {
                       setProfilehref("FriendPage/" + stat.user.id);
-                      setClickprofile(!clickprofile);
+                      clickprofile[key] = (!clickprofile[key]);
                     }}
                   />
-                  {clickprofile && (
+                  {clickprofile[key] && (
                     <div className="absolute mb-10 w-32  z-10 bg-grey-200 group-hover:block bg-white">
                       <ul
                         className=" py-1 w-22"
@@ -342,22 +247,31 @@ const ChatConversation = (props) => {
                           </Link>
                         </li>
                         <li>
-                          {/* <Link href="/"> */}
                           <p
                             className="w-22 block py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                             onClick={(e) => {
-                              hundelinvitegame(e, stat.user.username)
+                              hundelinvitegame(e, stat.user.username);
                             }}
                           >
                             Invite game
                           </p>
-                          {/* </Link> */}
+                        </li>
+                        <li>
+                          <p
+                            className="w-22 block py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                            onClick={(e) => {
+                              hundelWatchgame(e, stat.user.username);
+                            }}
+                          >
+                            Watch game
+                          </p>
                         </li>
                       </ul>
                     </div>
                   )}
                 </div>
               </div>
+              </React.Fragment>
             ))}
           </div>
           {convid !== -1 && props.data && reciever && (

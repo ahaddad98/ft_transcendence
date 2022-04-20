@@ -85,6 +85,7 @@ const Game = () => {
                 { Authorization: `Bearer ${localStorage.getItem('token')}` }
         }).then(res => {
             if (res.data) {
+                context.setMydata(res.data);
                 setMyData(res.data);
             }
         }).catch((err) => {
@@ -138,6 +139,7 @@ const Game = () => {
         // console.log(data);
         axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/invited/confirm/" + MyData['id'] + '/' + data['id']).then(res => {
             // console.log('data',res.data);
+            context.setMydata(MyData);
             context.setShowCanvas(
                 {
                     gameInfo: res.data,
@@ -223,14 +225,14 @@ const Game = () => {
 
         <div>
             <HomeNavbar />
-            <link
+            {/* <link
                 rel="stylesheet"
                 href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css"
                 />
             <link
                 rel="stylesheet"
                 href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css"
-                />
+                /> */}
             <Content style={{ padding: '5%' }}>
                 <div style={{ textAlign: 'center' }}>
                     {context.ShowCanvas.show &&
@@ -324,7 +326,6 @@ const Game = () => {
                     <Row justify="center" align="top" gutter={[48, 32]}>
                         <Col span={6} pull={18} style={{ background: 'transparent' }} >
                          
-
                         </Col>
                     </Row>
                 } */}

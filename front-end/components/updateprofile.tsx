@@ -13,19 +13,20 @@ import { useState } from "react";
 
 const UpdateProfile = () => {
   const [selectedfile, setSelectedfile] = useState();
-  const [selectedusername, setSelectedUsername] = useState('');
+  const [selectedusername, setSelectedUsername] = useState(null);
   const fileSelectedHundler = (e) => {
     setSelectedfile(e.target.files[0]);
   };
   const fileSelectedHundlerusername = (e) => {
-    setSelectedUsername(e.target.value);
+    if(e.target.value)
+      setSelectedUsername(e.target.value);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
     var formData = new FormData();
     formData.append("file", selectedfile);
     console.log(selectedusername);
-    if (selectedusername.length > 4)
+    if (selectedusername)
       formData.append("username", selectedusername);
     axios
       .post(

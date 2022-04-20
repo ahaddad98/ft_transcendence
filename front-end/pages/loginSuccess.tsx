@@ -15,6 +15,7 @@ import UpdateProfile from "../components/updateprofile";
 import { MydataProvider } from "../components/mydataprovider";
 
 import { useMydataContext } from "../components/mydataprovider";
+import EditProfile from "../components/EditProfile";
 
 const loginSuccess = () => {
   const { query } = useRouter();
@@ -76,7 +77,7 @@ const loginSuccess = () => {
     <>
     {
       !check ? 
-      <UpdateProfile /> : ""
+      <EditProfile /> : ""
     }
     </>
   );

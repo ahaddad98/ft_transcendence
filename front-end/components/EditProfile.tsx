@@ -13,22 +13,24 @@ import { useState } from "react";
 
 const EditProfile = () => {
   const [selectedfile, setSelectedfile] = useState();
-  const [selectedusername, setSelectedUsername] = useState();
+  const [selectedusername, setSelectedUsername] = useState(null);
   const fileSelectedHundler = (e) => {
     setSelectedfile(e.target.files[0]);
   };
   const fileSelectedHundlerusername = (e) => {
-    setSelectedUsername(e.target.value);
+    if(e.target.value)
+      setSelectedUsername(e.target.value);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
     var formData = new FormData();
     formData.append("file", selectedfile);
-    formData.append("username", selectedusername);
-    // http://localhost:3001/profile/update/users/me
+    console.log(selectedusername);
+    if (selectedusername)
+      formData.append("username", selectedusername);
     axios
       .post(
-        process.env.NEXT_PUBLIC_FRONTEND_URL + " :3001/users/me/updateProfile",
+        process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/profile/update/users/me",
         formData,
         {
           headers: {
@@ -40,6 +42,7 @@ const EditProfile = () => {
         if (res.data.succes !== null) router.push("/home");
       });
   };
+  const [data , setData] = useState()
   return (
     <div className="container-form">
       <form
@@ -57,6 +60,7 @@ const EditProfile = () => {
         />
         <br />
         <input
+          required
           type="text"
           id="username"
           minLength={5}

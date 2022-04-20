@@ -8,6 +8,7 @@ import axios from "axios";
 import { useMyContext } from './ContextProvider';
 import { Result } from 'antd';
 import Cookies from 'cookie';
+import { useMychannelContext } from './mychannelprovider';
 
 
 export class player {
@@ -257,6 +258,7 @@ export class Game {
         // console.log("This freacking data",data['user2']['email']);
         if (canvas != null && data != undefined) {
             this.MyData = MyData;
+            console.log("MyData", this.MyData);
             this.canvas.style.backgroundColor = "black";
             this.canvas.width = (window.innerWidth * 0.5) | 0;
             this.canvas.height = (window.innerHeight * 0.5) | 0;
@@ -414,20 +416,20 @@ export class Game {
                 });
             }
 
-            this.socket.on('QuitgameClient', (msg) => {
-                console.log("QUIT MSG", msg);
-                if (msg.gameid === this.gameid && (msg.userId === this.MyData['id'] || msg.userId === this.MyData['id'])) {
-                    // axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+'/game/quit/' + this.gameid + '/' + msg.userId,
-                    //     {
-                    //         map: "none",
-                    //     })
-                    //     .then(res => {
-                    //     });
-                    this.pause = true;
-                    this.time = 0;
-                }
+            // this.socket.on('QuitgameClient', (msg) => {
+            //     console.log("QUIT MSG", msg);
+            //     if (msg.gameid === this.gameid && (msg.userId === this.MyData['id'] || msg.userId === this.MyData['id'])) {
+            //         // axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+'/game/quit/' + this.gameid + '/' + msg.userId,
+            //         //     {
+            //         //         map: "none",
+            //         //     })
+            //         //     .then(res => {
+            //         //     });
+            //         this.pause = true;
+            //         this.time = 0;
+            //     }
 
-            });
+            // });
 
             this.timer();
             let img = new Image();
@@ -1006,21 +1008,27 @@ export class Game {
 //     }
 // }
 
+
 var t = false;
+
 
 const Canvas = (props: any) => {
     const [data, setData] = useState(props.data ? props.data : []);
     const canvasRef = useRef(null);
+    const DataContext = useMychannelContext();
     let context: any = useMyContext();
     const [socket, setSocket] = useState(context.socket);
     const [MyData, setMyData] = useState(props.mydata ? props.mydata : []);
     // console.log(props.data);
     const [isWating, setIsWating] = useState(true);
-
-    // if (!socket)
-    // setSocket(io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080'));
+ 
+    // console.log(" context.myData", );
+    // console.log(" props.myData", props.mydata);
     useEffect(() => {
-    }, [])
+        // if(MyData === null) 
+        // {
+        // }
+    }, []);
     //  console.log(context.GameInfo);
 
     // console.log(window);
@@ -1028,8 +1036,18 @@ const Canvas = (props: any) => {
     // console.log("MyData", MyData);
     // console.log("data", data);   
     useEffect(() => {
+        // fetchData()
         socket.on('ConnectClient', (res: any) => {
             {
+                // console.log("game.data",res.data);
+                // console.log("props.game",context.ShowCanvas.gameInfo);
+                if(MyData.length === 0)
+                {
+                    setMyData(context.myData);
+                    console.log("game.data",context.myData);
+                    console.log("MyData", MyData);
+                }
+             
                 if (isWating === true) {
                     // if ((context.ShowCanvas.gameInfo['user1']['id'] === res.idUser || context.ShowCanvas.gameInfo['user2']['id'] === res.idUser)) 
                     {
@@ -1038,7 +1056,7 @@ const Canvas = (props: any) => {
                             setData(res.data);
                             context.ShowCanvas.gameInfo = res.data;
                             console.log("data", res.data);
-                            new Game(canvasRef.current as unknown as HTMLCanvasElement, res.data, socket, props.mydata);
+                            new Game(canvasRef.current as unknown as HTMLCanvasElement, res.data, socket, context.myData);
                         }
                         if (res.data['is_rejected_by_user2'] === true && res.data['id'] === context.ShowCanvas.gameInfo['id']) {
                             setIsWating(false);
@@ -1059,7 +1077,7 @@ const Canvas = (props: any) => {
             }
         });
         socket.on('GameOverClient', (res: any) => {
-            if (res['idUser'] === MyData['id']) {
+            if (res['idUser'] === MyData['id'] || context.myData['id'] === res['idUser']) {
                 setIsWating(false);
                 context.setShowCanvas({
                     show: false,
@@ -1069,19 +1087,24 @@ const Canvas = (props: any) => {
             }
         });
 
-        if ((context.ShowCanvas.gameInfo['user1']['email'] === MyData['email'] || context.ShowCanvas.gameInfo['user2']['email'] === MyData['email']) || context.ShowCanvas.gameInfo['user2']['id'] === 0) {
+        if ((context.ShowCanvas.gameInfo['user1']['email'] === MyData['email'] || context.myData['email'] === context.ShowCanvas.gameInfo['user1']['email'] || context.ShowCanvas.gameInfo['user2']['email'] === MyData['email']) || context.ShowCanvas.gameInfo['user2']['id'] === 0) {
+            // if(context.ShowCanvas.gameInfo['user2']['email'] === MyData['email'])
+            // {
+            //     context.ShowCanvas.gameInfo['is_started'] = true;
+            // }
             socket.emit('ConnectServer', {
                 GameInfo: context.ShowCanvas.gameInfo,
                 idUser: MyData['id'],
             });
         }
         else {
-            // setIsWating(false);
-            // // while ( === null)
-            // console.log("Wa9ila here")
-            //     new Game(canvasRef.current as unknown as HTMLCanvasElement, context.ShowCanvas.gameInfo, socket, props.mydata);
+            setIsWating(false);
+            new Game(canvasRef.current as unknown as HTMLCanvasElement, context.ShowCanvas.gameInfo, socket, props.mydata);
         }
-
+        return () => {
+            socket.off('ConnectClient');
+            socket.off('GameOverClient');
+        }
     }, [isWating]);
 
     return (
