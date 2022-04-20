@@ -112,9 +112,10 @@ const ListUseres = ({ socket, ...props }) => {
         });
     });
     return () => {
+      socket.off('newStat')
       isMounted = false;
     };
-    // }
+
   }, []);
   const hundelClick1 = async (e, id, state) => {
     e.preventDefault();

@@ -12,7 +12,7 @@ const ChannelPage = (props) => {
   let data1: any = useMydataContext();
   const [mychannel, setMychannel] = useState<any>();
   const router = useRouter();
-
+  
   console.log("---------", router.query.channelId);
   const fetchmychannel = async () => {
     try {
@@ -21,15 +21,15 @@ const ChannelPage = (props) => {
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
-      );
-      return response;
-    } catch {
-      // router.push("/myprofile");
-    }
-  };
-  const [mychannelusers, setMychannelusers] = useState();
-
-  const fetchmychannelusers = async () => {
+        );
+        return response;
+      } catch {
+        // router.push("/myprofile");
+      }
+    };
+    const [mychannelusers, setMychannelusers] = useState();
+    
+    const fetchmychannelusers = async () => {
     console.log("in fetch", router.query.channelId);
 
     try {

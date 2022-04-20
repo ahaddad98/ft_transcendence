@@ -63,6 +63,9 @@ const ChannelBar = (props) => {
           router.push("/myprofile");
         });
     });
+    return(() => {
+      socket.off('newEventChannel')
+    })
   }, []);
   useEffect(() => {
     if (props.mychannelusers.owner?.username === data1.data.username) {
@@ -85,7 +88,9 @@ const ChannelBar = (props) => {
     setImowner(false);
     }
     if (router.query.channelId) {
-      console.log("===> " , router.query.channelId);
+      console.log("=1==> " , router.query.channelId);
+      const channelId = router.query.channelId
+      console.log("=2==> " , channelId);
       socket.emit("joinChannel", router.query.channelId);
     }
   }, []);

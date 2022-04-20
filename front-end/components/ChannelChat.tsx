@@ -39,6 +39,9 @@ const ChannelChat = (props) => {
           console.log(err);
         });
     });
+    return (()=>{
+      socket.off('newEventChannel')
+    })
   }, []);
   useEffect(() => {
     fetchconsversation()

@@ -67,7 +67,7 @@ const Listfriends = ({ socket, ...props }) => {
         });
     });
     return () => {
-      isMounted = false;
+      socket.off('newStatFriend')
     };
   }, []);
   const hundelClick = async (e, id, state) => {

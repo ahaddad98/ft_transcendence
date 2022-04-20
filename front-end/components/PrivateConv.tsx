@@ -69,6 +69,9 @@ const PrivateConv = (props) => {
       const content1 = data.message;
       setObject({me: me1, sender:sender1, receiver:receiver1, content:content1});
     });
+    return(()=>{
+      socket.off('newMessage')
+    })
   }, []);
 
   useEffect(() => {
