@@ -88,9 +88,7 @@ const ChannelBar = (props) => {
     setImowner(false);
     }
     if (router.query.channelId) {
-      console.log("=1==> " , router.query.channelId);
       const channelId = router.query.channelId
-      console.log("=2==> " , channelId);
       socket.emit("joinChannel", router.query.channelId);
     }
   }, []);
@@ -109,6 +107,8 @@ const ChannelBar = (props) => {
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
+      }).catch((err)=>{
+        router.push('/home')
       });
   };
   const hundelsetasadmin = async (e) => {
@@ -127,7 +127,10 @@ const ChannelBar = (props) => {
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
-      });
+      }).catch((err)=>{
+        
+        router.push('/home')
+      })
     setClickmember(false);
     setClickadmin(false);
   };
@@ -147,6 +150,9 @@ const ChannelBar = (props) => {
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
+      }).catch((err)=>{
+        
+        router.push('/home')
       });
     setClickmember(false);
     setClickadmin(false);
@@ -172,6 +178,9 @@ const ChannelBar = (props) => {
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
+      }).catch((err)=>{
+        
+        router.push('/home')
       });
     setClickmember(false);
     setClickadmin(false);
@@ -193,24 +202,6 @@ const ChannelBar = (props) => {
         router.push("/home");
       });
   };
-  const hundelsubmiteditpassword = async (e, id) => {
-    e.preventDefault();
-    console.log(selectedpassword);
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/update/${id}/password/users/me`,{
-          password: selectedpassword
-        },
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      )
-      .then((res) => {
-        // socket.emit("eventChannel", {
-        //   id: props.mychannel?.id,
-        // });
-      });
-  };
   const hundelremoveban = async (e) => {
     e.preventDefault();
     var formData = new FormData();
@@ -228,6 +219,9 @@ const ChannelBar = (props) => {
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
+      }).catch((err)=>{
+        
+        router.push('/home')
       });
     setClickmember(false);
     setClickadmin(false);
@@ -251,6 +245,9 @@ const ChannelBar = (props) => {
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
+      }).catch((err)=>{
+        
+        router.push('/home')
       });
     setClickmember(false);
     setClickadmin(false);
@@ -277,6 +274,9 @@ const ChannelBar = (props) => {
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
+      }).catch((err)=>{
+        
+        router.push('/home')
       });
     setClickmember(false);
     setClickadmin(false);

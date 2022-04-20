@@ -42,6 +42,9 @@ const ChannlesList = (props) => {
         )
         .then((res) => {
           setCreatechannel(!createchannel);
+        }).catch((err)=>{
+        
+          router.push('/home')
         });
       }
   };
@@ -64,12 +67,9 @@ const ChannlesList = (props) => {
         }
         )
         .then((res) => {
-          console.log('im in then');
-          console.log(res);
           router.push(`/Channnel/${id}`);
         })
         .catch((res)=>{
-          console.log('im in catch');
           router.push(`/home`);
         })
         ;
@@ -92,8 +92,11 @@ const ChannlesList = (props) => {
           }
         )
         .then((res) => {
-          console.log(res);
+          
           setCreatechannel(!createchannel);
+        }).catch((err)=>{
+        
+          router.push('/home')
         });
     }
   };
@@ -113,6 +116,9 @@ const ChannlesList = (props) => {
         {
           router.push(`/Channnel/${id}`);
         }
+      }).catch((err)=>{
+        
+        router.push('/home')
       });
   };
   const hundelsubmit = async (e) => {

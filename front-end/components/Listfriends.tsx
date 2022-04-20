@@ -30,9 +30,10 @@ const Listfriends = ({ socket, ...props }) => {
             setData(res.data);
           }
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err)=>{
+        
+        router.push('/home')
+      });
     }
     return () => {
       isMounted = false;
@@ -46,8 +47,9 @@ const Listfriends = ({ socket, ...props }) => {
           setData(res.data);
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((err)=>{
+        
+        router.push('/home')
       });
     return () => {
       isMounted = false;
@@ -62,9 +64,10 @@ const Listfriends = ({ socket, ...props }) => {
             setData(res.data);
           }
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err)=>{
+        
+        router.push('/home')
+      });
     });
     return () => {
       socket.off('newStatFriend')
@@ -83,7 +86,10 @@ const Listfriends = ({ socket, ...props }) => {
           },
         }
       )
-      .then(() => {});
+      .then(() => {}).catch((err)=>{
+        
+        router.push('/home')
+      });
     setCheck((check) => check + 1);
     setCheck((check) => check + 1);
     socket.emit("changeStatOfFriend", {
@@ -101,7 +107,10 @@ const Listfriends = ({ socket, ...props }) => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
-    );
+    ).catch((err)=>{
+        
+      router.push('/home')
+    });
     setCheck((check) => check + 1);
     socket.emit("changeStatOfFriend", {
       user1: data1.data,
@@ -112,7 +121,6 @@ const Listfriends = ({ socket, ...props }) => {
     e.preventDefault();
     router.push(`FriendPage/${id}`);
   };
-  console.log(data);
   return (
     <>
       {data && (

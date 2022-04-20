@@ -18,6 +18,9 @@ const FriendComponent = (props) => {
         }
       ).then((res)=>{
         router.push(`/Chats/${res.data.id}`)
+      }).catch((err)=>{
+        
+        router.push('/home')
       })
   };
   return (

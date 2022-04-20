@@ -3,6 +3,7 @@ import { stat, Stats } from "fs";
 import React, { useEffect, useState } from "react";
 import HomeNavbar from "./HomeNavbar";
 import { useMydataContext } from "../components/mydataprovider";
+import { Router, useRouter } from "next/router";
 
 const ListUseres = ({ socket, ...props }) => {
   let data1: any = useMydataContext();
@@ -10,6 +11,7 @@ const ListUseres = ({ socket, ...props }) => {
   const [clickuser, setClickuser] = useState(false);
   const [clickblock, setClickblock] = useState(false);
   const [stater, setStat] = useState(0);
+  const router = useRouter()
   useEffect(() => {
     let isMounted = true;
     if (data1.data.id) {
@@ -20,7 +22,7 @@ const ListUseres = ({ socket, ...props }) => {
           }
         })
         .catch((err) => {
-          console.log(err);
+        router.push('/home')  
         });
     }
     return () => {
@@ -37,7 +39,7 @@ const ListUseres = ({ socket, ...props }) => {
           }
         })
         .catch((err) => {
-          console.log(err);
+        router.push('/home')  
         });
     }
     return () => {
@@ -91,7 +93,7 @@ const ListUseres = ({ socket, ...props }) => {
           }
         })
         .catch((err) => {
-          console.log(err);
+        router.push('/home')  
         });
     }
     return () => {
@@ -108,7 +110,7 @@ const ListUseres = ({ socket, ...props }) => {
           }
         })
         .catch((err) => {
-          console.log(err);
+        router.push('/home')  
         });
     });
     return () => {

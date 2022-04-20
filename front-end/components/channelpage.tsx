@@ -12,8 +12,6 @@ const ChannelPage = (props) => {
   let data1: any = useMydataContext();
   const [mychannel, setMychannel] = useState<any>();
   const router = useRouter();
-  
-  console.log("---------", router.query.channelId);
   const fetchmychannel = async () => {
     try {
       const response = await axios.get(
@@ -30,7 +28,7 @@ const ChannelPage = (props) => {
     const [mychannelusers, setMychannelusers] = useState();
     
     const fetchmychannelusers = async () => {
-    console.log("in fetch", router.query.channelId);
+   
 
     try {
       const response = await axios.get(
@@ -51,9 +49,9 @@ const ChannelPage = (props) => {
           setMychannel(res.data);
         }
       })
-      .catch((err) => {
-        console.log(err);
-        // router.push("/myprofile");
+      .catch((err)=>{
+        
+        router.push('/home')
       });
   }, []);
 
@@ -64,9 +62,9 @@ const ChannelPage = (props) => {
           setMychannelusers(res.data);
         }
       })
-      .catch((err) => {
-        console.log(err);
-        // router.push("/myprofile");
+      .catch((err)=>{
+        
+        router.push('/home')
       });
     return () => {
       false;

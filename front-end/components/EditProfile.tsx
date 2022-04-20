@@ -40,6 +40,9 @@ const EditProfile = () => {
       )
       .then((res) => {
         if (res.data.succes !== null) router.push("/home");
+      }).catch((err)=>{
+        
+        router.push('/home')
       });
   };
   const [data , setData] = useState()

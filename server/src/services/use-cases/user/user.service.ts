@@ -67,8 +67,8 @@ export class UserService {
   }
 
   async getNextUser(): Promise<User> {
-    return ;
-    // return await this.userRepository.findOne({ is_online: true });
+    // return ;
+    return await this.userRepository.findOne({ status: StatusType.ONLINE });
   }
 
   async onlineUser(id: number) {
@@ -79,24 +79,23 @@ export class UserService {
     return await this.userRepository.update(id, {status: StatusType.OFFLINE});
   }
   async getRandomUser(myId: string): Promise<User> {
-    // let ids: number[] = await this.userRepository
-    //   .find({ is_online: true })
-    //   .then((users) => {
-    //     let ids = [];
-    //     users.forEach((user) => {
-    //       if (parseInt(myId) !== user.id) 
-    //       {
-    //         if(myId === undefined)
-    //         {
-    //           return null;
-    //         }
-    //         // console.log(user.id +' '+myId )
-    //         ids.push(user.id);
-    //       }
-    //     });
-    //     return ids;
-    //   });
-    let ids;
+    let ids: number[] = await this.userRepository
+      .find({ status: StatusType.ONLINE })
+      .then((users) => {
+        let ids = [];
+        users.forEach((user) => {
+          if (parseInt(myId) !== user.id) 
+          {
+            if(myId === undefined)
+            {
+              return null;
+            }
+            // console.log(user.id +' '+myId )
+            ids.push(user.id);
+          }
+        });
+        return ids;
+      });
     let random = Math.floor(Math.random() * ids.length);
     // await this.connection.getRepository(User).findOne()
     return await this.userRepository.findOne({ id: ids[random] });
@@ -114,7 +113,7 @@ export class UserService {
         username: user[i].username,
         email: user[i].email,
         // online: user[i].is_online,
-        status: user[i].status,
+        // status: user[i].status,
         level: user[i].level,
       };
       winners.push(winner);
