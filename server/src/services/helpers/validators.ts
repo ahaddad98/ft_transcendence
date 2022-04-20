@@ -90,7 +90,7 @@ export class UpdatePasswordChannel {
 }
 
 export class UpdateUsername {
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(5)
   @MaxLength(12)
   username: string;

@@ -29,11 +29,19 @@ const loginSuccess = () => {
     );
     return response;
   };
+  let check = false;
   useEffect(() => {
     if (query.token) {
       const tok = query.token;
       localStorage.setItem("token", `${tok}`);
-      if (localStorage.getItem("token")) router.push("/home");
+      fetchData().then((res)=>{
+        if (res.data.username)
+        router.push('/home')
+        check = true
+        // setData(res.data)
+      })
+      // if (localStorage.getItem("token"))
+      //     router.push("/home");
     }
   }, [query]);
 
@@ -66,7 +74,10 @@ const loginSuccess = () => {
   };
   return (
     <>
-      <UpdateProfile />
+    {
+      !check ? 
+      <UpdateProfile /> : ""
+    }
     </>
   );
 };

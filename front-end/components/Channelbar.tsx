@@ -385,7 +385,8 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
+                                minLength={1}
                                 id="time"
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
@@ -470,7 +471,8 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
+                                minLength={1}
                                 id="time"
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
@@ -606,8 +608,9 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
                                 id="time"
+                                minLength={1}
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
                                 onChange={(e) =>
@@ -637,7 +640,8 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
+                                minLength={1}
                                 id="time"
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
@@ -706,7 +710,8 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
+                                minLength={1}
                                 id="time"
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
@@ -737,7 +742,8 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
+                                minLength={1}
                                 id="time"
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
@@ -841,7 +847,8 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
+                                minLength={1}
                                 id="time"
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
@@ -872,7 +879,8 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
+                                minLength={1}
                                 id="time"
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
@@ -941,7 +949,8 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
+                                minLength={1}
                                 id="time"
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
@@ -1027,7 +1036,7 @@ const ChannelBar = (props) => {
             </button>
           </div>
         </div>
-        {imowner && (
+        {/* {imowner && (
           <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
             <div className="inline-flex mt-2 xs:mt-0">
               <button
@@ -1069,7 +1078,7 @@ const ChannelBar = (props) => {
               </div>
             )}
           </Modal>
-        )}
+        )} */}
         <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
           <div className="inline-flex mt-2 xs:mt-0">
             <button
