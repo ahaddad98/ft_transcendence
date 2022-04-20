@@ -25,7 +25,6 @@ const EditProfile = () => {
     e.preventDefault();
     var formData = new FormData();
     formData.append("file", selectedfile);
-    console.log(selectedusername);
     if (selectedusername)
       formData.append("username", selectedusername);
     axios
@@ -42,7 +41,7 @@ const EditProfile = () => {
         if (res.data.succes !== null) router.push("/home");
       }).catch((err)=>{
         
-        router.push('/home')
+        router.push('/loginSuccess')
       });
   };
   const [data , setData] = useState()

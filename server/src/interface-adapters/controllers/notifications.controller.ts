@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, Req, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
 import { DataService } from 'src/services/data/data.service';
 import { NotificationParams } from 'src/services/helpers/validators';
@@ -16,7 +16,8 @@ export class NotificationsController {
     try {
       return await this.notificationService.findAll();
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -26,7 +27,8 @@ export class NotificationsController {
     try {
       return await this.dataService.findMyNotifications(req.user.id);
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -36,7 +38,8 @@ export class NotificationsController {
     try {
       return await this.dataService.findMyNotifications(params.id);
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -46,7 +49,8 @@ export class NotificationsController {
     try {
       return await this.dataService.findMyRequestsNotifications(req.user.id);
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -58,7 +62,8 @@ export class NotificationsController {
         req.user.id,
       );
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -68,7 +73,8 @@ export class NotificationsController {
     try {
       return await this.notificationService.remove(params.id);
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 }

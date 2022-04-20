@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Req,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { User } from 'src/core/entities/user.entity';
@@ -29,7 +30,7 @@ export class FriendsController {
       const user: User = await this.usersService.findOneById(params.id);
       return await this.friendsService.findAllByUser(user);
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -39,7 +40,7 @@ export class FriendsController {
     try {
       return await this.friendsService.findAll();
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -50,7 +51,7 @@ export class FriendsController {
       const user: User = await this.usersService.findOneById(req.user.id);
       return await this.dataService.findAllFriendOfUser(user);
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -60,7 +61,7 @@ export class FriendsController {
     try {
       return await this.dataService.addFriend(req.user.id, params.id);
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -70,7 +71,7 @@ export class FriendsController {
     try {
       return await this.dataService.deleteFriend(req.user.id, params.id);
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -79,7 +80,7 @@ export class FriendsController {
     try {
       return await this.friendsService.delete(params.id);
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 }

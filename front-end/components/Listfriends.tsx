@@ -74,7 +74,6 @@ const Listfriends = ({ socket, ...props }) => {
     };
   }, []);
   const hundelClick = async (e, id, state) => {
-    console.log(state);
 
     e.preventDefault();
     await axios

@@ -1,7 +1,6 @@
 import React from "react";
 
 const Submitmessage = (props) => {
-    console.log(props);
   return (
     <>
       <div className="flex-grow ml-4">

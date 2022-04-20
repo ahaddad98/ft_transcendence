@@ -4,6 +4,7 @@ import {
   Delete,
   ForbiddenException,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -43,7 +44,7 @@ export class ChannelsController {
     try {
       return await this.dataService.findAllChannels(req.user.id, req.user.id);
     } catch (err) {
-      return err;
+      throw new NotFoundException();
     }
   }
 
@@ -53,7 +54,8 @@ export class ChannelsController {
     try {
       return await this.dataService.findAllMyChannels(req.user.id);
     } catch (err) {
-      return err;
+      throw new NotFoundException();
+
     }
   }
   
@@ -64,7 +66,6 @@ export class ChannelsController {
       return await this.dataService.findMyChannel(params.id, req.user.id);
     } catch (err) {
       throw new UnauthorizedException();
-      return err;
     }
   }
   
@@ -72,11 +73,9 @@ export class ChannelsController {
   @UseGuards(JwtAuthGuard)
   async listAllUsersOfChannelWithoutMe(@Param() params: ChannelParams) {
     try {
-      console.log('@Get(:id/users/all)')
       return await this.dataService.listUsersOfChannelWitouhtMe(params.id);
     } catch (err) {
-      // console.log('waaaa errrorr')
-      throw new Error();
+      throw new UnauthorizedException();
     }
   }
 
@@ -86,7 +85,7 @@ export class ChannelsController {
     try {
       return await this.dataService.listUsersOfChannel(params.id, req.user.id);
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -95,7 +94,7 @@ export class ChannelsController {
     try {
       return await this.dataService.removeChannel(params.id);
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -105,7 +104,7 @@ export class ChannelsController {
     try {
       return await this.dataService.addNewPrivateChannel(body, req.user.id);
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -124,7 +123,7 @@ export class ChannelsController {
         req.user.id,
       );
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -134,7 +133,7 @@ export class ChannelsController {
     try {
       return await this.dataService.addNewPublicChannel(body, req.user.id);
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -142,11 +141,9 @@ export class ChannelsController {
   @UseGuards(JwtAuthGuard)
   async JoinToPublicChannel(@Param() params: ChannelParams, @Req() req) {
     try {
-      console.log('join/:id/public/users/me');
       return await this.dataService.joinPublicChannel(params.id, req.user.id);
     } catch (err) {
-      console.log('error in join/:id/public/users/me');
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -174,7 +171,7 @@ export class ChannelsController {
     try {
       return await this.dataService.leavesTheChannel(params.id, req.user.id);
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -185,7 +182,7 @@ export class ChannelsController {
     try {
       return await this.dataService.leavesTheChannel(params.id, params.userId);
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -199,7 +196,7 @@ export class ChannelsController {
         params.userId,
       );
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -213,7 +210,7 @@ export class ChannelsController {
         params.userId,
       );
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -228,7 +225,7 @@ export class ChannelsController {
         req.body,
       );
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -243,7 +240,7 @@ export class ChannelsController {
         req.body,
       );
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -257,7 +254,7 @@ export class ChannelsController {
         params.userId,
       );
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -271,7 +268,7 @@ export class ChannelsController {
         params.userId,
       );
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 }

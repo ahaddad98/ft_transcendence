@@ -3,7 +3,6 @@ import Viewall from "./Viewall";
 import MediaQuery, { useMediaQuery } from "react-responsive";
 
 const HistoryGame = (props) => {
-  // console.log(props.data);
 
   const [viewclick, setViewclick] = useState(false);
   return (

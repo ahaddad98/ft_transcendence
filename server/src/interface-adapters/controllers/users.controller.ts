@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, Put, Req, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Put, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { DataService } from 'src/services/data/data.service';
 import { UserService } from 'src/services/use-cases/user/user.service';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
@@ -30,7 +30,8 @@ export class UsersController {
     try {
       return this.userService.findOneById(req.user.id);
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -40,7 +41,8 @@ export class UsersController {
     try {
       return await this.dataService.findAllExceptMyProfile(req.user.id);
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -51,7 +53,8 @@ export class UsersController {
       const user: User = await this.userService.findOneById(req.user.id);
       return this.dataService.findAllFriendOfUser(user);
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -62,7 +65,8 @@ export class UsersController {
       const user = await this.userService.findOneById(req.user.id);
       return await this.dataService.findAllFriendOfUser(user);
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -72,7 +76,8 @@ export class UsersController {
       const user: User = await this.userService.findOneById(params.id);
       return this.dataService.findAllFriendOfUser(user);
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -102,7 +107,8 @@ export class UsersController {
       await this.userService.remove(params.id);
       return { status: 201, message: 'User deleted' };
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 }

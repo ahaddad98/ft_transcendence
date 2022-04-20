@@ -21,7 +21,7 @@ const Conversation = () => {
         if (res.data) setData(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        router.push('/index')
       });
   }, []);
   const [Conversations, setConversations] = useState();
@@ -41,7 +41,7 @@ const Conversation = () => {
         if (res.data) setConversations(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        router.push('/index')
       });
   }, []);
   return (

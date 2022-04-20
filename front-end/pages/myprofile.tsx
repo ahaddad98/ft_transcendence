@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import HomeNavbar from "../components/HomeNavbar";
 import Profile from "../components/Profile";
 import { MydataProvider } from "../components/mydataprovider";
+import { useRouter } from "next/router";
 
 const Myprofile = () => {
   const [myprofile, setMyprofile] = useState({});
@@ -13,6 +14,7 @@ const Myprofile = () => {
     });
     return response;
   };
+  const router  = useRouter()
   useEffect(() => {
     fetchmyprofile()
       .then((res) => {
@@ -22,7 +24,7 @@ const Myprofile = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        router.push('/home')
       });
   }, []);
   const [myhistory, setMyhistory] = useState();
@@ -44,7 +46,7 @@ const Myprofile = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        router.push('/home')
       });
   }, []);
   // const [mychannel, setMychannel] = useState();
@@ -65,7 +67,7 @@ const Myprofile = () => {
   //       }
   //     })
   //     .catch((err) => {
-  //       console.log(err);
+  //       router.push('/home')
   //     });
   // }, []);
   const is_me = {

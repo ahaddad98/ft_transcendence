@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Req,
+  UnauthorizedException,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -37,7 +38,8 @@ export class ProfileController {
     try {
       return await this.dataService.getProfileOfUser(req.user.id);
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -47,7 +49,8 @@ export class ProfileController {
     try {
       return await this.dataService.getProfileOfUser(params.id);
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -75,7 +78,8 @@ export class ProfileController {
       try {
         return this.dataService.updateProfile(file, body, req.user.id);
       } catch (err) {
-        return err;
+                  throw new UnauthorizedException();
+
       }
     }
     
@@ -86,7 +90,8 @@ export class ProfileController {
       try {
         return this.dataService.updateAvatar(file, req);
       } catch (err) {
-        return err;
+                  throw new UnauthorizedException();
+
       }
     }
 
@@ -98,7 +103,8 @@ export class ProfileController {
           req.user.id,
         );
       } catch (err) {
-        return err;
+                  throw new UnauthorizedException();
+
       }
     }
   }

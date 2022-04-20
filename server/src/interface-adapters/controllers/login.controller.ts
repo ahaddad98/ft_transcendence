@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Req, Post, UseGuards, Param, Query } from '@nestjs/common';
+import { Controller, Get, Res, Req, Post, UseGuards, Param, Query, UnauthorizedException } from '@nestjs/common';
 import { FortyTwoStrategyAuthGuard } from '../../frameworks/auth/o-auth/42-auth.guard';
 import { DataService } from 'src/services/data/data.service';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
@@ -18,7 +18,6 @@ export class LoginController {
   async redirect(@Req() req, @Res() res) {
     try {
       const user = await this.usersService.findOneById(req.user.id);
-      console.log(req.user);
       if(user.twoFactor == true)
         return res.redirect(`${process.env.NEXT_PUBLIC_FRONTEND_URL}:3000/twofactor?id=${user.id}`)
       else{
@@ -26,8 +25,10 @@ export class LoginController {
         this.usersService.onlineUser(req.user.id);
         return res.redirect(`${process.env.NEXT_PUBLIC_FRONTEND_URL}:3000/loginSuccess?token=${token}`);
       }
-    } catch (err) {
-      return err;
+    }
+    catch (err) {
+
+      throw new UnauthorizedException();
     }
   }
 
@@ -51,7 +52,6 @@ export class LoginController {
             );
             
           }
-          console.log(response);
           if(response)
           {
             this.usersService.onlineUser(req.body.id);
@@ -62,8 +62,7 @@ export class LoginController {
           return {url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3000/twofactor?id=${req.body.id}`}
         } catch (err) {
 
-          console.log('error');
-          return err;
+          throw new UnauthorizedException();
         }
   }
 

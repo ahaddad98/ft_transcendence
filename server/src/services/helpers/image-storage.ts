@@ -32,7 +32,6 @@ export const saveImageToStorage = {
 };
 
 export const fullImagePath = (filename: string): string => {
-  const imagesFolderPath =   '/';
   const fullPath = '/' + filename;
   return fullPath;
 };
@@ -42,7 +41,6 @@ export const isFileExtensionSafe = async (path: string) => {
   else {
     fs.unlink(path, (err) => {
       if (err) throw err;
-      console.log('file is deleted');
     });
     return false;
   }

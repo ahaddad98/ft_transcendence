@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Req,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
@@ -24,7 +25,8 @@ export class MessagesController {
     try {
       return this.messageService.findAll();
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -36,7 +38,8 @@ export class MessagesController {
         params.conversationId,
       );
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -47,7 +50,8 @@ export class MessagesController {
       if (!req.body.message) return;
       return await this.dataService.sendNewMessage(req, params.conversationId);
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -63,7 +67,8 @@ export class MessagesController {
     try {
       return await this.messageService.removeMessage(params.id);
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 }

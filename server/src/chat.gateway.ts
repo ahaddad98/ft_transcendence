@@ -60,7 +60,6 @@ export class ChatGateway
 
   @SubscribeMessage('joinChannel')
   joinChannel(client: any, payload: any) {
-    console.log('im in join channel');
     
     this.server.socketsJoin(payload.toString());
   }

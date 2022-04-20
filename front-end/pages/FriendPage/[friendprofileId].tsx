@@ -13,6 +13,7 @@ const friendprofile = () => {
     });
     return response;
   };
+  
   useEffect(() => {
     fetchmyprofile()
       .then((res) => {
@@ -22,7 +23,7 @@ const friendprofile = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        router.push('home')
       });
   }, []);
   const [myhistory, setMyhistory] = useState();
@@ -44,7 +45,7 @@ const friendprofile = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        router.push('home')
       });
   }, []);
   const router = useRouter();

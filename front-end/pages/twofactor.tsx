@@ -19,9 +19,9 @@ const TwoFactor = () => {
         // console.log(res.data);
       })
       .catch((err) => {
-        console.log("errrroooor");
+        router.push('/index');
       });
-    console.log("asdasda");
+    
   };
   return (
     <>

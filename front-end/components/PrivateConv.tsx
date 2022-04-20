@@ -1,8 +1,9 @@
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import Messagemapconv from "./Messagemapconv";
 import { io, Socket } from "socket.io-client";
 import { socketchatcontext } from "../pages/home";
+import { useRouter } from "next/router";
 
 const PrivateConv = (props) => {
 
@@ -31,6 +32,7 @@ const PrivateConv = (props) => {
     );
     return response;
   };
+  const router = useRouter()
   const [msg, setMsg] = useState("");
   useEffect(() => {
     if (conversation.length == 0)
@@ -42,8 +44,8 @@ const PrivateConv = (props) => {
         }
       })
       .catch((err) => {
-        console.log(err);
-      });
+        router.push('/home')  
+        });
     }
   }, []);
   useEffect(() => {
@@ -56,8 +58,8 @@ const PrivateConv = (props) => {
         }
       })
       .catch((err) => {
-        console.log(err);
-      });
+        router.push('/home')  
+        });
     }
   }, [props.convid]);
 
@@ -94,17 +96,18 @@ const PrivateConv = (props) => {
         }
       )
       .then((res) => {
-        console.log(res);
+      }).catch((err) => {
+        router.push('/home')  
       });
-    if (conversation) {
-      fetchconsversation()
+      if (conversation) {
+        fetchconsversation()
         .then((res) => {
           if (res.data) {
             setConversation(res.data);
           }
         })
         .catch((err) => {
-          console.log(err);
+          router.push('/home')  
         });
       socket.emit("sendMessage", {
         sender: props.data,

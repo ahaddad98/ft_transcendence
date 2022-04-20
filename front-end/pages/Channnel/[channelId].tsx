@@ -34,7 +34,7 @@ const Channel = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        router.push('home')
       });
   }, []);
 

@@ -34,8 +34,8 @@ const Profile = (props) => {
         }
       })
       .catch((err) => {
-        console.log(err);
-      });
+        router.push('/home')  
+        });
   }, []);
   const [checkmodel, setCheckmodel] = useState(false);
   const [check, setCheck] = useState(false);
@@ -52,11 +52,12 @@ const Profile = (props) => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((res) => {
-        console.log(res);
-      });
+        
+      }).catch((err) => {
+        router.push('/home')  
+        });
   };
   const handlerTwoFactor = async (e) => {
-    console.log("handlerTwoFactor");
     e.preventDefault();
     axios
       .post(
@@ -69,7 +70,9 @@ const Profile = (props) => {
       .then((res) => {
         props.mydata.user.twoFactor = true;
         if (res.data) setRestwofactor(res.data.secret);
-      });
+      }).catch((err) => {
+        router.push('/home')  
+        });
   };
   const handlerremoveTwoFactor = async (e) => {
     e.preventDefault();
@@ -79,7 +82,9 @@ const Profile = (props) => {
       })
       .then(() => {
         props.mydata.user.twoFactor = false;
-      });
+      }).catch((err) => {
+        router.push('/home')  
+        });
   };
   const handlerclickparticipate = async (e, id) => {
     e.preventDefault();

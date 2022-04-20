@@ -1,12 +1,15 @@
 import {
   Controller,
   Delete,
+  ForbiddenException,
   Get,
+  NotFoundException,
   Param,
   Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { NotFoundError } from 'rxjs';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
 import { DataService } from 'src/services/data/data.service';
 import { BlockParams } from 'src/services/helpers/validators';
@@ -35,7 +38,7 @@ export class BlockController {
     try {
       return await this.blockService.findMyBlockList(req.user.id);
     } catch (err) {
-      return err;
+      throw new NotFoundException();
     }
   }
 
@@ -45,37 +48,37 @@ export class BlockController {
     try {
       return await this.blockService.findAllMyBlockList(req.user.id);
     } catch (err) {
-      return err;
+      throw new ForbiddenException();
     }
   }
-
+  
   @Post('add/users/me/:id')
   @UseGuards(JwtAuthGuard)
   async addNewUser(@Req() req, @Param() params: BlockParams) {
     try {
       return await this.dataService.blockUser(req.user.id, params.id);
     } catch (err) {
-      return err;
+      throw new NotFoundException();
     }
   }
-
+  
   @Post('remove/users/me/:id')
   @UseGuards(JwtAuthGuard)
   async removeUser(@Req() req, @Param() params: BlockParams) {
     try {
       return await this.dataService.deleteBlock(req.user.id, params.id);
     } catch (err) {
-      return err;
+      throw new NotFoundException();
     }
   }
-
+  
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   async deleteUser(@Param() params: BlockParams) {
     try {
       return await this.blockService.delete(params.id);
     } catch (err) {
-      return err;
+      throw new NotFoundException();
     }
   }
 }

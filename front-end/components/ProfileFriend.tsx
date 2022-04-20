@@ -14,6 +14,7 @@ const ProfileFriend = (props) => {
     });
     return response;
   };
+  const router = useRouter()
   useEffect(() => {
     fetchmyprofile()
       .then((res) => {
@@ -23,7 +24,7 @@ const ProfileFriend = (props) => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        router.push('/home')
       });
   }, []);
   const [myhistory, setMyhistory] = useState();
@@ -42,7 +43,7 @@ const ProfileFriend = (props) => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        router.push('/home')
       });
   }, []);
   const [data, setData] = useState({});
@@ -59,7 +60,7 @@ const ProfileFriend = (props) => {
         if (res.data) setData(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        router.push('/home')
       });
   }, []);
   return (

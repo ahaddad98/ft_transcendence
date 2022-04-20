@@ -8,7 +8,7 @@ import { MydataProvider } from "../../components/mydataprovider";
 const Conversation = () => {
   const router = useRouter();
   const [data, setData] = useState({});
-
+  
   const fetchData = async () => {
     const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -21,7 +21,7 @@ const Conversation = () => {
         if (res.data) setData(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        router.push('/home')
       });
   }, []);
   const [Conversations, setConversations] = useState();
@@ -41,7 +41,7 @@ const Conversation = () => {
         if (res.data) setConversations(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        router.push('/home')
       });
   }, []);
   return (

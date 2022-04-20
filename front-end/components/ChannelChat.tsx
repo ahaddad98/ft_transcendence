@@ -28,7 +28,6 @@ const ChannelChat = (props) => {
   const router = useRouter()
   useEffect(() => {
     socket.on("newEventChannel", (data) => {
-      console.log(data);
       props
         .fetchmychannel()
         .then((res) => {

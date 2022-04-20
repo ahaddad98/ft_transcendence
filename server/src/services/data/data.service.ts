@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, UseFilters } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException, UseFilters } from '@nestjs/common';
 import { UserService } from '../use-cases/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/core/entities/user.entity';
@@ -88,7 +88,6 @@ export class DataService {
       //   blockUser.user.id == id ? blockUser.block : blockUser.user,
       // );
     });
-    console.log(newblockList);
     await Promise.all(
       users.map(async (user) => {
         let block: boolean =  false; 
@@ -166,7 +165,6 @@ export class DataService {
       relations: ['friend'],
     });
     if (user.friend.find((friend) => friend.friend?.id == friendId)) {
-      console.log('friend is already in the list');
       return { error: 'friend is already in the list' };
     }
     const newFriend: Friend = new Friend();
@@ -183,7 +181,7 @@ export class DataService {
   async deleteFriend(userId: number, friendId: number) {
     try {
       const friend: User = await this.usersService.findOneById(friendId);
-      if (!friend) return { status: 500, message: 'this user is not fount' };
+      if (!friend) throw new UnauthorizedException()
       const user: User = await this.usersService.findOneById(userId);
       const list: Friend[] = await this.friendsService.findTwoFriends(
         userId,
@@ -200,7 +198,7 @@ export class DataService {
     let result: any = await this.usersService.findOneById(newUser.id);
     if (!result) {
       const user = await this.usersService.save(newUser);
-    } else console.log('wala a sahbi ma blansh');
+    }
   }
 
   login(user: any) {
@@ -214,7 +212,7 @@ export class DataService {
       return { status: 500, message: 'U cant send a request to urself' };
     const me: User = await this.usersService.findOneById(myId);
     const friend: User = await this.usersService.findOneById(friendId);
-    if (!me || !friend) return { status: 500, message: 'User Not Found' };
+    if (!me || !friend) throw new UnauthorizedException()
     const checkRequest: Request =
       await this.requestService.findFriendRequestByUsers(me, friend);
     if (checkRequest)
@@ -240,7 +238,6 @@ export class DataService {
     const friend: User = await this.usersService.findOneById(friendId);
     const checkRequest: Request =
       await this.requestService.findFriendRequestByUsers(me, friend);
-    // console.log('saidsads');
     if (!checkRequest) return { status: 500, message: 'No Request Found' };
     await this.requestService.removeRequestById(reqId);
     const result = await this.addFriend(myId, friendId);
@@ -265,7 +262,7 @@ export class DataService {
             myId,
             fullImagePath(file.filename),
           );
-        } else console.log('file is not safe');
+        }
       }
       if (body.username)
         await this.usersService.updateUsername(myId, body.username);
@@ -286,7 +283,6 @@ export class DataService {
 
   // messages
   async sendNewMessage(req, id: number) {
-    // console.log(req.body);
     const conversation: Conversation =
       await this.conversationService.findConversationById(id);
     const newUser: User = await this.usersService.findOneById(req.user.id);
@@ -405,7 +401,7 @@ export class DataService {
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );
-    if (!channel) return { status: 500, message: 'channel Not Found' };
+    if (!channel) throw new UnauthorizedException()
     if (!channelUser) return await this.validateUser(channelId, body, myId);
     return { status: 500, message: 'you are already in this channel' };
   }
@@ -415,7 +411,7 @@ export class DataService {
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );
-    if (!channel) return { status: 500, message: 'channel Not Found' };
+    if (!channel) throw new UnauthorizedException()
     if (!channelUser)
       return await this.addNewUserToChannel(channelId, myId, UserType.USER);
     return { status: 500, message: 'you are already in this channel' };
@@ -442,7 +438,6 @@ export class DataService {
         }
       }),
     );
-    // console.log(arr);
     return arr;
   }
 
@@ -632,7 +627,7 @@ export class DataService {
 
   async findMyChannel(channelId: number, me: number) {
     const channel = await this.channelService.findChannelById(channelId);
-    if (!channel) return { status: 500, message: 'channel not found' };
+    if (!channel) throw new UnauthorizedException()
     const user: User = await this.usersService.findOneById(me);
     const channelUser: ChannelUser =
       await this.channelUserService.findbyChannelAndUser(channel, user);
@@ -674,10 +669,6 @@ export class DataService {
   }
 
   async listUsersOfChannelWitouhtMe(channelId: number) {
-    console.log('-------------------');
-    console.log('channelId: '+ channelId)
-    // console.log('channelId: '+ channelId)
-    console.log('-------------------');
     const newChannel: Channel = await this.channelService.findChannelById(
       channelId,
     );
@@ -764,10 +755,10 @@ export class DataService {
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );
-    if (!channel) return { status: 500, message: 'Channel not found' };
+    if (!channel)throw new UnauthorizedException()
     const chanelUser = await this.findChannelUser(channelId, myId);
     if (!chanelUser)
-      return { status: 500, message: 'This user is not found in this channel' };
+    throw new UnauthorizedException()
     return await this.channelUserService.updateToBeAdmin(chanelUser.id);
   }
 
@@ -775,10 +766,10 @@ export class DataService {
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );
-    if (!channel) return { status: 500, message: 'Channel not found' };
+    if (!channel) throw new UnauthorizedException()
     const chanelUser = await this.findChannelUser(channelId, myId);
     if (!chanelUser)
-      return { status: 500, message: 'This user is not found in this channel' };
+      throw new NotFoundException();
     return await this.channelUserService.updateToBeUser(chanelUser.id);
   }
 
@@ -786,7 +777,7 @@ export class DataService {
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );
-    if (!channel) return { status: 500, message: 'Channel not found' };
+    if (!channel) throw new UnauthorizedException()
     const conversation: Conversation =
       await this.conversationService.findConversationOfChannel(channelId);
     const conversationUser =
@@ -802,12 +793,11 @@ export class DataService {
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );
-    if (!channel) return { status: 500, message: 'Channel not found' };
+    if (!channel) throw new UnauthorizedException()
     const chanelUser = await this.findChannelUser(channelId, myId);
     if (!chanelUser)
-      return { status: 500, message: 'This user is not found in this channel' };
+    throw new NotFoundException();
     if (chanelUser.ban == true) {
-      console.log('This user is already banned');
       return { status: 500, message: 'This user is already banned' };
     }
     chanelUser.mute = true;
@@ -820,10 +810,10 @@ export class DataService {
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );
-    if (!channel) return { status: 500, message: 'Channel not found' };
+    if (!channel) throw new UnauthorizedException()
     const chanelUser = await this.findChannelUser(channelId, myId);
     if (!chanelUser)
-      return { status: 500, message: 'This user is not found in this channel' };
+    throw new NotFoundException();
     chanelUser.ban = true;
     chanelUser.timeOfOperation = new Date();
     if (body.time > 0) chanelUser.period = body.time;
@@ -839,10 +829,10 @@ export class DataService {
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );
-    if (!channel) return { status: 500, message: 'Channel not found' };
+    if (!channel) throw new UnauthorizedException()
     const chanelUser = await this.findChannelUser(channelId, myId);
     if (!chanelUser)
-      return { status: 500, message: 'This user is not found in this channel' };
+    throw new NotFoundException();
     await this.messageService.updateHiddenToBeFalse(
       channel.conversation.id,
       myId,
@@ -854,16 +844,16 @@ export class DataService {
     const channel: Channel = await this.channelService.findChannelById(
       channelId,
     );
-    if (!channel) return { status: 500, message: 'Channel not found' };
+    if (!channel) throw new NotFoundException();
     const chanelUser = await this.findChannelUser(channelId, myId);
     if (!chanelUser)
-      return { status: 500, message: 'This user is not found in this channel' };
+    throw new NotFoundException();
     return await this.channelUserService.removeMute(chanelUser.id);
   }
 
   async removeChannel(id: number) {
     const channel = await this.channelService.findChannelById(id);
-    if (!channel) return { status: 500, message: 'channel not found' };
+    if (!channel)throw new NotFoundException();
     const conversation: Conversation =
       await this.conversationService.findConversationOfChannel(channel.id);
     await this.conversationService.remove(conversation);
@@ -885,7 +875,6 @@ export class DataService {
     await Promise.all(
       users.map(async (user) => {
         if (user.userType === UserType.USER) {
-          // console.log(user.user);
           await this.kickUserFormChannelConversation(channel.id, user.user.id);
           await this.leavesTheChannel(channelId, user.user.id);
         }
@@ -920,24 +909,15 @@ export class DataService {
   async TwoFactorAuthenticationVerify(userId: number, token: string) {
     const user: User = await this.usersService.findOneById(userId);
     const object = JSON.parse(user.secret);
-    console.log('two factor');
-    console.log(object);
-    
-    console.log('two factor');
     const secret = object.base32;
     
-    // console.log(secret);
     const verified = speakeasy.totp.verify({
       secret,
       encoding: 'base32',
       token,
     });
-    console.log('-----------------------');
-    console.log(verified);
-    console.log('-----------------------');
     
     if (verified) {
-      console.log('fen wsalto');
       
       await this.usersService.update(userId, { isVerified: true });
       return true;
@@ -948,7 +928,6 @@ export class DataService {
     const user: User = await this.usersService.findOneById(userId);
     const object = JSON.parse(user.secret);
     const secret = object.base32;
-    // console.log(secret);
     const tokenValidates = speakeasy.totp.verify({
       secret,
       encoding: 'base32',
@@ -963,7 +942,7 @@ export class DataService {
   // block
   async blockUser(myId: number, userId: number) {
     const block = await this.usersService.findOneById(userId);
-    if (typeof block === undefined) return { error: 'error' };
+    if (typeof block === undefined) throw new UnauthorizedException();
     const me = await this.usersService.findOneByIdWithRelation(myId, {
       relations: ['block'],
     });
@@ -973,7 +952,6 @@ export class DataService {
     );
     if (friends) await this.deleteFriend(myId, userId);
     if (me.block.find((blockUser) => blockUser.block?.id == userId)) {
-      console.log('this user is already in the list');
       return { status: 500, message: 'this users is already in the list' };
     }
     const newBlock: Block = new Block();
@@ -986,11 +964,11 @@ export class DataService {
   async deleteBlock(myId: number, blockId: number) {
     try {
       const blockUser: User = await this.usersService.findOneById(blockId);
-      if (!blockUser) return { status: 500, message: 'this user is not fount' };
+      if (!blockUser) throw new UnauthorizedException();
       const me: User = await this.usersService.findOneById(myId);
       const block = await this.blockService.findBlockUser(me, blockUser);
       if (block) return await this.blockService.remove(block);
-      return { status: 500, message: 'error' };
+      throw new UnauthorizedException();
     } catch (err) {
       return err;
     }

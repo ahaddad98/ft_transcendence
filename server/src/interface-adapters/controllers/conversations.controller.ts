@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Req,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
@@ -31,7 +32,7 @@ export class ConversationsController {
       // );
       // return await this.conversationService.findAll();
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -41,7 +42,7 @@ export class ConversationsController {
     try {
       return await this.dataService.findConversationById(params.id);
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -57,7 +58,7 @@ export class ConversationsController {
         req.user.id,
       );
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -67,25 +68,10 @@ export class ConversationsController {
     try {
       return await this.dataService.getAllMyPrivateConversations(req.user.id);
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
-  // @Get('users/me/:userId')
-  // @UseGuards(JwtAuthGuard)
-  // async findConversationByUsersId(
-  //   @Req() req,
-  //   @Param() params: ConversationParams,
-  // ) {
-  //   try {
-  //     return await this.conversationService.getConversationByUsers(
-  //       req.user.id,
-  //       params.id,
-  //     );
-  //   } catch (err) {
-  //     return err;
-  //   }
-  // }
 
   @Post('channel/create/users/me')
   @UseGuards(JwtAuthGuard)
@@ -93,7 +79,7 @@ export class ConversationsController {
     try {
       return await this.dataService.addNewChannelConversation(req.user.id);
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -106,7 +92,7 @@ export class ConversationsController {
         params.conversationId,
       );
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -122,7 +108,7 @@ export class ConversationsController {
         params.userId,
       );
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 
@@ -132,7 +118,7 @@ export class ConversationsController {
     try {
       return await this.conversationService.delete(params.id);
     } catch (err) {
-      return err;
+      throw new UnauthorizedException();
     }
   }
 }

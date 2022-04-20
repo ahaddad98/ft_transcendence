@@ -12,7 +12,6 @@ import { socketchannelcontext } from "../pages/home";
 import { useMychannelContext } from "./mychannelprovider";
 
 const ChannelBar = (props) => {
-  console.log(props);
   
   let mychanneltmp: any = useMychannelContext();
   let socket = useContext(socketchannelcontext);
@@ -51,15 +50,11 @@ const ChannelBar = (props) => {
         .fetchmychannelusers()
         .then((res) => {
           if (res.data) {
-            console.log('---data---');
-            console.log(res.data);
-            console.log('---data---');
             
             props.setMychannelusers(res.data);
           }
         })
         .catch((err) => {
-          console.log(err);
           router.push("/myprofile");
         });
     });

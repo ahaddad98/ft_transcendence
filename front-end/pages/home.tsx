@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import HomeNavbar from "../components/HomeNavbar";
 import LeaderBoard from "../components/LeaderBoard";
 import ChannlesList from "../components/ChannelsList";
@@ -16,10 +16,12 @@ export const socketchannelcontext = React.createContext(socketchannel);
 import mydataProvider from "../stats/mydata";
 import { useMyContext } from "../components/ContextProvider";
 import { MydataProvider } from "../components/mydataprovider";
+import { Router } from "@mui/icons-material";
+import { useRouter } from "next/router";
 
 const Home = () => {
   const [channel, setChannel] = useState([]);
-
+  const router = useRouter()
   const fetchChannel = async () => {
     const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/channels/home", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -32,7 +34,7 @@ const Home = () => {
         if (res.data) setChannel(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        router.push('/home')
       });
   }, []);
   const [stats, setStats] = useState([]);
@@ -51,7 +53,8 @@ const Home = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        router.push('/home')
+
       });
   }, []);
   const [history, setHistory] = useState([]);
@@ -70,7 +73,8 @@ const Home = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        router.push('/home')
+
       });
   }, []);
 

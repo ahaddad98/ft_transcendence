@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import React from "react";
 
 const ListchannelProfile = (props) => {
-    console.log(props.mychannel);
     
   const router = useRouter();
 
@@ -78,7 +77,6 @@ const ListchannelProfile = (props) => {
                       <button
                         className="text-sm text-indigo-50 transition duration-150 hover:bg-orange-400 font-semibold py-2 px-4 rounded-r"
                         onClick={(e) => {
-                            console.log(stat.id);
                             
                             if (stat.id)
                                 handlerclickparticipate(e, stat.id);

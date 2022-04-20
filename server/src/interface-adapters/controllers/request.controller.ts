@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Req,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/frameworks/auth/jwt/jwt-auth.guard';
@@ -24,7 +25,8 @@ export class RequestController {
     try {
       return await this.requestService.findAll();
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -37,7 +39,8 @@ export class RequestController {
         params.friendId,
       );
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -51,7 +54,8 @@ export class RequestController {
         params.friendId,
       );
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 
@@ -61,7 +65,8 @@ export class RequestController {
     try {
       return await this.requestService.removeRequestById(params.id);
     } catch (err) {
-      return err;
+                throw new UnauthorizedException();
+
     }
   }
 }

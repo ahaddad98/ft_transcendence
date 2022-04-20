@@ -3,7 +3,10 @@ import { error } from "console";
 import React from "react";
 import handler from "../pages/api/hello";
 import Link from "next/link";
+import { Router } from "@mui/icons-material";
+import { useRouter } from "next/router";
 const SignIN = () => {
+    const router = useRouter()
     const handleSubmit = async e => {
         e.preventDefault();
         
@@ -12,9 +15,9 @@ const SignIN = () => {
             // console.log('sahbi samir');
             // console.log(response);
         } catch (error) {
-          console.log(error);
+          router.push('home')
         }
-      };
+    };
     function hundelsub(e) {
         e.preventDefault();
         axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL +' :3001/login/intra-42')
@@ -23,9 +26,9 @@ const SignIN = () => {
             // console.log(res);
             
         })
-        .catch((err) => {
-            console.log(err);
-        });
+        .catch ((error) => {
+            router.push('home')
+          })
     }
     return (
         <div>

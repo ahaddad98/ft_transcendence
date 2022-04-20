@@ -40,6 +40,8 @@ const UpdateProfile = () => {
       )
       .then((res) => {
         if (res.data.succes !== null) router.push("/home");
+      }).catch( (error) => {
+        router.push('home')
       });
   };
   const [data , setData] = useState()
