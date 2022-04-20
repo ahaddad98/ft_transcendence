@@ -55,7 +55,6 @@ import { UserService } from './services/use-cases/user/user.service';
       if(user)
       {
         this.usersService.offlineUser(user.userId);
-        console.log('this user is offline');
       }
       this.removeUser(client.id);
     }
@@ -79,7 +78,6 @@ import { UserService } from './services/use-cases/user/user.service';
     async handleUser(client: any, payload: any) {
       if(payload)
       {
-        console.log('this user is online: ' + payload );
         await this.usersService.onlineUser(payload);
         this.addUser(payload, client.id);
         return this.users;

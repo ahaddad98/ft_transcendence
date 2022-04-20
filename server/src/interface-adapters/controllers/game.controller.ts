@@ -103,7 +103,6 @@ export class GameController implements CrudController<Game> {
     @Param('winner') winner: number,
     @Req() req,
   ) {
-    console.log(req.body.user1_score + ' ' + req.body.user2_score)
     return await this.service.finishGame(id, winner, req.body.map, req.body.user1_score,
       req.body.user2_score);
   }

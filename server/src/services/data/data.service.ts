@@ -668,10 +668,14 @@ export class DataService {
     return arr;
   }
 
-  async listUsersOfChannelWitouhtMe(channelId: number) {
+  async listUsersOfChannelWitouhtMe(channelId: number, myId) {
     const newChannel: Channel = await this.channelService.findChannelById(
       channelId,
     );
+    const test = await this.channelUserService.findAllChannelBlocked(myId);
+    const check = test.find(element => element.user.id == myId && element.channel.id == channelId && element.ban == true)
+    if(check)
+      throw new UnauthorizedException();
     const result = await this.channelUserService.findAllUsersInChannelWithoutMe(
       newChannel,
     );

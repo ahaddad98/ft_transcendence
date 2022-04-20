@@ -71,9 +71,9 @@ export class ChannelsController {
   
   @Get(':id/users/all')
   @UseGuards(JwtAuthGuard)
-  async listAllUsersOfChannelWithoutMe(@Param() params: ChannelParams) {
+  async listAllUsersOfChannelWithoutMe(@Param() params: ChannelParams, @Req() req) {
     try {
-      return await this.dataService.listUsersOfChannelWitouhtMe(params.id);
+      return await this.dataService.listUsersOfChannelWitouhtMe(params.id, req.user.id);
     } catch (err) {
       throw new UnauthorizedException();
     }
