@@ -12,6 +12,8 @@ const ChannelPage = (props) => {
   let data1: any = useMydataContext();
   const [mychannel, setMychannel] = useState<any>();
   const router = useRouter();
+
+  console.log("---------", router.query.channelId);
   const fetchmychannel = async () => {
     try {
       const response = await axios.get(
@@ -28,9 +30,11 @@ const ChannelPage = (props) => {
   const [mychannelusers, setMychannelusers] = useState();
 
   const fetchmychannelusers = async () => {
+    console.log("in fetch", router.query.channelId);
+
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/${props.id}/users/all`,
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/${router.query.channelId}/users/all`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -64,9 +68,9 @@ const ChannelPage = (props) => {
         console.log(err);
         // router.push("/myprofile");
       });
-      return (()=>{
-        false
-      })
+    return () => {
+      false;
+    };
   }, []);
 
   return (

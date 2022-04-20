@@ -6,7 +6,6 @@ import FriendComponent from "./FriendComponent";
 import HomeNavbar from "./HomeNavbar";
 
 const ProfileFriend = (props) => {
-    // console.log(props);
     const [myprofile, setMyprofile] = useState({});
   const [hasResult, setHasResult] = useState(false);
   const fetchmyprofile = async () => {
@@ -63,19 +62,6 @@ const ProfileFriend = (props) => {
         console.log(err);
       });
   }, []);
-  // const router = useRouter()
-  // const handlerclickparticipate = async (e, id) => {
-  //   e.preventDefault()
-  //     {
-  //       router.push(`FriendPage/${id}`)
-  //     }
-  // };
-  // const data = {
-  //   username: props.mydata.user.username,
-  //   avatar: props.mydata.user.avatar,
-  // };
-  // const [click, setClick] = useState(false);
-  // const [participatechannel, setParticipatechannel] = useState("");
   return (
     <div>
       {

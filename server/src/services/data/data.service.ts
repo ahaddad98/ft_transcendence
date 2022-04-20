@@ -663,7 +663,7 @@ export class DataService {
         id: result[i].user.id,
         username: result[i].user.username,
         avatar: result[i].user.avatar,
-        is_online: result[i].user.is_online,
+        status: result[i].user.status,
         userType: result[i].userType,
         block: result[i].ban,
         mute: result[i].mute,
@@ -700,7 +700,7 @@ export class DataService {
         id: result[i].user.id,
         username: result[i].user.username,
         avatar: result[i].user.avatar,
-        is_online: result[i].user.is_online,
+        status: result[i].user.status,
         userType: result[i].userType,
         stat: newStat,
       };

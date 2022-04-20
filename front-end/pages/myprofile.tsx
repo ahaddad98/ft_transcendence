@@ -47,38 +47,38 @@ const Myprofile = () => {
         console.log(err);
       });
   }, []);
-  const [mychannel, setMychannel] = useState();
-  const fetchmychannel = async () => {
-    const response = await axios.get(
-      process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/channels/users/me",
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-    );
-    return response;
-  };
-  useEffect(() => {
-    fetchmychannel()
-      .then((res) => {
-        if (res.data) {
-          setMychannel(res.data);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  // const [mychannel, setMychannel] = useState();
+  // const fetchmychannel = async () => {
+  //   const response = await axios.get(
+  //     process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/channels/users/me",
+  //     {
+  //       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  //     }
+  //   );
+  //   return response;
+  // };
+  // useEffect(() => {
+  //   fetchmychannel()
+  //     .then((res) => {
+  //       if (res.data) {
+  //         setMychannel(res.data);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
   const is_me = {
     check: true,
   };
   return (
     <MydataProvider>
       <div>
-        {hasResult && mychannel && (
+        {hasResult && (
           <Profile
             mydata={myprofile}
             myhistory={myhistory}
-            mychannels={mychannel}
+            // mychannels={mychannel}
             fetchmyprofile={fetchmyprofile}
             setMyprofile={setMyprofile}
           />

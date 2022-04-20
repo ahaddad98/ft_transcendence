@@ -91,7 +91,7 @@ const ChatConversation = (props) => {
   const hundelinvitegame = async (e, id) => {
     e.preventDefault();
     setuserInvite(id);
-    isModalVisible(true);
+    // isModalVisible(true);
     // axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/invite",
     // {
     //     "username1": MyData['username'],

@@ -4,6 +4,12 @@ import { Block } from './block.entity';
 import { Notification } from './notification.entity';
 import { Request } from './request.entity';
 
+export enum StatusType {
+  ONLINE = 'online',
+  OFFLINE = 'offline',
+  INGAME='ingame'
+}
+
 @Entity()
 export class User {
   @PrimaryColumn()
@@ -60,6 +66,6 @@ export class User {
   @Column({ default: 0 })
   quit?: number;
 
-  @Column({ type: 'boolean', default: false })
-  is_online?: boolean;
+  @Column({ type: 'enum', enum: StatusType, default: StatusType.ONLINE })
+  status?: StatusType
 }
